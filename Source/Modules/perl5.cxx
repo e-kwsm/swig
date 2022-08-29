@@ -143,7 +143,7 @@ public:
    * main()
    * ------------------------------------------------------------ */
 
-  virtual void main(int argc, char *argv[]) {
+  void main(int argc, char *argv[]) override {
     int i = 1;
 
     SWIG_library_directory("perl5");
@@ -216,7 +216,7 @@ public:
    * top()
    * ------------------------------------------------------------ */
 
-  virtual int top(Node *n) {
+  int top(Node *n) override {
     /* check if directors are enabled for this module.  note: this
      * is a "master" switch, without which no director code will be
      * emitted.  %feature("director") statements are also required
@@ -648,7 +648,7 @@ public:
    * importDirective(Node *n)
    * ------------------------------------------------------------ */
 
-  virtual int importDirective(Node *n) {
+  int importDirective(Node *n) override {
     if (blessed) {
       String *modname = Getattr(n, "module");
       if (modname) {
@@ -662,7 +662,7 @@ public:
    * functionWrapper()
    * ------------------------------------------------------------ */
 
-  virtual int functionWrapper(Node *n) {
+  int functionWrapper(Node *n) override {
     String *name = Getattr(n, "name");
     String *iname = Getattr(n, "sym:name");
     SwigType *returntype = Getattr(n, "type");
@@ -980,7 +980,7 @@ public:
   /* ------------------------------------------------------------
    * variableWrapper()
    * ------------------------------------------------------------ */
-  virtual int variableWrapper(Node *n) {
+  int variableWrapper(Node *n) override {
     String *name = Getattr(n, "name");
     String *iname = Getattr(n, "sym:name");
     SwigType *t = Getattr(n, "type");
@@ -1130,7 +1130,7 @@ public:
    * constantWrapper()
    * ------------------------------------------------------------ */
 
-  virtual int constantWrapper(Node *n) {
+  int constantWrapper(Node *n) override {
     String *name = Getattr(n, "name");
     String *iname = Getattr(n, "sym:name");
     SwigType *type = Getattr(n, "type");
@@ -1273,7 +1273,7 @@ public:
    * nativeWrapper()
    * ------------------------------------------------------------ */
 
-  virtual int nativeWrapper(Node *n) {
+  int nativeWrapper(Node *n) override {
     String *name = Getattr(n, "sym:name");
     String *funcname = Getattr(n, "wrap:name");
 
@@ -1364,7 +1364,7 @@ public:
   /* ------------------------------------------------------------
    * classDeclaration()
    * ------------------------------------------------------------ */
-  virtual int classDeclaration(Node *n) {
+  int classDeclaration(Node *n) override {
     /* Do some work on the class name */
     if (!Getattr(n, "feature:onlychildren")) {
       if (blessed) {
@@ -1380,7 +1380,7 @@ public:
    * classHandler()
    * ------------------------------------------------------------ */
 
-  virtual int classHandler(Node *n) {
+  int classHandler(Node *n) override {
 
     if (blessed) {
       have_constructor = 0;
@@ -1620,7 +1620,7 @@ public:
    * memberfunctionHandler()
    * ------------------------------------------------------------ */
 
-  virtual int memberfunctionHandler(Node *n) {
+  int memberfunctionHandler(Node *n) override {
     String *symname = Getattr(n, "sym:name");
 
     member_func = 1;
@@ -1713,7 +1713,7 @@ public:
    * Adds an instance member.
    * ----------------------------------------------------------------------------- */
 
-  virtual int membervariableHandler(Node *n) {
+  int membervariableHandler(Node *n) override {
 
     String *symname = Getattr(n, "sym:name");
     /* SwigType *t  = Getattr(n,"type"); */
@@ -1755,7 +1755,7 @@ public:
    * something that wasn't necessarily allocated by malloc or new
    * ------------------------------------------------------------ */
 
-  virtual int constructorHandler(Node *n) {
+  int constructorHandler(Node *n) override {
 
     String *symname = Getattr(n, "sym:name");
 
@@ -1835,7 +1835,7 @@ public:
    * destructorHandler()
    * ------------------------------------------------------------ */
 
-  virtual int destructorHandler(Node *n) {
+  int destructorHandler(Node *n) override {
     String *symname = Getattr(n, "sym:name");
     member_func = 1;
     Language::destructorHandler(n);
@@ -1868,7 +1868,7 @@ public:
    * staticmemberfunctionHandler()
    * ------------------------------------------------------------ */
 
-  virtual int staticmemberfunctionHandler(Node *n) {
+  int staticmemberfunctionHandler(Node *n) override {
     member_func = 1;
     Language::staticmemberfunctionHandler(n);
     member_func = 0;
@@ -1883,7 +1883,7 @@ public:
    * staticmembervariableHandler()
    * ------------------------------------------------------------ */
 
-  virtual int staticmembervariableHandler(Node *n) {
+  int staticmembervariableHandler(Node *n) override {
     Language::staticmembervariableHandler(n);
     if (blessed) {
       String *symname = Getattr(n, "sym:name");
@@ -1896,7 +1896,7 @@ public:
    * memberconstantHandler()
    * ------------------------------------------------------------ */
 
-  virtual int memberconstantHandler(Node *n) {
+  int memberconstantHandler(Node *n) override {
     String *symname = Getattr(n, "sym:name");
     int oldblessed = blessed;
 
@@ -1920,7 +1920,7 @@ public:
    * %pragma(perl5) include="file.pl"          # Includes a file in the .pm file
    * ------------------------------------------------------------ */
 
-  virtual int pragmaDirective(Node *n) {
+  int pragmaDirective(Node *n) override {
     String *lang;
     String *code;
     String *value;
@@ -2021,7 +2021,7 @@ public:
    * Hook for %insert directive.
    * ------------------------------------------------------------ */
 
-  virtual int insertDirective(Node *n) {
+  int insertDirective(Node *n) override {
     String *code = Getattr(n, "code");
     String *section = Getattr(n, "section");
 
@@ -2033,7 +2033,7 @@ public:
     return SWIG_OK;
   }
 
-  String *runtimeCode() {
+  String *runtimeCode() override {
     String *s = NewString("");
     String *shead = Swig_include_sys("perlhead.swg");
     if (!shead) {
@@ -2059,11 +2059,11 @@ public:
     return s;
   }
 
-  String *defaultExternalRuntimeFilename() {
+  String *defaultExternalRuntimeFilename() override {
     return NewString("swigperlrun.h");
   }
 
-  virtual int classDirectorInit(Node *n) {
+  int classDirectorInit(Node *n) override {
     String *declaration = Swig_director_declaration(n);
     Printf(f_directors_h, "\n");
     Printf(f_directors_h, "%s\n", declaration);
@@ -2072,7 +2072,7 @@ public:
     return Language::classDirectorInit(n);
   }
 
-  virtual int classDirectorEnd(Node *n) {
+  int classDirectorEnd(Node *n) override {
     if (dirprot_mode()) {
       /*
          This implementation uses a std::map<std::string,int>.
@@ -2100,7 +2100,7 @@ public:
     return Language::classDirectorEnd(n);
   }
 
-  virtual int classDirectorConstructor(Node *n) {
+  int classDirectorConstructor(Node *n) override {
     Node *parent = Getattr(n, "parentNode");
     String *sub = NewString("");
     String *decl = Getattr(n, "decl");
@@ -2150,7 +2150,7 @@ public:
     return Language::classDirectorConstructor(n);
   }
 
-  virtual int classDirectorMethod(Node *n, Node *parent, String *super) {
+  int classDirectorMethod(Node *n, Node *parent, String *super) override {
     int is_void = 0;
     int is_pointer = 0;
     String *decl = Getattr(n, "decl");
@@ -2584,7 +2584,7 @@ public:
     return status;
   }
 
-  int classDirectorDisown(Node *n) {
+  int classDirectorDisown(Node *n) override {
     int rv;
     member_func = 1;
     rv = Language::classDirectorDisown(n);
@@ -2597,7 +2597,7 @@ public:
     return rv;
   }
 
-  int classDirectorDestructor(Node *n) {
+  int classDirectorDestructor(Node *n) override {
     /* TODO: it would be nice if this didn't have to copy the body of Language::classDirectorDestructor() */
     String *DirectorClassName = directorClassName(getCurrentClass());
     String *body = NewString("\n");
