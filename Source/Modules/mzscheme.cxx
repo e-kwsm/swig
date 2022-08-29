@@ -54,7 +54,7 @@ public:
    * main()
    * ------------------------------------------------------------ */
 
-  virtual void main(int argc, char *argv[]) {
+  void main(int argc, char *argv[]) override {
 
     int i;
 
@@ -117,7 +117,7 @@ public:
    * top()
    * ------------------------------------------------------------ */
 
-  virtual int top(Node *n) {
+  int top(Node *n) override {
 
     /* Initialize all of the output files */
     String *outfile = Getattr(n, "outfile");
@@ -208,7 +208,7 @@ public:
     return SwigType_ispointer(SwigType_typedef_resolve_all(t));
   }
 
-  virtual int functionWrapper(Node *n) {
+  int functionWrapper(Node *n) override {
     char *iname = GetChar(n, "sym:name");
     SwigType *returntype = Getattr(n, "type");
     ParmList *l = Getattr(n, "parms");
@@ -472,7 +472,7 @@ public:
    * value.
    * ------------------------------------------------------------ */
 
-  virtual int variableWrapper(Node *n) {
+  int variableWrapper(Node *n) override {
 
     char *name = GetChar(n, "name");
     char *iname = GetChar(n, "sym:name");
@@ -554,7 +554,7 @@ public:
    * constantWrapper()
    * ------------------------------------------------------------ */
 
-  virtual int constantWrapper(Node *n) {
+  int constantWrapper(Node *n) override {
     char *name = GetChar(n, "name");
     char *iname = GetChar(n, "sym:name");
     SwigType *type = Getattr(n, "type");
@@ -595,7 +595,7 @@ public:
     return SWIG_OK;
   }
 
-  virtual int destructorHandler(Node *n) {
+  int destructorHandler(Node *n) override {
     exporting_destructor = true;
     Language::destructorHandler(n);
     exporting_destructor = false;
@@ -605,7 +605,7 @@ public:
   /* ------------------------------------------------------------
    * classHandler()
    * ------------------------------------------------------------ */
-  virtual int classHandler(Node *n) {
+  int classHandler(Node *n) override {
     String *scm_structname = NewString("");
     SwigType *ctype_ptr = NewStringf("p.%s", getClassType());
 
@@ -673,7 +673,7 @@ public:
    * membervariableHandler()
    * ------------------------------------------------------------ */
 
-  virtual int membervariableHandler(Node *n) {
+  int membervariableHandler(Node *n) override {
     Language::membervariableHandler(n);
 
     if (!is_smart_pointer()) {
@@ -706,7 +706,7 @@ public:
    * validIdentifier()
    * ------------------------------------------------------------ */
 
-  virtual int validIdentifier(String *s) {
+  int validIdentifier(String *s) override {
     char *c = Char(s);
     /* Check whether we have an R5RS identifier. */
     /* <identifier> --> <initial> <subsequent>* | <peculiar identifier> */
@@ -735,7 +735,7 @@ public:
     return 1;
   }
 
-  String *runtimeCode() {
+  String *runtimeCode() override {
     String *s = Swig_include_sys("mzrun.swg");
     if (!s) {
       Printf(stderr, "*** Unable to open 'mzrun.swg'\n");
@@ -744,7 +744,7 @@ public:
     return s;
   }
 
-  String *defaultExternalRuntimeFilename() {
+  String *defaultExternalRuntimeFilename() override {
     return NewString("swigmzrun.h");
   }
 };

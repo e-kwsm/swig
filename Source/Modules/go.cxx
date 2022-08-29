@@ -245,7 +245,7 @@ private:
   /* ------------------------------------------------------------
    * main()
    * ------------------------------------------------------------ */
-  virtual void main(int argc, char *argv[]) {
+  void main(int argc, char *argv[]) override {
 
     SWIG_library_directory("go");
     bool saw_nocgo_flag = false;
@@ -389,7 +389,7 @@ private:
    *
    * --------------------------------------------------------------------- */
 
-  virtual int top(Node *n) {
+  int top(Node *n) override {
     Node *optionsnode = Getattr(Getattr(n, "module"), "options");
     if (optionsnode) {
       if (Getattr(optionsnode, "directors")) {
@@ -697,7 +697,7 @@ private:
    * statement.
    * ------------------------------------------------------------ */
 
-  virtual int importDirective(Node *n) {
+  int importDirective(Node *n) override {
     String *hold_import = imported_package;
     String *modname = Getattr(n, "module");
     if (modname) {
@@ -722,7 +722,7 @@ private:
    *
    * If the section is go_imports, store them for later.
    * ---------------------------------------------------------------------- */
-  virtual int insertDirective(Node *n) {
+  int insertDirective(Node *n) override {
     char *section = Char(Getattr(n, "section"));
     if ((ImportMode && !Getattr(n, "generated")) ||
         !section || (strcmp(section, "go_imports") != 0)) {
@@ -748,7 +748,7 @@ private:
    * Implement a function.
    * ---------------------------------------------------------------------- */
 
-  virtual int functionWrapper(Node *n) {
+  int functionWrapper(Node *n) override {
     if (GetFlag(n, "feature:ignore")) {
       return SWIG_OK;
     }
@@ -940,7 +940,7 @@ private:
    * function is static.
    * ---------------------------------------------------------------------- */
 
-  int staticmemberfunctionHandler(Node *n) {
+  int staticmemberfunctionHandler(Node *n) override {
     assert(!is_static_member_function);
     is_static_member_function = true;
     int r = Language::staticmemberfunctionHandler(n);
@@ -1785,7 +1785,7 @@ private:
    * This exists just to set the making_variable_wrappers flag.
    * ----------------------------------------------------------------------- */
 
-  virtual int variableHandler(Node *n) {
+  int variableHandler(Node *n) override {
     assert(!making_variable_wrappers);
     making_variable_wrappers = true;
     int r = Language::variableHandler(n);
@@ -1799,7 +1799,7 @@ private:
    * Product a const declaration.
    * ------------------------------------------------------------------------ */
 
-  virtual int constantWrapper(Node *n) {
+  int constantWrapper(Node *n) override {
     SwigType *type = Getattr(n, "type");
 
     if (Swig_storage_isstatic(n)) {
@@ -1878,7 +1878,7 @@ private:
    * A C++ enum type turns into a Named go int type.
    * ---------------------------------------------------------------------- */
 
-  virtual int enumDeclaration(Node *n) {
+  int enumDeclaration(Node *n) override {
     if (getCurrentClass() && (cplus_mode != PUBLIC))
       return SWIG_NOWRAP;
 
@@ -1908,7 +1908,7 @@ private:
    * calling a C/C++ function.
    * ------------------------------------------------------------------------ */
 
-  virtual int enumvalueDeclaration(Node *n) {
+  int enumvalueDeclaration(Node *n) override {
     if (!is_public(n)) {
       return SWIG_OK;
     }
@@ -2027,7 +2027,7 @@ private:
    * class to use the interface.
    * ------------------------------------------------------------ */
 
-  virtual int classHandler(Node *n) {
+  int classHandler(Node *n) override {
     class_node = n;
 
     List *baselist = Getattr(n, "bases");
@@ -2674,7 +2674,7 @@ private:
    * it does, it calls it, otherwise it calls back into C++.
    * ------------------------------------------------------------ */
 
-  int classDirectorInit(Node *n) {
+  int classDirectorInit(Node *n) override {
     // Because we use a different function to handle inheritance in
     // Go, ordinary creations of the object should not create a
     // director object.
@@ -2737,7 +2737,7 @@ private:
    * Emit a constructor for a director class.
    * ------------------------------------------------------------ */
 
-  int classDirectorConstructor(Node *n) {
+  int classDirectorConstructor(Node *n) override {
     bool is_ignored = GetFlag(n, "feature:ignore") ? true : false;
 
     String *name = Getattr(n, "sym:name");
@@ -3020,7 +3020,7 @@ private:
    * Emit a destructor for a director class.
    * ------------------------------------------------------------ */
 
-  int classDirectorDestructor(Node *n) {
+  int classDirectorDestructor(Node *n) override {
     if (!is_public(n)) {
       return SWIG_OK;
     }
@@ -3132,7 +3132,7 @@ private:
    * Emit a method for a director class, plus its overloads.
    * ------------------------------------------------------------ */
 
-  int classDirectorMethod(Node *n, Node *parent, String *super) {
+  int classDirectorMethod(Node *n, Node *parent, String *super) override {
     bool is_ignored = GetFlag(n, "feature:ignore") ? true : false;
 
     // We don't need explicit calls.
@@ -4143,7 +4143,7 @@ private:
    * Complete support for a director class.
    * ------------------------------------------------------------ */
 
-  int classDirectorEnd(Node *n) {
+  int classDirectorEnd(Node *n) override {
     (void) n;
 
     Printv(f_c_directors_h, " private:\n", NULL);
@@ -4169,7 +4169,7 @@ private:
    * I think Go does not require a disown method.
    * ------------------------------------------------------------ */
 
-  int classDirectorDisown(Node *n) {
+  int classDirectorDisown(Node *n) override {
     (void) n;
     return SWIG_OK;
   }
@@ -4213,7 +4213,7 @@ private:
    * We don't need to check upcall when calling methods.
    *--------------------------------------------------------------------*/
 
-  bool extraDirectorProtectedCPPMethodsRequired() const {
+  bool extraDirectorProtectedCPPMethodsRequired() const override {
     return false;
   }
 

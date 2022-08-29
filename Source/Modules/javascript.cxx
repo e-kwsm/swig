@@ -325,26 +325,26 @@ public:
 
   JAVASCRIPT():emitter(NULL) {
   }
-  ~JAVASCRIPT() {
+  ~JAVASCRIPT() override {
     delete emitter;
   }
 
-  virtual int functionHandler(Node *n);
-  virtual int globalfunctionHandler(Node *n);
-  virtual int variableHandler(Node *n);
-  virtual int globalvariableHandler(Node *n);
-  virtual int staticmemberfunctionHandler(Node *n);
-  virtual int classHandler(Node *n);
-  virtual int functionWrapper(Node *n);
-  virtual int constantWrapper(Node *n);
-  virtual int nativeWrapper(Node *n);
-  virtual void main(int argc, char *argv[]);
-  virtual int top(Node *n);
+  int functionHandler(Node *n) override;
+  int globalfunctionHandler(Node *n) override;
+  int variableHandler(Node *n) override;
+  int globalvariableHandler(Node *n) override;
+  int staticmemberfunctionHandler(Node *n) override;
+  int classHandler(Node *n) override;
+  int functionWrapper(Node *n) override;
+  int constantWrapper(Node *n) override;
+  int nativeWrapper(Node *n) override;
+  void main(int argc, char *argv[]) override;
+  int top(Node *n) override;
 
   /**
    *  Registers all %fragments assigned to section "templates".
    **/
-  virtual int fragmentDirective(Node *n);
+  int fragmentDirective(Node *n) override;
 
 public:
 
@@ -1609,21 +1609,21 @@ class JSCEmitter:public JSEmitter {
 
 public:
   JSCEmitter();
-  virtual ~ JSCEmitter();
-  virtual int initialize(Node *n);
-  virtual int dump(Node *n);
-  virtual int close();
+  ~ JSCEmitter() override;
+  int initialize(Node *n) override;
+  int dump(Node *n) override;
+  int close() override;
 
 protected:
-  virtual int enterVariable(Node *n);
-  virtual int exitVariable(Node *n);
-  virtual int enterFunction(Node *n);
-  virtual int exitFunction(Node *n);
-  virtual int enterClass(Node *n);
-  virtual int exitClass(Node *n);
-  virtual void marshalInputArgs(Node *n, ParmList *parms, Wrapper *wrapper, MarshallingMode mode, bool is_member, bool is_static);
-  virtual Hash *createNamespaceEntry(const char *name, const char *parent, const char *parent_mangled);
-  virtual int emitNamespaces();
+  int enterVariable(Node *n) override;
+  int exitVariable(Node *n) override;
+  int enterFunction(Node *n) override;
+  int exitFunction(Node *n) override;
+  int enterClass(Node *n) override;
+  int exitClass(Node *n) override;
+  void marshalInputArgs(Node *n, ParmList *parms, Wrapper *wrapper, MarshallingMode mode, bool is_member, bool is_static) override;
+  Hash *createNamespaceEntry(const char *name, const char *parent, const char *parent_mangled) override;
+  int emitNamespaces() override;
 
 private:
 
@@ -2007,19 +2007,19 @@ class V8Emitter:public JSEmitter {
 public:
   V8Emitter();
 
-  virtual ~ V8Emitter();
-  virtual int initialize(Node *n);
-  virtual int dump(Node *n);
-  virtual int close();
-  virtual int enterClass(Node *n);
-  virtual int exitClass(Node *n);
-  virtual int enterVariable(Node *n);
-  virtual int exitVariable(Node *n);
-  virtual int exitFunction(Node *n);
+  ~ V8Emitter() override;
+  int initialize(Node *n) override;
+  int dump(Node *n) override;
+  int close() override;
+  int enterClass(Node *n) override;
+  int exitClass(Node *n) override;
+  int enterVariable(Node *n) override;
+  int exitVariable(Node *n) override;
+  int exitFunction(Node *n) override;
 
 protected:
-  virtual void marshalInputArgs(Node *n, ParmList *parms, Wrapper *wrapper, MarshallingMode mode, bool is_member, bool is_static);
-  virtual int emitNamespaces();
+  void marshalInputArgs(Node *n, ParmList *parms, Wrapper *wrapper, MarshallingMode mode, bool is_member, bool is_static) override;
+  int emitNamespaces() override;
 
 protected:
   /* built-in parts */
@@ -2455,28 +2455,28 @@ class NAPIEmitter:public JSEmitter {
 public:
   NAPIEmitter();
 
-  virtual ~NAPIEmitter();
-  virtual int initialize(Node *n);
-  virtual int dump(Node *n);
-  virtual int close();
-  virtual int enterClass(Node *n);
-  virtual int exitClass(Node *n);
-  virtual int enterVariable(Node *n);
-  virtual int exitVariable(Node *n);
-  virtual int exitFunction(Node *n);
+  ~NAPIEmitter() override;
+  int initialize(Node *n) override;
+  int dump(Node *n) override;
+  int close() override;
+  int enterClass(Node *n) override;
+  int exitClass(Node *n) override;
+  int enterVariable(Node *n) override;
+  int exitVariable(Node *n) override;
+  int exitFunction(Node *n) override;
 
 protected:
-  virtual void marshalInputArgs(Node *n, ParmList *parms, Wrapper *wrapper, MarshallingMode mode, bool is_member, bool is_static);
-  virtual int emitNamespaces();
-  virtual int emitCtor(Node *);
-  virtual int emitDtor(Node *);
+  void marshalInputArgs(Node *n, ParmList *parms, Wrapper *wrapper, MarshallingMode mode, bool is_member, bool is_static) override;
+  int emitNamespaces() override;
+  int emitCtor(Node *) override;
+  int emitDtor(Node *) override;
   virtual int emitClassMethodDeclaration(Node *);
 
-  virtual const char *getFunctionTemplate(bool is_member);
-  virtual const char *getFunctionDispatcherTemplate(bool is_member);
-  virtual const char *getOverloadedFunctionTemplate(bool is_member);
-  virtual const char *getSetterTemplate(bool is_member);
-  virtual const char *getGetterTemplate(bool is_member);
+  const char *getFunctionTemplate(bool is_member) override;
+  const char *getFunctionDispatcherTemplate(bool is_member) override;
+  const char *getOverloadedFunctionTemplate(bool is_member) override;
+  const char *getSetterTemplate(bool is_member) override;
+  const char *getGetterTemplate(bool is_member) override;
 
 protected:
   /* built-in parts */

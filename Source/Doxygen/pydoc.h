@@ -26,7 +26,7 @@
 class PyDocConverter : public DoxygenTranslator {
 public:
   PyDocConverter(int flags = 0);
-  String *makeDocumentation(Node *node);
+  String *makeDocumentation(Node *node) override;
 
 protected:
 
