@@ -80,7 +80,7 @@ public:
    * main()
    * ----------------------------------------------------------------------*/
 
-  virtual void main(int argc, char *argv[]) {
+  void main(int argc, char *argv[]) override {
     generateBuilder = false;
     sourceFileList = NewList();
     cflags = NewList();
@@ -176,7 +176,7 @@ public:
    * top()
    * ----------------------------------------------------------------------*/
 
-  virtual int top(Node *node) {
+  int top(Node *node) override {
 
     /* Get the module name */
     String *gatewayName = Getattr(node, "name");
@@ -326,7 +326,7 @@ public:
    * functionWrapper()
    * ----------------------------------------------------------------------*/
 
-  virtual int functionWrapper(Node *node) {
+  int functionWrapper(Node *node) override {
 
     /* Get some useful attributes of this function */
     String *functionName = Getattr(node, "sym:name");
@@ -604,7 +604,7 @@ public:
    * variableWrapper()
    * ----------------------------------------------------------------------- */
 
-  virtual int variableWrapper(Node *node) {
+  int variableWrapper(Node *node) override {
 
     /* Get information about variable */
     String *origVariableName = Getattr(node, "name");  // Ex: Shape::nshapes
@@ -679,7 +679,7 @@ public:
    * constantWrapper()
    * ----------------------------------------------------------------------- */
 
-  virtual int constantWrapper(Node *node) {
+  int constantWrapper(Node *node) override {
 
     /* Get the useful information from the node */
     String *nodeName = Getattr(node, "name");
@@ -764,7 +764,7 @@ public:
    * enumvalueDeclaration()
    * --------------------------------------------------------------------- */
 
-  virtual int enumvalueDeclaration(Node *node) {
+  int enumvalueDeclaration(Node *node) override {
     static int iPreviousEnumValue = 0;
 
     if (GetFlag(node, "feature:scilab:const")) {

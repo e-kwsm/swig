@@ -290,7 +290,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::main()
    * --------------------------------------------------------------------------- */
-  virtual void main(int argc, char *argv[]) {
+  void main(int argc, char *argv[]) override {
     SWIG_library_directory("d");
 
     // Look for certain command line options
@@ -343,7 +343,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::top()
    * --------------------------------------------------------------------------- */
-  virtual int top(Node *n) {
+  int top(Node *n) override {
     // Get any options set in the module directive
     Node *module = Getattr(n, "module");
     Node *optionsnode = Getattr(module, "options");
@@ -723,7 +723,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::insertDirective()
    * --------------------------------------------------------------------------- */
-  virtual int insertDirective(Node *n) {
+  int insertDirective(Node *n) override {
     int ret = SWIG_OK;
     String *code = Getattr(n, "code");
     String *section = Getattr(n, "section");
@@ -756,7 +756,7 @@ public:
    * wrapperloaderbindcommand - D code for binding a symbol from the wrapper
    *                        library to the declaration in the im D module.
    * --------------------------------------------------------------------------- */
-  virtual int pragmaDirective(Node *n) {
+  int pragmaDirective(Node *n) override {
     if (!ImportMode) {
       String *lang = Getattr(n, "lang");
       String *code = Getattr(n, "name");
@@ -798,7 +798,7 @@ public:
    *
    * Wraps C/C++ enums as D enums.
    * --------------------------------------------------------------------------- */
-  virtual int enumDeclaration(Node *n) {
+  int enumDeclaration(Node *n) override {
     if (ImportMode)
       return SWIG_OK;
 
@@ -932,7 +932,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::enumvalueDeclaration()
    * --------------------------------------------------------------------------- */
-  virtual int enumvalueDeclaration(Node *n) {
+  int enumvalueDeclaration(Node *n) override {
     if (getCurrentClass() && (cplus_mode != PUBLIC))
       return SWIG_NOWRAP;
 
@@ -987,7 +987,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::memberfunctionHandler()
    * --------------------------------------------------------------------------- */
-  virtual int memberfunctionHandler(Node *n) {
+  int memberfunctionHandler(Node *n) override {
     Language::memberfunctionHandler(n);
 
     String *overloaded_name = getOverloadedName(n);
@@ -1034,7 +1034,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::staticmemberfunctionHandler()
    * --------------------------------------------------------------------------- */
-  virtual int staticmemberfunctionHandler(Node *n) {
+  int staticmemberfunctionHandler(Node *n) override {
     static_flag = true;
 
     Language::staticmemberfunctionHandler(n);
@@ -1053,7 +1053,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::globalvariableHandler()
    * --------------------------------------------------------------------------- */
-  virtual int globalvariableHandler(Node *n) {
+  int globalvariableHandler(Node *n) override {
     variable_name = Getattr(n, "sym:name");
     global_variable_flag = true;
     int ret = Language::globalvariableHandler(n);
@@ -1065,7 +1065,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::membervariableHandler()
    * --------------------------------------------------------------------------- */
-  virtual int membervariableHandler(Node *n) {
+  int membervariableHandler(Node *n) override {
     variable_name = Getattr(n, "sym:name");
     wrapping_member_flag = true;
     variable_wrapper_flag = true;
@@ -1079,7 +1079,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::staticmembervariableHandler()
    * --------------------------------------------------------------------------- */
-  virtual int staticmembervariableHandler(Node *n) {
+  int staticmembervariableHandler(Node *n) override {
     if (GetFlag(n, "feature:d:manifestconst") != 1) {
       Delattr(n, "value");
     }
@@ -1097,7 +1097,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::memberconstantHandler()
    * --------------------------------------------------------------------------- */
-  virtual int memberconstantHandler(Node *n) {
+  int memberconstantHandler(Node *n) override {
     variable_name = Getattr(n, "sym:name");
     wrapping_member_flag = true;
     Language::memberconstantHandler(n);
@@ -1108,7 +1108,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::constructorHandler()
    * --------------------------------------------------------------------------- */
-  virtual int constructorHandler(Node *n) {
+  int constructorHandler(Node *n) override {
     Language::constructorHandler(n);
 
     // Wrappers not wanted for some methods where the parameters cannot be overloadedprocess in D.
@@ -1323,7 +1323,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::destructorHandler()
    * --------------------------------------------------------------------------- */
-  virtual int destructorHandler(Node *n) {
+  int destructorHandler(Node *n) override {
     Language::destructorHandler(n);
     String *symname = Getattr(n, "sym:name");
 
@@ -1338,7 +1338,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::classHandler()
    * --------------------------------------------------------------------------- */
-  virtual int classHandler(Node *n) {
+  int classHandler(Node *n) override {
     String *nspace = getNSpace();
     File *class_file = NULL;
 
@@ -1431,7 +1431,7 @@ public:
    * retrieves the value via a call to the C wrapper. However, if there is a
    * %dconstvalue specified, it overrides all other settings.
    * --------------------------------------------------------------------------- */
-  virtual int constantWrapper(Node *n) {
+  int constantWrapper(Node *n) override {
     String *symname = Getattr(n, "sym:name");
     if (!addSymbol(symname, n))
       return SWIG_ERROR;
@@ -1521,7 +1521,7 @@ public:
    * Generates the C wrapper code for a function and the corresponding
    * declaration in the wrap D module.
    * --------------------------------------------------------------------------- */
-  virtual int functionWrapper(Node *n) {
+  int functionWrapper(Node *n) override {
     String *symname = Getattr(n, "sym:name");
     SwigType *returntype = Getattr(n, "type");
     ParmList *l = Getattr(n, "parms");
@@ -1865,7 +1865,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::nativeWrapper()
    * --------------------------------------------------------------------------- */
-  virtual int nativeWrapper(Node *n) {
+  int nativeWrapper(Node *n) override {
     String *wrapname = Getattr(n, "wrap:name");
 
     if (!addSymbol(wrapname, n))
@@ -1888,7 +1888,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::classDirector()
    * --------------------------------------------------------------------------- */
-  virtual int classDirector(Node *n) {
+  int classDirector(Node *n) override {
     String *nspace = Getattr(n, "sym:nspace");
     proxy_class_name = NewString(Getattr(n, "sym:name"));
     if (nspace) {
@@ -1910,7 +1910,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::classDirectorInit()
    * --------------------------------------------------------------------------- */
-  virtual int classDirectorInit(Node *n) {
+  int classDirectorInit(Node *n) override {
     Delete(director_ctor_code);
     director_ctor_code = NewString("$director_new");
 
@@ -1947,7 +1947,7 @@ public:
    * Emit a virtual director method to pass a method call on to the
    * underlying D object.
    * --------------------------------------------------------------------------- */
-  virtual int classDirectorMethod(Node *n, Node *parent, String *super) {
+  int classDirectorMethod(Node *n, Node *parent, String *super) override {
     String *classname = Getattr(parent, "sym:name");
     String *c_classname = Getattr(parent, "name");
     String *name = Getattr(n, "name");
@@ -2456,7 +2456,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::classDirectorConstructor()
    * --------------------------------------------------------------------------- */
-  virtual int classDirectorConstructor(Node *n) {
+  int classDirectorConstructor(Node *n) override {
     Node *parent = parentNode(n);
     String *decl = Getattr(n, "decl");
     ;
@@ -2516,7 +2516,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::classDirectorDefaultConstructor()
    * --------------------------------------------------------------------------- */
-  virtual int classDirectorDefaultConstructor(Node *n) {
+  int classDirectorDefaultConstructor(Node *n) override {
     String *dirclassname = directorClassName(n);
     String *classtype = SwigType_namestr(Getattr(n, "name"));
     Wrapper *w = NewWrapper();
@@ -2535,7 +2535,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::classDirectorDestructor()
    * --------------------------------------------------------------------------- */
-  virtual int classDirectorDestructor(Node *n) {
+  int classDirectorDestructor(Node *n) override {
     Node *current_class = getCurrentClass();
     String *dirclassname = directorClassName(current_class);
     Wrapper *w = NewWrapper();
@@ -2563,7 +2563,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::classDirectorEnd()
    * --------------------------------------------------------------------------- */
-  virtual int classDirectorEnd(Node *n) {
+  int classDirectorEnd(Node *n) override {
     int i;
     String *director_classname = directorClassName(n);
 
@@ -2618,7 +2618,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::classDirectorDisown()
    * --------------------------------------------------------------------------- */
-  virtual int classDirectorDisown(Node *n) {
+  int classDirectorDisown(Node *n) override {
     (void)n;
     return SWIG_OK;
   }
@@ -2626,7 +2626,7 @@ public:
   /* ---------------------------------------------------------------------------
    * D::replaceSpecialVariables()
    * --------------------------------------------------------------------------- */
-  virtual void replaceSpecialVariables(String *method, String *tm, Parm *parm) {
+  void replaceSpecialVariables(String *method, String *tm, Parm *parm) override {
     (void)method;
     SwigType *type = Getattr(parm, "type");
 
@@ -2638,7 +2638,7 @@ protected:
   /* ---------------------------------------------------------------------------
    * D::extraDirectorProtectedCPPMethodsRequired()
    * --------------------------------------------------------------------------- */
-  virtual bool extraDirectorProtectedCPPMethodsRequired() const {
+  bool extraDirectorProtectedCPPMethodsRequired() const override {
     return false;
   }
 
@@ -4421,7 +4421,7 @@ private:
     return proxyname;
   }
 
-  String *makeParameterName(Node *n, Parm *p, int arg_num, bool setter) const {
+  String *makeParameterName(Node *n, Parm *p, int arg_num, bool setter) const override {
     String *arg = Language::makeParameterName(n, p, arg_num, setter);
 
     if (split_proxy_dmodule && Strncmp(arg, package, Len(arg)) == 0) {
