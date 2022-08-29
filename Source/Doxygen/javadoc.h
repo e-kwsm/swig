@@ -23,7 +23,7 @@
 class JavaDocConverter : public DoxygenTranslator {
 public:
   JavaDocConverter(int flags = 0);
-  String *makeDocumentation(Node *node);
+  String *makeDocumentation(Node *node) override;
 
 protected:
   /*

@@ -85,7 +85,7 @@ public:
    * main()
    * ------------------------------------------------------------ */
 
-  virtual void main(int argc, char *argv[]) {
+  void main(int argc, char *argv[]) override {
     int i;
 
     prefix = 0;
@@ -176,7 +176,7 @@ public:
    *  directors_h
    * ------------------------------------------------------------ */
 
-  virtual int top(Node *n) {
+  int top(Node *n) override {
     /* Set comparison with none for ConstructorToFunction */
     setSubclassInstanceCheck(NewString("caml_list_nth(args,0) != Val_unit"));
 
@@ -413,7 +413,7 @@ public:
     return SwigType_isarray(SwigType_typedef_resolve_all(t));
   }
 
-  virtual int membervariableHandler(Node *n) {
+  int membervariableHandler(Node *n) override {
     String *symname = Getattr(n, "sym:name");
     Language::membervariableHandler(n);
 
@@ -441,7 +441,7 @@ public:
    * Create a function declaration and register it with the interpreter.
    * ------------------------------------------------------------ */
 
-  virtual int functionWrapper(Node *n) {
+  int functionWrapper(Node *n) override {
     char *iname = GetChar(n, "sym:name");
     SwigType *returntype = Getattr(n, "type");
     String *return_type_normalized = normalizeTemplatedClassName(returntype);
@@ -780,7 +780,7 @@ public:
    * will vary if the variable has been renamed.
    * ------------------------------------------------------------ */
 
-  virtual int variableWrapper(Node *n) {
+  int variableWrapper(Node *n) override {
     char *name = GetChar(n, "feature:symname");
     String *iname = Getattr(n, "feature:enumvname");
     String *mname = mangleNameForCaml(iname);
@@ -876,7 +876,7 @@ public:
    * Overridden to set static_member_function 
    * ------------------------------------------------------------ */
 
-  virtual int staticmemberfunctionHandler(Node *n) {
+  int staticmemberfunctionHandler(Node *n) override {
     static_member_function = 1;
     Language::staticmemberfunctionHandler(n);
     static_member_function = 0;
@@ -891,7 +891,7 @@ public:
    * original if any exists.
    * ------------------------------------------------------------ */
 
-  virtual int constantWrapper(Node *n) {
+  int constantWrapper(Node *n) override {
     String *name = Getattr(n, "feature:symname");
     SwigType *type = Getattr(n, "type");
     String *value = Getattr(n, "value");
@@ -914,7 +914,7 @@ public:
     return SWIG_OK;
   }
 
-  int constructorHandler(Node *n) {
+  int constructorHandler(Node *n) override {
     int ret;
 
     in_constructor = 1;
@@ -928,7 +928,7 @@ public:
    * Turn on destructor flag to inform decisions in functionWrapper
    */
 
-  int destructorHandler(Node *n) {
+  int destructorHandler(Node *n) override {
     int ret;
 
     in_destructor = 1;
@@ -942,7 +942,7 @@ public:
    * Turn on constructor and copyconstructor flags for functionWrapper
    */
 
-  int copyconstructorHandler(Node *n) {
+  int copyconstructorHandler(Node *n) override {
     int ret;
 
     in_copyconst = 1;
@@ -995,7 +995,7 @@ public:
 
   /* We accept all chars in identifiers because we use strings to index
    * them. */
-  int validIdentifier(String *name) {
+  int validIdentifier(String *name) override {
     return Len(name) > 0 ? 1 : 0;
   }
 
@@ -1073,7 +1073,7 @@ public:
    * It allows me to give the Ocaml user introspection over their objects.
    */
 
-  int classHandler(Node *n) {
+  int classHandler(Node *n) override {
     String *name = Getattr(n, "name");
     classname = Getattr(n, "sym:name");
 
@@ -1228,7 +1228,7 @@ public:
 
   /* Benedikt Grundmann inspired --> Enum wrap styles */
 
-  int enumvalueDeclaration(Node *n) {
+  int enumvalueDeclaration(Node *n) override {
     String *name = Getattr(n, "name");
     String *symname = Getattr(n, "sym:name");
     SwigType *qtype = 0;
@@ -1269,7 +1269,7 @@ public:
    * The other thing that uglifies this function is the varying way that
    * typedef enum and enum are handled.  I need to produce consistent names,
    * which means looking up and registering by typedef and enum name. */
-  int enumDeclaration(Node *n) {
+  int enumDeclaration(Node *n) override {
     if (getCurrentClass() && (cplus_mode != PUBLIC))
       return SWIG_NOWRAP;
 
@@ -1353,7 +1353,7 @@ public:
    *
    * --------------------------------------------------------------- */
 
-  int classDirectorMethod(Node *n, Node *parent, String *super) {
+  int classDirectorMethod(Node *n, Node *parent, String *super) override {
     int is_void = 0;
     int is_pointer = 0;
     String *storage = Getattr(n, "storage");
@@ -1685,7 +1685,7 @@ public:
    * classDirectorConstructor()
    * ------------------------------------------------------------ */
 
-  int classDirectorConstructor(Node *n) {
+  int classDirectorConstructor(Node *n) override {
     Node *parent = Getattr(n, "parentNode");
     String *sub = NewString("");
     String *decl = Getattr(n, "decl");
@@ -1742,7 +1742,7 @@ public:
    * classDirectorDefaultConstructor()
    * ------------------------------------------------------------ */
 
-  int classDirectorDefaultConstructor(Node *n) {
+  int classDirectorDefaultConstructor(Node *n) override {
     String *classname;
     classname = Swig_class_name(n);
 
@@ -1767,14 +1767,14 @@ public:
     return Language::classDirectorDefaultConstructor(n);
   }
 
-  int classDirectorInit(Node *n) {
+  int classDirectorInit(Node *n) override {
     String *declaration = Swig_director_declaration(n);
     Printf(f_directors_h, "\n" "%s\n" "public:\n", declaration);
     Delete(declaration);
     return Language::classDirectorInit(n);
   }
 
-  int classDirectorEnd(Node *n) {
+  int classDirectorEnd(Node *n) override {
     Printf(f_directors_h, "};\n\n");
     return Language::classDirectorEnd(n);
   }
@@ -1798,7 +1798,7 @@ public:
    * Since I need these strings to be consistent, I must maintain a correct
    * association list between typedef and enum names.
    * --------------------------------------------------------------------- */
-  int typedefHandler(Node *n) {
+  int typedefHandler(Node *n) override {
     String *type = Getattr(n, "type");
     Node *enum_node = type ? Getattr(seen_enums, type) : 0;
     if (enum_node) {
@@ -1810,7 +1810,7 @@ public:
     return SWIG_OK;
   }
 
-  String *runtimeCode() {
+  String *runtimeCode() override {
     String *s = Swig_include_sys("ocamlrun.swg");
     if (!s) {
       Printf(stderr, "*** Unable to open 'ocamlrun.swg'\n");
@@ -1819,7 +1819,7 @@ public:
     return s;
   }
 
-  String *defaultExternalRuntimeFilename() {
+  String *defaultExternalRuntimeFilename() override {
     return NewString("swigocamlrun.h");
   }
 };

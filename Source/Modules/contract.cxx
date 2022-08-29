@@ -42,15 +42,15 @@ class Contracts:public Dispatcher {
 public:
   Hash *ContractSplit(Node *n);
   int emit_contract(Node *n, int method);
-  int cDeclaration(Node *n);
-  int constructorDeclaration(Node *n);
-  int externDeclaration(Node *n);
-  int extendDirective(Node *n);
-  int importDirective(Node *n);
-  int includeDirective(Node *n);
-  int namespaceDeclaration(Node *n);
-  int classDeclaration(Node *n);
-  virtual int top(Node *n);
+  int cDeclaration(Node *n) override;
+  int constructorDeclaration(Node *n) override;
+  int externDeclaration(Node *n) override;
+  int extendDirective(Node *n) override;
+  int importDirective(Node *n) override;
+  int includeDirective(Node *n) override;
+  int namespaceDeclaration(Node *n) override;
+  int classDeclaration(Node *n) override;
+  int top(Node *n) override;
 };
 
 static int Contract_Mode = 0;	/* contract option */

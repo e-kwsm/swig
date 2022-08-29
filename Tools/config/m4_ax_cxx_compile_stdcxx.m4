@@ -255,8 +255,8 @@ namespace cxx11
 
     struct Derived : public Base
     {
-      virtual ~Derived() override {}
-      virtual void f() override {}
+      ~Derived() override {}
+      void f() override {}
     };
 
   }

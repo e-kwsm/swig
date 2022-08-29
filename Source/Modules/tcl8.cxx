@@ -75,7 +75,7 @@ public:
    * TCL8::main()
    * ------------------------------------------------------------ */
 
-  virtual void main(int argc, char *argv[]) {
+  void main(int argc, char *argv[]) override {
 
      SWIG_library_directory("tcl");
 
@@ -129,7 +129,7 @@ public:
    * top()
    * ------------------------------------------------------------ */
 
-  virtual int top(Node *n) {
+  int top(Node *n) override {
 
     /* Initialize all of the output files */
     String *outfile = Getattr(n, "outfile");
@@ -257,7 +257,7 @@ public:
    * functionWrapper()
    * ------------------------------------------------------------ */
 
-  virtual int functionWrapper(Node *n) {
+  int functionWrapper(Node *n) override {
     String *name = Getattr(n, "name");	/* Like to get rid of this */
     String *iname = Getattr(n, "sym:name");
     SwigType *returntype = Getattr(n, "type");
@@ -548,7 +548,7 @@ public:
    * variableWrapper()
    * ------------------------------------------------------------ */
 
-  virtual int variableWrapper(Node *n) {
+  int variableWrapper(Node *n) override {
 
     String *name = Getattr(n, "name");
     String *iname = Getattr(n, "sym:name");
@@ -656,7 +656,7 @@ public:
    * constantWrapper()
    * ------------------------------------------------------------ */
 
-  virtual int constantWrapper(Node *n) {
+  int constantWrapper(Node *n) override {
     String *name = Getattr(n, "name");
     String *iname = Getattr(n, "sym:name");
     String *nsname = !namespace_option ? Copy(iname) : NewStringf("%s::%s", ns_name, iname);
@@ -697,7 +697,7 @@ public:
    * nativeWrapper()
    * ------------------------------------------------------------ */
 
-  virtual int nativeWrapper(Node *n) {
+  int nativeWrapper(Node *n) override {
     String *name = Getattr(n, "sym:name");
     String *funcname = Getattr(n, "wrap:name");
     if (!addSymbol(funcname, n))
@@ -712,7 +712,7 @@ public:
    * classHandler()
    * ------------------------------------------------------------ */
 
-  virtual int classHandler(Node *n) {
+  int classHandler(Node *n) override {
     static Hash *emitted = NewHash();
     String *mangled_classname = 0;
     SwigType *real_classname = 0;
@@ -963,7 +963,7 @@ public:
    * memberfunctionHandler()
    * ------------------------------------------------------------ */
 
-  virtual int memberfunctionHandler(Node *n) {
+  int memberfunctionHandler(Node *n) override {
     String *name = Getattr(n, "name");
     String *iname = GetChar(n, "sym:name");
 
@@ -1059,7 +1059,7 @@ public:
    * membervariableHandler()
    * ------------------------------------------------------------ */
 
-  virtual int membervariableHandler(Node *n) {
+  int membervariableHandler(Node *n) override {
     String *symname = Getattr(n, "sym:name");
     String *rname;
 
@@ -1091,7 +1091,7 @@ public:
    * constructorHandler()
    * ------------------------------------------------------------ */
 
-  virtual int constructorHandler(Node *n) {
+  int constructorHandler(Node *n) override {
     Language::constructorHandler(n);
 
     if (itcl) {
@@ -1190,7 +1190,7 @@ public:
    * destructorHandler()
    * ------------------------------------------------------------ */
 
-  virtual int destructorHandler(Node *n) {
+  int destructorHandler(Node *n) override {
     Language::destructorHandler(n);
     have_destructor = 1;
     destructor_action = Getattr(n, "wrap:action");
@@ -1201,7 +1201,7 @@ public:
    * validIdentifier()
    * ------------------------------------------------------------ */
 
-  virtual int validIdentifier(String *s) {
+  int validIdentifier(String *s) override {
     if (Strchr(s, ' '))
       return 0;
     return 1;
@@ -1250,7 +1250,7 @@ public:
     return Char(temp);
   }
 
-  String *runtimeCode() {
+  String *runtimeCode() override {
     String *s = NewString("");
     String *sincludes = Swig_include_sys("tclincludes.swg");
     if (!sincludes) {
@@ -1284,7 +1284,7 @@ public:
     return s;
   }
 
-  String *defaultExternalRuntimeFilename() {
+  String *defaultExternalRuntimeFilename() override {
     return NewString("swigtclrun.h");
   }
 };

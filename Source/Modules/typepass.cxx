@@ -415,7 +415,7 @@ class TypePass:private Dispatcher {
    * top()
    * ------------------------------------------------------------ */
 
-  virtual int top(Node *n) {
+  int top(Node *n) override {
     importmode = 0;
     module = Getattr(n, "module");
     inclass = 0;
@@ -434,7 +434,7 @@ class TypePass:private Dispatcher {
    * moduleDirective()
    * ------------------------------------------------------------ */
 
-  virtual int moduleDirective(Node *n) {
+  int moduleDirective(Node *n) override {
     if (!module) {
       module = n;
     }
@@ -445,7 +445,7 @@ class TypePass:private Dispatcher {
    * importDirective()
    * ------------------------------------------------------------ */
 
-  virtual int importDirective(Node *n) {
+  int importDirective(Node *n) override {
     String *oldmodule = module;
     int oldimport = importmode;
     importmode = 1;
@@ -462,13 +462,13 @@ class TypePass:private Dispatcher {
    * extendDirective()
    * ------------------------------------------------------------ */
 
-  virtual int includeDirective(Node *n) {
+  int includeDirective(Node *n) override {
     return emit_children(n);
   }
-  virtual int externDeclaration(Node *n) {
+  int externDeclaration(Node *n) override {
     return emit_children(n);
   }
-  virtual int extendDirective(Node *n) {
+  int extendDirective(Node *n) override {
     return emit_children(n);
   }
 
@@ -476,7 +476,7 @@ class TypePass:private Dispatcher {
    * classDeclaration()
    * ------------------------------------------------------------ */
 
-  virtual int classDeclaration(Node *n) {
+  int classDeclaration(Node *n) override {
     String *name = Getattr(n, "name");
     String *tdname = Getattr(n, "tdname");
     String *unnamed = Getattr(n, "unnamed");
@@ -630,7 +630,7 @@ class TypePass:private Dispatcher {
    * templateDeclaration()
    * ------------------------------------------------------------ */
 
-  virtual int templateDeclaration(Node *n) {
+  int templateDeclaration(Node *n) override {
     String *name = Getattr(n, "name");
     String *ttype = Getattr(n, "templatetype");
     if (Strcmp(ttype, "class") == 0) {
@@ -654,7 +654,7 @@ class TypePass:private Dispatcher {
    * lambdaDeclaration()
    * ------------------------------------------------------------ */
 
-  virtual int lambdaDeclaration(Node *) {
+  int lambdaDeclaration(Node *) override {
     return SWIG_OK;
   }
 
@@ -662,7 +662,7 @@ class TypePass:private Dispatcher {
    * classforwardDeclaration()
    * ------------------------------------------------------------ */
 
-  virtual int classforwardDeclaration(Node *n) {
+  int classforwardDeclaration(Node *n) override {
 
     /* Can't do inside a C struct because it breaks C nested structure wrapping */
     if ((!inclass) || (CPlusPlus)) {
@@ -676,7 +676,7 @@ class TypePass:private Dispatcher {
    * namespaceDeclaration()
    * ------------------------------------------------------------ */
 
-  virtual int namespaceDeclaration(Node *n) {
+  int namespaceDeclaration(Node *n) override {
     Symtab *symtab;
     String *name = Getattr(n, "name");
     String *alias = Getattr(n, "alias");
@@ -743,7 +743,7 @@ class TypePass:private Dispatcher {
    * cDeclaration()
    * ------------------------------------------------------------ */
 
-  virtual int cDeclaration(Node *n) {
+  int cDeclaration(Node *n) override {
     if (NoExcept) {
       Delattr(n, "throws");
     }
@@ -814,7 +814,7 @@ class TypePass:private Dispatcher {
    * constructorDeclaration()
    * ------------------------------------------------------------ */
 
-  virtual int constructorDeclaration(Node *n) {
+  int constructorDeclaration(Node *n) override {
     if (NoExcept) {
       Delattr(n, "throws");
     }
@@ -830,7 +830,7 @@ class TypePass:private Dispatcher {
    * destructorDeclaration()
    * ------------------------------------------------------------ */
 
-  virtual int destructorDeclaration(Node *) {
+  int destructorDeclaration(Node *) override {
     return SWIG_OK;
   }
 
@@ -838,7 +838,7 @@ class TypePass:private Dispatcher {
    * constantDirective()
    * ------------------------------------------------------------ */
 
-  virtual int constantDirective(Node *n) {
+  int constantDirective(Node *n) override {
     SwigType *ty = Getattr(n, "type");
     if (ty) {
       Setattr(n, "type", SwigType_typedef_qualified(ty));
@@ -851,7 +851,7 @@ class TypePass:private Dispatcher {
    * enumDeclaration()
    * ------------------------------------------------------------ */
 
-  virtual int enumDeclaration(Node *n) {
+  int enumDeclaration(Node *n) override {
     String *name = Getattr(n, "name");
 
     if (name) {
@@ -960,7 +960,7 @@ class TypePass:private Dispatcher {
    * enumvalueDeclaration()
    * ------------------------------------------------------------ */
 
-  virtual int enumvalueDeclaration(Node *n) {
+  int enumvalueDeclaration(Node *n) override {
     String *name = Getattr(n, "name");
     String *value = Getattr(n, "value");
     String *scopedenum = Getattr(parentNode(n), "scopedenum");
@@ -999,7 +999,7 @@ class TypePass:private Dispatcher {
    * enumforwardDeclaration()
    * ------------------------------------------------------------ */
 
-  virtual int enumforwardDeclaration(Node *n) {
+  int enumforwardDeclaration(Node *n) override {
 
     // Use enumDeclaration() to do all the hard work.
     // Note that no children can be emitted in a forward declaration as there aren't any.
@@ -1054,7 +1054,7 @@ class TypePass:private Dispatcher {
    * usingDeclaration()
    * ------------------------------------------------------------ */
 
-  virtual int usingDeclaration(Node *n) {
+  int usingDeclaration(Node *n) override {
     if (Getattr(n, "namespace")) {
       /* using namespace id */
 
@@ -1114,7 +1114,7 @@ class TypePass:private Dispatcher {
    * typemapDirective()
    * ------------------------------------------------------------ */
 
-  virtual int typemapDirective(Node *n) {
+  int typemapDirective(Node *n) override {
     if (inclass || nsname) {
       Node *items = firstChild(n);
       while (items) {
@@ -1133,7 +1133,7 @@ class TypePass:private Dispatcher {
    * typemapcopyDirective()
    * ------------------------------------------------------------ */
 
-  virtual int typemapcopyDirective(Node *n) {
+  int typemapcopyDirective(Node *n) override {
     if (inclass || nsname) {
       Node *items = firstChild(n);
       ParmList *pattern = Getattr(n, "pattern");
@@ -1151,7 +1151,7 @@ class TypePass:private Dispatcher {
    * applyDirective()
    * ------------------------------------------------------------ */
 
-  virtual int applyDirective(Node *n) {
+  int applyDirective(Node *n) override {
     if (inclass || nsname) {
       ParmList *pattern = Getattr(n, "pattern");
       normalize_later(pattern);
@@ -1169,7 +1169,7 @@ class TypePass:private Dispatcher {
    * clearDirective()
    * ------------------------------------------------------------ */
 
-  virtual int clearDirective(Node *n) {
+  int clearDirective(Node *n) override {
     if (inclass || nsname) {
       Node *p;
       for (p = firstChild(n); p; p = nextSibling(p)) {

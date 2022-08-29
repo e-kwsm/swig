@@ -33,7 +33,7 @@ public:
   ~XML() {
   }
 
-  virtual void main(int argc, char *argv[]) {
+  virtual void main(int argc, char *argv[]) override {
     for (int iX = 0; iX < argc; iX++) {
       if (strcmp(argv[iX], "-help") == 0) {
 	fputs(usage, stdout);
@@ -50,7 +50,7 @@ public:
 
   /* Top of the parse tree */
 
-  virtual int top(Node *n) {
+  int top(Node *n) override {
     if (out == 0) {
       String *outfile = Getattr(n, "outfile");
       String *ext = Swig_file_extension(outfile);

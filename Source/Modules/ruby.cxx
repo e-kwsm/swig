@@ -855,7 +855,7 @@ public:
    * Parse command line options and initializes variables.
    * --------------------------------------------------------------------- */
   
-  virtual void main(int argc, char *argv[]) {
+  void main(int argc, char *argv[]) override {
 
     int autorename = 0;
 
@@ -1002,7 +1002,7 @@ public:
    * top()
    * --------------------------------------------------------------------- */
 
-  virtual int top(Node *n) {
+  int top(Node *n) override {
 
     String *mod_docstring = NULL;
 
@@ -1214,7 +1214,7 @@ public:
    * importDirective()
    * ----------------------------------------------------------------------------- */
 
-  virtual int importDirective(Node *n) {
+  int importDirective(Node *n) override {
     String *modname = Getattr(n, "module");
     if (modname) {
       if (prefix) {
@@ -1294,7 +1294,7 @@ public:
   /* --------------------------------------------------------------------------
    * nativeWrapper()
    * -------------------------------------------------------------------------- */
-  virtual int nativeWrapper(Node *n) {
+  int nativeWrapper(Node *n) override {
     String *funcname = Getattr(n, "wrap:name");
     Swig_warning(WARN_LANG_NATIVE_UNIMPL, input_file, line_number, "Adding native function %s not supported (ignored).\n", funcname);
     return SWIG_NOWRAP;
@@ -1643,7 +1643,7 @@ public:
    * (e.g. Thread#critical=).
    * --------------------------------------------------------------------- */
 
-  virtual int validIdentifier(String *s) {
+  int validIdentifier(String *s) override {
     char *c = Char(s);
     while (*c) {
       if (!(isalnum(*c) || (*c == '_') || (*c == '?') || (*c == '!') || (*c == '=')))
@@ -1659,7 +1659,7 @@ public:
    * Create a function declaration and register it with the interpreter.
    * --------------------------------------------------------------------- */
 
-  virtual int functionWrapper(Node *n) {
+  int functionWrapper(Node *n) override {
 
     String *nodeType;
     bool destructor;
@@ -2156,7 +2156,7 @@ public:
    * variableWrapper()
    * --------------------------------------------------------------------- */
 
-  virtual int variableWrapper(Node *n) {
+  int variableWrapper(Node *n) override {
     String* docs = docstring(n, AUTODOC_GETTER);
     Printf(f_wrappers, "%s", docs);
     Delete(docs);
@@ -2312,7 +2312,7 @@ public:
    * constantWrapper()
    * --------------------------------------------------------------------- */
 
-  virtual int constantWrapper(Node *n) {
+  int constantWrapper(Node *n) override {
     Swig_require("constantWrapper", n, "*sym:name", "type", "value", NIL);
 
     char *iname = GetChar(n, "sym:name");
@@ -2367,7 +2367,7 @@ public:
    * other modules referenced by %import.
    * ----------------------------------------------------------------------------- */
 
-  virtual int classDeclaration(Node *n) {
+  int classDeclaration(Node *n) override {
     if (!Getattr(n, "feature:onlychildren")) {
       String *name = Getattr(n, "name");
       String *symname = Getattr(n, "sym:name");
@@ -2507,7 +2507,7 @@ public:
    * classHandler()
    * ---------------------------------------------------------------------- */
 
-  virtual int classHandler(Node *n) {
+  int classHandler(Node *n) override {
     String* docs = docstring(n, AUTODOC_CLASS);
     Printf(f_wrappers, "%s", docs);
     Delete(docs);
@@ -2604,7 +2604,7 @@ public:
    *
    * --------------------------------------------------------------------- */
 
-  virtual int memberfunctionHandler(Node *n) {
+  int memberfunctionHandler(Node *n) override {
     current = MEMBER_FUNC;
 
     String* docs = docstring(n, AUTODOC_METHOD);
@@ -2642,7 +2642,7 @@ public:
     Delete(name);
   }
 
-  virtual int constructorHandler(Node *n) {
+  int constructorHandler(Node *n) override {
     int use_director = Swig_directorclass(n);
     if (use_director) {
       set_director_ctor_code(n);
@@ -2696,7 +2696,7 @@ public:
     return SWIG_OK;
   }
 
-  virtual int copyconstructorHandler(Node *n) {
+  int copyconstructorHandler(Node *n) override {
     int use_director = Swig_directorclass(n);
     if (use_director) {
       set_director_ctor_code(n);
@@ -2714,7 +2714,7 @@ public:
    * destructorHandler()
    * -------------------------------------------------------------------- */
 
-  virtual int destructorHandler(Node *n) {
+  int destructorHandler(Node *n) override {
 
     /* Do no spit free function if user defined his own for this class */
     Node *pn = Swig_methodclass(n);
@@ -2778,7 +2778,7 @@ public:
    * This creates a pair of functions to set/get the variable of a member.
    * -------------------------------------------------------------------- */
 
-  virtual int membervariableHandler(Node *n) {
+  int membervariableHandler(Node *n) override {
     String* docs = docstring(n, AUTODOC_GETTER);
     Printf(f_wrappers, "%s", docs);
     Delete(docs);
@@ -2801,7 +2801,7 @@ public:
    * Wrap a static C++ function
    * ---------------------------------------------------------------------- */
 
-  virtual int staticmemberfunctionHandler(Node *n) {
+  int staticmemberfunctionHandler(Node *n) override {
     String* docs = docstring(n, AUTODOC_STATICFUNC);
     Printf(f_wrappers, "%s", docs);
     Delete(docs);
@@ -2818,7 +2818,7 @@ public:
    * Create a C++ constant
    * --------------------------------------------------------------------- */
 
-  virtual int memberconstantHandler(Node *n) {
+  int memberconstantHandler(Node *n) override {
     String* docs = docstring(n, AUTODOC_STATICFUNC);
     Printf(f_wrappers, "%s", docs);
     Delete(docs);
@@ -2833,7 +2833,7 @@ public:
    * staticmembervariableHandler()
    * --------------------------------------------------------------------- */
 
-  virtual int staticmembervariableHandler(Node *n) {
+  int staticmembervariableHandler(Node *n) override {
     String* docs = docstring(n, AUTODOC_GETTER);
     Printf(f_wrappers, "%s", docs);
     Delete(docs);
@@ -2851,11 +2851,11 @@ public:
   }
 
   /* C++ director class generation */
-  virtual int classDirector(Node *n) {
+  int classDirector(Node *n) override {
     return Language::classDirector(n);
   }
 
-  virtual int classDirectorInit(Node *n) {
+  int classDirectorInit(Node *n) override {
     String *declaration;
     declaration = Swig_director_declaration(n);
     Printf(f_directors_h, "\n");
@@ -2865,7 +2865,7 @@ public:
     return Language::classDirectorInit(n);
   }
 
-  virtual int classDirectorEnd(Node *n) {
+  int classDirectorEnd(Node *n) override {
     Printf(f_directors_h, "};\n\n");
     return Language::classDirectorEnd(n);
   }
@@ -2874,7 +2874,7 @@ public:
    * classDirectorConstructor()
    * ------------------------------------------------------------ */
 
-  virtual int classDirectorConstructor(Node *n) {
+  int classDirectorConstructor(Node *n) override {
     Node *parent = Getattr(n, "parentNode");
     String *sub = NewString("");
     String *decl = Getattr(n, "decl");
@@ -2925,7 +2925,7 @@ public:
    * classDirectorDefaultConstructor()
    * ------------------------------------------------------------ */
 
-  virtual int classDirectorDefaultConstructor(Node *n) {
+  int classDirectorDefaultConstructor(Node *n) override {
     String *classname;
     Wrapper *w;
     classname = Swig_class_name(n);
@@ -3031,7 +3031,7 @@ public:
     DelWrapper(rescue);
   }
 
-  virtual int classDirectorMethod(Node *n, Node *parent, String *super) {
+  int classDirectorMethod(Node *n, Node *parent, String *super) override {
     int is_void = 0;
     int is_pointer = 0;
     String *decl = Getattr(n, "decl");
@@ -3393,19 +3393,19 @@ public:
     return status;
   }
 
-  virtual int classDirectorConstructors(Node *n) {
+  int classDirectorConstructors(Node *n) override {
     return Language::classDirectorConstructors(n);
   }
 
-  virtual int classDirectorMethods(Node *n) {
+  int classDirectorMethods(Node *n) override {
     return Language::classDirectorMethods(n);
   }
 
-  virtual int classDirectorDisown(Node *n) {
+  int classDirectorDisown(Node *n) override {
     return Language::classDirectorDisown(n);
   }
 
-  String *runtimeCode() {
+  String *runtimeCode() override {
     String *s = NewString("");
     String *shead = Swig_include_sys("rubyhead.swg");
     if (!shead) {
@@ -3445,7 +3445,7 @@ public:
     return s;
   }
 
-  String *defaultExternalRuntimeFilename() {
+  String *defaultExternalRuntimeFilename() override {
     return NewString("swigrubyrun.h");
   }
 
@@ -3453,7 +3453,7 @@ public:
    * kwargsSupport()
    *--------------------------------------------------------------------*/
 
-  bool kwargsSupport() const {
+  bool kwargsSupport() const override {
     // kwargs support isn't actually implemented, but changing to return false may break something now as it turns on compactdefaultargs
     return true;
   }

@@ -114,8 +114,8 @@ protected:
 class Language:public Dispatcher {
 public:
   Language();
-  virtual ~Language();
-  virtual int emit_one(Node *n);
+  ~Language() override;
+  int emit_one(Node *n) override;
 
   String *directorClassName(Node *n);
 
@@ -125,40 +125,40 @@ public:
 
   /* Top of the parse tree */
 
-  virtual int top(Node *n);
+  int top(Node *n) override;
 
   /* SWIG directives */
 
 
-  virtual int applyDirective(Node *n);
-  virtual int clearDirective(Node *n);
-  virtual int constantDirective(Node *n);
-  virtual int extendDirective(Node *n);
-  virtual int fragmentDirective(Node *n);
-  virtual int importDirective(Node *n);
-  virtual int includeDirective(Node *n);
-  virtual int insertDirective(Node *n);
-  virtual int moduleDirective(Node *n);
-  virtual int nativeDirective(Node *n);
-  virtual int pragmaDirective(Node *n);
-  virtual int typemapDirective(Node *n);
-  virtual int typemapcopyDirective(Node *n);
-  virtual int typesDirective(Node *n);
+  int applyDirective(Node *n) override;
+  int clearDirective(Node *n) override;
+  int constantDirective(Node *n) override;
+  int extendDirective(Node *n) override;
+  int fragmentDirective(Node *n) override;
+  int importDirective(Node *n) override;
+  int includeDirective(Node *n) override;
+  int insertDirective(Node *n) override;
+  int moduleDirective(Node *n) override;
+  int nativeDirective(Node *n) override;
+  int pragmaDirective(Node *n) override;
+  int typemapDirective(Node *n) override;
+  int typemapcopyDirective(Node *n) override;
+  int typesDirective(Node *n) override;
 
   /* C/C++ parsing */
 
-  virtual int cDeclaration(Node *n);
-  virtual int externDeclaration(Node *n);
-  virtual int enumDeclaration(Node *n);
-  virtual int enumvalueDeclaration(Node *n);
-  virtual int enumforwardDeclaration(Node *n);
-  virtual int classDeclaration(Node *n);
-  virtual int classforwardDeclaration(Node *n);
-  virtual int constructorDeclaration(Node *n);
-  virtual int destructorDeclaration(Node *n);
-  virtual int accessDeclaration(Node *n);
-  virtual int namespaceDeclaration(Node *n);
-  virtual int usingDeclaration(Node *n);
+  int cDeclaration(Node *n) override;
+  int externDeclaration(Node *n) override;
+  int enumDeclaration(Node *n) override;
+  int enumvalueDeclaration(Node *n) override;
+  int enumforwardDeclaration(Node *n) override;
+  int classDeclaration(Node *n) override;
+  int classforwardDeclaration(Node *n) override;
+  int constructorDeclaration(Node *n) override;
+  int destructorDeclaration(Node *n) override;
+  int accessDeclaration(Node *n) override;
+  int namespaceDeclaration(Node *n) override;
+  int usingDeclaration(Node *n) override;
 
   /* Function handlers */
 

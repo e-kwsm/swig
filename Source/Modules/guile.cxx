@@ -118,7 +118,7 @@ public:
    * main()
    * ------------------------------------------------------------ */
 
-  virtual void main(int argc, char *argv[]) {
+  void main(int argc, char *argv[]) override {
     int i;
 
      SWIG_library_directory("guile");
@@ -279,7 +279,7 @@ public:
    * top()
    * ------------------------------------------------------------ */
 
-  virtual int top(Node *n) {
+  int top(Node *n) override {
     /* Initialize all of the output files */
     String *outfile = Getattr(n, "outfile");
 
@@ -606,7 +606,7 @@ public:
    * Create a function declaration and register it with the interpreter.
    * ------------------------------------------------------------ */
 
-  virtual int functionWrapper(Node *n) {
+  int functionWrapper(Node *n) override {
     String *iname = Getattr(n, "sym:name");
     SwigType *returntype = Getattr(n, "type");
     ParmList *l = Getattr(n, "parms");
@@ -1070,7 +1070,7 @@ public:
    * value.
    * ------------------------------------------------------------ */
 
-  virtual int variableWrapper(Node *n) {
+  int variableWrapper(Node *n) override {
 
     char *name = GetChar(n, "name");
     char *iname = GetChar(n, "sym:name");
@@ -1263,7 +1263,7 @@ public:
    * We create a read-only variable.
    * ------------------------------------------------------------ */
 
-  virtual int constantWrapper(Node *n) {
+  int constantWrapper(Node *n) override {
     char *name = GetChar(n, "name");
     char *iname = GetChar(n, "sym:name");
     SwigType *type = Getattr(n, "type");
@@ -1335,7 +1335,7 @@ public:
   /* ------------------------------------------------------------
    * classDeclaration()
    * ------------------------------------------------------------ */
-  virtual int classDeclaration(Node *n) {
+  int classDeclaration(Node *n) override {
     String *class_name = NewStringf("<%s>", Getattr(n, "sym:name"));
     Setattr(n, "guile:goopsclassname", class_name);
     return Language::classDeclaration(n);
@@ -1344,7 +1344,7 @@ public:
   /* ------------------------------------------------------------
    * classHandler()
    * ------------------------------------------------------------ */
-  virtual int classHandler(Node *n) {
+  int classHandler(Node *n) override {
     /* Create new strings for building up a wrapper function */
     have_constructor = 0;
 
@@ -1450,7 +1450,7 @@ public:
   /* ------------------------------------------------------------
    * memberfunctionHandler()
    * ------------------------------------------------------------ */
-  int memberfunctionHandler(Node *n) {
+  int memberfunctionHandler(Node *n) override {
     String *iname = Getattr(n, "sym:name");
     String *proc = NewString(iname);
     Replaceall(proc, "_", "-");
@@ -1466,7 +1466,7 @@ public:
   /* ------------------------------------------------------------
    * membervariableHandler()
    * ------------------------------------------------------------ */
-  int membervariableHandler(Node *n) {
+  int membervariableHandler(Node *n) override {
     String *iname = Getattr(n, "sym:name");
 
     if (emit_setters) {
@@ -1513,7 +1513,7 @@ public:
   /* ------------------------------------------------------------
    * constructorHandler()
    * ------------------------------------------------------------ */
-  int constructorHandler(Node *n) {
+  int constructorHandler(Node *n) override {
     Language::constructorHandler(n);
     have_constructor = 1;
     return SWIG_OK;
@@ -1522,7 +1522,7 @@ public:
   /* ------------------------------------------------------------
    * destructorHandler()
    * ------------------------------------------------------------ */
-  virtual int destructorHandler(Node *n) {
+  int destructorHandler(Node *n) override {
     exporting_destructor = true;
     Language::destructorHandler(n);
     exporting_destructor = false;
@@ -1533,7 +1533,7 @@ public:
    * pragmaDirective()
    * ------------------------------------------------------------ */
 
-  virtual int pragmaDirective(Node *n) {
+  int pragmaDirective(Node *n) override {
     if (!ImportMode) {
       String *lang = Getattr(n, "lang");
       String *cmd = Getattr(n, "name");
@@ -1593,7 +1593,7 @@ public:
    * validIdentifier()
    * ------------------------------------------------------------ */
 
-  virtual int validIdentifier(String *s) {
+  int validIdentifier(String *s) override {
     char *c = Char(s);
     /* Check whether we have an R5RS identifier.  Guile supports a
        superset of R5RS identifiers, but it's probably a bad idea to use
@@ -1624,7 +1624,7 @@ public:
     return 1;
   }
 
-  String *runtimeCode() {
+  String *runtimeCode() override {
     String *s;
     s = Swig_include_sys("guile_scm_run.swg");
     if (!s) {
@@ -1634,7 +1634,7 @@ public:
     return s;
   }
 
-  String *defaultExternalRuntimeFilename() {
+  String *defaultExternalRuntimeFilename() override {
     return NewString("swigguilerun.h");
   }
 };

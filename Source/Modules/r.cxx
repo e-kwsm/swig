@@ -199,25 +199,25 @@ class R : public Language {
 public:
   R();
   void registerClass(Node *n);
-  void main(int argc, char *argv[]);
-  int top(Node *n);
+  void main(int argc, char *argv[]) override;
+  int top(Node *n) override;
 
   void dispatchFunction(Node *n);
-  int functionWrapper(Node *n);
-  int constantWrapper(Node *n);
-  int variableWrapper(Node *n);
+  int functionWrapper(Node *n) override;
+  int constantWrapper(Node *n) override;
+  int variableWrapper(Node *n) override;
 
-  int classDeclaration(Node *n);
-  int enumDeclaration(Node *n);
+  int classDeclaration(Node *n) override;
+  int enumDeclaration(Node *n) override;
   String *enumValue(Node *n);
-  virtual int enumvalueDeclaration(Node *n);
-  int membervariableHandler(Node *n);
+  int enumvalueDeclaration(Node *n) override;
+  int membervariableHandler(Node *n) override;
 
-  int typedefHandler(Node *n);
+  int typedefHandler(Node *n) override;
 
   static List *Swig_overload_rank(Node *n, bool script_lang_wrapping);
 
-  int memberfunctionHandler(Node *n) {
+  int memberfunctionHandler(Node *n) override {
     if (debugMode)
       Printf(stdout, "<memberfunctionHandler> %s %s\n",
 	     Getattr(n, "name"),
@@ -231,7 +231,7 @@ public:
 
   /* Grab the name of the current class being processed so that we can
      deal with members of that class. */
-  int classHandler(Node *n){
+  int classHandler(Node *n) override{
     if(!ClassMemberTable)
       ClassMemberTable = NewHash();
 
@@ -242,8 +242,8 @@ public:
     return status;
   }
 
-  String *runtimeCode();
-  void replaceSpecialVariables(String *method, String *tm, Parm *parm);
+  String *runtimeCode() override;
+  void replaceSpecialVariables(String *method, String *tm, Parm *parm) override;
 
 protected:
   int addRegistrationRoutine(String *rname, int nargs);

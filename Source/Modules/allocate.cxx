@@ -724,7 +724,7 @@ Allocate():
   inclass(NULL), extendmode(0) {
   }
 
-  virtual int top(Node *n) {
+  int top(Node *n) override {
     cplus_mode = PUBLIC;
     inclass = 0;
     extendmode = 0;
@@ -732,26 +732,26 @@ Allocate():
     return SWIG_OK;
   }
 
-  virtual int importDirective(Node *n) {
+  int importDirective(Node *n) override {
     return emit_children(n);
   }
-  virtual int includeDirective(Node *n) {
+  int includeDirective(Node *n) override {
     return emit_children(n);
   }
-  virtual int externDeclaration(Node *n) {
+  int externDeclaration(Node *n) override {
     return emit_children(n);
   }
-  virtual int namespaceDeclaration(Node *n) {
+  int namespaceDeclaration(Node *n) override {
     return emit_children(n);
   }
-  virtual int extendDirective(Node *n) {
+  int extendDirective(Node *n) override {
     extendmode = 1;
     emit_children(n);
     extendmode = 0;
     return SWIG_OK;
   }
 
-  virtual int classDeclaration(Node *n) {
+  int classDeclaration(Node *n) override {
     Symtab *symtab = Swig_symbol_current();
     Swig_symbol_setscope(Getattr(n, "symtab"));
     save_value<Node*> oldInclass(inclass);
@@ -998,12 +998,12 @@ Allocate():
     return SWIG_OK;
   }
 
-  virtual int accessDeclaration(Node *n) {
+  int accessDeclaration(Node *n) override {
     cplus_mode = accessModeFromString(Getattr(n, "kind"));
     return SWIG_OK;
   }
 
-  virtual int usingDeclaration(Node *n) {
+  int usingDeclaration(Node *n) override {
 
     if (GetFlag(n, "feature:ignore"))
       return SWIG_OK;
@@ -1171,7 +1171,7 @@ Allocate():
     return SWIG_OK;
   }
 
-  virtual int cDeclaration(Node *n) {
+  int cDeclaration(Node *n) override {
 
     process_exceptions(n);
 
@@ -1287,7 +1287,7 @@ Allocate():
     return SWIG_OK;
   }
 
-  virtual int templateDeclaration(Node *n) {
+  int templateDeclaration(Node *n) override {
     String *ttype = Getattr(n, "templatetype");
     if (Equal(ttype, "constructor")) {
       // Templated constructors need to be taken account of even if not instantiated with %template
@@ -1296,7 +1296,7 @@ Allocate():
     return SWIG_OK;
   }
 
-  virtual int constructorDeclaration(Node *n) {
+  int constructorDeclaration(Node *n) override {
     if (!inclass)
       return SWIG_OK;
 
@@ -1397,7 +1397,7 @@ Allocate():
     return SWIG_OK;
   }
 
-  virtual int destructorDeclaration(Node *n) {
+  int destructorDeclaration(Node *n) override {
     (void) n;
     if (!inclass)
       return SWIG_OK;
