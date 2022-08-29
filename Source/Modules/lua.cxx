@@ -206,7 +206,7 @@ public:
    *
    * Parse command line options and initializes variables.
    * --------------------------------------------------------------------- */
-  virtual void main(int argc, char *argv[]) {
+  void main(int argc, char *argv[]) override {
 
     /* Set location of SWIG library */
     SWIG_library_directory("lua");
@@ -271,7 +271,7 @@ public:
    * top()
    * --------------------------------------------------------------------- */
 
-  virtual int top(Node *n) {
+  int top(Node *n) override {
     /* Get the module name */
     module = Getattr(n, "name");
 
@@ -408,7 +408,7 @@ public:
    * importDirective()
    * ------------------------------------------------------------ */
 
-  virtual int importDirective(Node *n) {
+  int importDirective(Node *n) override {
     return Language::importDirective(n);
   }
 
@@ -417,7 +417,7 @@ public:
    * It copies sym:name to lua:name to preserve its original value
    * ------------------------------------------------------------ */
 
-  virtual int cDeclaration(Node *n) {
+  int cDeclaration(Node *n) override {
     // class 'Language' is messing with symname in a really heavy way.
     // Although documentation states that sym:name is a name in
     // the target language space, it is not true. sym:name and
@@ -432,11 +432,11 @@ public:
       Setattr(n, "lua:name", symname);
     return Language::cDeclaration(n);
   }
-  virtual int constructorDeclaration(Node *n) {
+  int constructorDeclaration(Node *n) override {
     Setattr(n, "lua:name", Getattr(n, "sym:name"));
     return Language::constructorDeclaration(n);
   }
-  virtual int destructorDeclaration(Node *n) {
+  int destructorDeclaration(Node *n) override {
     Setattr(n, "lua:name", Getattr(n, "sym:name"));
     return Language::destructorDeclaration(n);
   }
@@ -517,7 +517,7 @@ public:
     }
   }
 
-  virtual int functionWrapper(Node *n) {
+  int functionWrapper(Node *n) override {
     REPORT("functionWrapper", n);
 
     String *name = Getattr(n, "name");
@@ -1054,7 +1054,7 @@ public:
    * variableWrapper()
    * ------------------------------------------------------------ */
 
-  virtual int variableWrapper(Node *n) {
+  int variableWrapper(Node *n) override {
     /* NEW LANGUAGE NOTE:***********************************************
        Language::variableWrapper(n) will generate two wrapper fns
        Foo_get & Foo_set by calling functionWrapper()
@@ -1105,7 +1105,7 @@ public:
    * constantWrapper()
    * ------------------------------------------------------------ */
 
-  virtual int constantWrapper(Node *n) {
+  int constantWrapper(Node *n) override {
     REPORT("constantWrapper", n);
     String *name = Getattr(n, "name");
     String *iname = Getattr(n, "sym:name");
@@ -1201,7 +1201,7 @@ public:
    * nativeWrapper()
    * ------------------------------------------------------------ */
 
-  virtual int nativeWrapper(Node *n) {
+  int nativeWrapper(Node *n) override {
     //    REPORT("nativeWrapper", n);
     String *symname = Getattr(n, "sym:name");
     String *wrapname = Getattr(n, "wrap:name");
@@ -1219,7 +1219,7 @@ public:
    * enumDeclaration()
    * ------------------------------------------------------------ */
 
-  virtual int enumDeclaration(Node *n) {
+  int enumDeclaration(Node *n) override {
     if (getCurrentClass() && (cplus_mode != PUBLIC))
       return SWIG_NOWRAP;
 
@@ -1245,7 +1245,7 @@ public:
    * enumvalueDeclaration()
    * ------------------------------------------------------------ */
 
-  virtual int enumvalueDeclaration(Node *n) {
+  int enumvalueDeclaration(Node *n) override {
     if (getCurrentClass() && (cplus_mode != PUBLIC))
       return SWIG_NOWRAP;
 
@@ -1281,7 +1281,7 @@ public:
    * classDeclaration()
    * ------------------------------------------------------------ */
 
-  virtual int classDeclaration(Node *n) {
+  int classDeclaration(Node *n) override {
     return Language::classDeclaration(n);
   }
 
@@ -1308,7 +1308,7 @@ public:
    * classHandler()
    * ------------------------------------------------------------ */
 
-  virtual int classHandler(Node *n) {
+  int classHandler(Node *n) override {
     // REPORT("classHandler", n);
 
     String *mangled_full_proxy_class_name = 0;
@@ -1681,7 +1681,7 @@ public:
    * memberfunctionHandler()
    * ------------------------------------------------------------ */
 
-  virtual int memberfunctionHandler(Node *n) {
+  int memberfunctionHandler(Node *n) override {
     String *symname = GetChar(n, "sym:name");
     // Printf(stdout,"memberfunctionHandler %s %s\n",name,iname);
 
@@ -1706,7 +1706,7 @@ public:
    * membervariableHandler()
    * ------------------------------------------------------------ */
 
-  virtual int membervariableHandler(Node *n) {
+  int membervariableHandler(Node *n) override {
     //    REPORT("membervariableHandler",n);
     current[MEMBER_VAR] = true;
     Language::membervariableHandler(n);
@@ -1721,7 +1721,7 @@ public:
    * Method for adding C++ member constructor
    * ------------------------------------------------------------ */
 
-  virtual int constructorHandler(Node *n) {
+  int constructorHandler(Node *n) override {
     //    REPORT("constructorHandler", n);
     current[CONSTRUCTOR] = true;
     Language::constructorHandler(n);
@@ -1735,7 +1735,7 @@ public:
    * destructorHandler()
    * ------------------------------------------------------------ */
 
-  virtual int destructorHandler(Node *n) {
+  int destructorHandler(Node *n) override {
     REPORT("destructorHandler", n);
     current[DESTRUCTOR] = true;
     Language::destructorHandler(n);
@@ -1754,7 +1754,7 @@ public:
    * 3. During class parsing from staticmemberfunctionHandler
    * ---------------------------------------------------------------------- */
 
-  virtual int globalfunctionHandler(Node *n) {
+  int globalfunctionHandler(Node *n) override {
     bool oldVal = current[NO_CPP];
     if (!current[STATIC_FUNC])  // If static function, don't switch to NO_CPP
       current[NO_CPP] = true;
@@ -1772,7 +1772,7 @@ public:
    * Sets "current" array correctly
    * ---------------------------------------------------------------------- */
 
-  virtual int globalvariableHandler(Node *n) {
+  int globalvariableHandler(Node *n) override {
     bool oldVal = current[NO_CPP];
     current[GLOBAL_VAR] = true;
     current[NO_CPP] = true;
@@ -1791,7 +1791,7 @@ public:
    * Wrap a static C++ function
    * ---------------------------------------------------------------------- */
 
-  virtual int staticmemberfunctionHandler(Node *n) {
+  int staticmemberfunctionHandler(Node *n) override {
     REPORT("staticmemberfunctionHandler", n);
     current[STATIC_FUNC] = true;
 
@@ -1821,7 +1821,7 @@ public:
    * Create a C++ constant
    * ------------------------------------------------------------ */
 
-  virtual int memberconstantHandler(Node *n) {
+  int memberconstantHandler(Node *n) override {
     REPORT("memberconstantHandler", n);
     int result = Language::memberconstantHandler(n);
 
@@ -1832,7 +1832,7 @@ public:
    * staticmembervariableHandler()
    * --------------------------------------------------------------------- */
 
-  virtual int staticmembervariableHandler(Node *n) {
+  int staticmembervariableHandler(Node *n) override {
     REPORT("staticmembervariableHandler", n);
     current[STATIC_VAR] = true;
     // String *symname = Getattr(n, "sym:name");
@@ -1877,7 +1877,7 @@ public:
      String *defaultExternalRuntimeFilename() // returns the default filename
      I am writing a generic solution, even though SWIG-Lua only has one file right now...
    */
-  String *runtimeCode() {
+  String *runtimeCode() override {
     String *s = NewString("");
     const char *filenames[] = {"luarun.swg", 0};  // must be 0 terminated
 
@@ -1897,7 +1897,7 @@ public:
     return s;
   }
 
-  String *defaultExternalRuntimeFilename() {
+  String *defaultExternalRuntimeFilename() override {
     return NewString("swigluarun.h");
   }
 
@@ -2453,7 +2453,7 @@ public:
    * Initialize the director class declaration.
    * ------------------------------------------------------------ */
 
-  int classDirectorInit(Node *n) {
+  int classDirectorInit(Node *n) override {
     String *declaration = Swig_director_declaration(n);
     Printf(f_directors_h, "\n");
     Printf(f_directors_h, "%s\n", declaration);
@@ -2478,7 +2478,7 @@ public:
    * Complete the director class declaration.
    * ------------------------------------------------------------ */
 
-  int classDirectorEnd(Node *n) {
+  int classDirectorEnd(Node *n) override {
     String *classname = Swig_class_name(n);
 
     if (dirprot_mode()) {
@@ -2524,7 +2524,7 @@ public:
    * Emit a director constructor.
    * ------------------------------------------------------------ */
 
-  int classDirectorConstructor(Node *n) {
+  int classDirectorConstructor(Node *n) override {
     Node *parent = Getattr(n, "parentNode");
     String *sub = NewString("");
     String *decl = Getattr(n, "decl");
@@ -2579,7 +2579,7 @@ public:
    * Emit a director default constructor.
    * ------------------------------------------------------------ */
 
-  int classDirectorDefaultConstructor(Node *n) {
+  int classDirectorDefaultConstructor(Node *n) override {
     Node *parent = Swig_methodclass(n);
     String *classname = directorClassName(parent);
 
@@ -2605,7 +2605,7 @@ public:
    * underlying Lua object.
    * ------------------------------------------------------------ */
 
-  int classDirectorMethod(Node *n, Node *parent, String *super) {
+  int classDirectorMethod(Node *n, Node *parent, String *super) override {
     int is_void = 0;
     int is_pointer = 0;
     String *decl = Getattr(n, "decl");
@@ -2914,7 +2914,7 @@ public:
    * classDirectorMethods()
    * ------------------------------------------------------------ */
 
-  int classDirectorMethods(Node *n) {
+  int classDirectorMethods(Node *n) override {
     return Language::classDirectorMethods(n);
   }
 
@@ -2922,7 +2922,7 @@ public:
    * classDirectorDisown()
    * ------------------------------------------------------------ */
 
-  int classDirectorDisown(Node *n) {
+  int classDirectorDisown(Node *n) override {
     (void)n;
     return SWIG_OK;
   }
@@ -2931,7 +2931,7 @@ public:
    * nestedClassesSupport()
    * ------------------------------------------------------------ */
 
-  NestedClassSupport nestedClassesSupport() const {
+  NestedClassSupport nestedClassesSupport() const override {
     return NCS_Full;
   }
 };

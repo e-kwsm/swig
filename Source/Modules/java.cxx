@@ -175,7 +175,7 @@ public:
     directorLanguage();
   }
 
-  ~JAVA() {
+  ~JAVA() override {
     delete doxygenTranslator;
   }
 
@@ -269,7 +269,7 @@ public:
    * main()
    * ------------------------------------------------------------ */
 
-  virtual void main(int argc, char *argv[]) {
+  void main(int argc, char *argv[]) override {
 
     SWIG_library_directory("java");
 
@@ -333,7 +333,7 @@ public:
    * top()
    * --------------------------------------------------------------------- */
 
-  virtual int top(Node *n) {
+  int top(Node *n) override {
 
     // Get any options set in the module directive
     Node *module = Getattr(n, "module");
@@ -840,7 +840,7 @@ public:
    * nativeWrapper()
    * ---------------------------------------------------------------------- */
 
-  virtual int nativeWrapper(Node *n) {
+  int nativeWrapper(Node *n) override {
     String *wrapname = Getattr(n, "wrap:name");
 
     if (!addSymbol(wrapname, n, imclass_name))
@@ -864,7 +864,7 @@ public:
    * functionWrapper()
    * ---------------------------------------------------------------------- */
 
-  virtual int functionWrapper(Node *n) {
+  int functionWrapper(Node *n) override {
     String *symname = Getattr(n, "sym:name");
     SwigType *returntype = Getattr(n, "type");
     ParmList *l = Getattr(n, "parms");
@@ -1213,7 +1213,7 @@ public:
    * variableWrapper()
    * ----------------------------------------------------------------------- */
 
-  virtual int variableWrapper(Node *n) {
+  int variableWrapper(Node *n) override {
     variable_wrapper_flag = true;
     Language::variableWrapper(n); /* Default to functions */
     variable_wrapper_flag = false;
@@ -1224,7 +1224,7 @@ public:
    * globalvariableHandler()
    * ------------------------------------------------------------------------ */
 
-  virtual int globalvariableHandler(Node *n) {
+  int globalvariableHandler(Node *n) override {
 
     variable_name = Getattr(n, "sym:name");
     global_variable_flag = true;
@@ -1266,7 +1266,7 @@ public:
    * Anonymous enums always default to 1)
    * ---------------------------------------------------------------------- */
 
-  virtual int enumDeclaration(Node *n) {
+  int enumDeclaration(Node *n) override {
 
     if (!ImportMode) {
       if (getCurrentClass() && (cplus_mode != PUBLIC))
@@ -1428,7 +1428,7 @@ public:
    * enumvalueDeclaration()
    * ---------------------------------------------------------------------- */
 
-  virtual int enumvalueDeclaration(Node *n) {
+  int enumvalueDeclaration(Node *n) override {
     if (getCurrentClass() && (cplus_mode != PUBLIC))
       return SWIG_NOWRAP;
 
@@ -1593,7 +1593,7 @@ public:
    * Also note that this method might be called for wrapping enum items (when the enum is using %javaconst(0)).
    * ------------------------------------------------------------------------ */
 
-  virtual int constantWrapper(Node *n) {
+  int constantWrapper(Node *n) override {
     String *symname = Getattr(n, "sym:name");
     SwigType *t = Getattr(n, "type");
     ParmList *l = Getattr(n, "parms");
@@ -1718,7 +1718,7 @@ public:
    * insertDirective()
    * ----------------------------------------------------------------------------- */
 
-  virtual int insertDirective(Node *n) {
+  int insertDirective(Node *n) override {
     int ret = SWIG_OK;
     String *code = Getattr(n, "code");
     String *section = Getattr(n, "section");
@@ -1757,7 +1757,7 @@ public:
    * constantsmodifiers      - access modifiers for the constants interface
    * ----------------------------------------------------------------------------- */
 
-  virtual int pragmaDirective(Node *n) {
+  int pragmaDirective(Node *n) override {
     if (!ImportMode) {
       String *lang = Getattr(n, "lang");
       String *code = Getattr(n, "name");
@@ -2245,7 +2245,7 @@ public:
    * classDeclaration()
    * ---------------------------------------------------------------------- */
 
-  int classDeclaration(Node *n) {
+  int classDeclaration(Node *n) override {
     return Language::classDeclaration(n);
   }
 
@@ -2253,7 +2253,7 @@ public:
    * classHandler()
    * ---------------------------------------------------------------------- */
 
-  virtual int classHandler(Node *n) {
+  int classHandler(Node *n) override {
     File *f_proxy = NULL;
     File *f_interface = NULL;
     String *old_proxy_class_name = proxy_class_name;
@@ -2467,7 +2467,7 @@ public:
    * memberfunctionHandler()
    * ---------------------------------------------------------------------- */
 
-  virtual int memberfunctionHandler(Node *n) {
+  int memberfunctionHandler(Node *n) override {
     member_func_flag = true;
     Language::memberfunctionHandler(n);
 
@@ -2487,7 +2487,7 @@ public:
    * staticmemberfunctionHandler()
    * ---------------------------------------------------------------------- */
 
-  virtual int staticmemberfunctionHandler(Node *n) {
+  int staticmemberfunctionHandler(Node *n) override {
 
     static_flag = true;
     member_func_flag = true;
@@ -2795,7 +2795,7 @@ public:
    * constructorHandler()
    * ---------------------------------------------------------------------- */
 
-  virtual int constructorHandler(Node *n) {
+  int constructorHandler(Node *n) override {
 
     ParmList *l = Getattr(n, "parms");
     String *tm;
@@ -3025,7 +3025,7 @@ public:
    * destructorHandler()
    * ---------------------------------------------------------------------- */
 
-  virtual int destructorHandler(Node *n) {
+  int destructorHandler(Node *n) override {
     Language::destructorHandler(n);
     String *symname = Getattr(n, "sym:name");
 
@@ -3043,7 +3043,7 @@ public:
    * membervariableHandler()
    * ---------------------------------------------------------------------- */
 
-  virtual int membervariableHandler(Node *n) {
+  int membervariableHandler(Node *n) override {
     variable_name = Getattr(n, "sym:name");
     wrapping_member_flag = true;
     variable_wrapper_flag = true;
@@ -3057,7 +3057,7 @@ public:
    * staticmembervariableHandler()
    * ---------------------------------------------------------------------- */
 
-  virtual int staticmembervariableHandler(Node *n) {
+  int staticmembervariableHandler(Node *n) override {
     variable_name = Getattr(n, "sym:name");
     wrapping_member_flag = true;
     static_flag = true;
@@ -3071,7 +3071,7 @@ public:
    * memberconstantHandler()
    * ---------------------------------------------------------------------- */
 
-  virtual int memberconstantHandler(Node *n) {
+  int memberconstantHandler(Node *n) override {
     variable_name = Getattr(n, "sym:name");
     wrapping_member_flag = true;
     Language::memberconstantHandler(n);
@@ -3295,7 +3295,7 @@ public:
    * replaceSpecialVariables()
    *--------------------------------------------------------------------*/
 
-  virtual void replaceSpecialVariables(String *method, String *tm, Parm *parm) {
+  void replaceSpecialVariables(String *method, String *tm, Parm *parm) override {
     (void)method;
     SwigType *type = Getattr(parm, "type");
     substituteClassname(type, tm);
@@ -4119,7 +4119,7 @@ public:
    *
    * --------------------------------------------------------------- */
 
-  int classDirectorMethod(Node *n, Node *parent, String *super) {
+  int classDirectorMethod(Node *n, Node *parent, String *super) override {
     String *c_classname = Getattr(parent, "name");
     String *name = Getattr(n, "name");
     String *symname = Getattr(n, "sym:name");
@@ -4818,7 +4818,7 @@ public:
    * classDirectorConstructor()
    * ------------------------------------------------------------ */
 
-  int classDirectorConstructor(Node *n) {
+  int classDirectorConstructor(Node *n) override {
     Node *parent = parentNode(n);
     String *decl = Getattr(n, "decl");
     String *supername = Swig_class_name(parent);
@@ -4886,7 +4886,7 @@ public:
    * classDirectorDefaultConstructor()
    * ------------------------------------------------------------ */
 
-  int classDirectorDefaultConstructor(Node *n) {
+  int classDirectorDefaultConstructor(Node *n) override {
     String *classname = Swig_class_name(n);
     String *classtype = SwigType_namestr(Getattr(n, "name"));
     String *dirClassName = directorClassName(n);
@@ -4909,7 +4909,7 @@ public:
    * classDirectorInit()
    * ------------------------------------------------------------ */
 
-  int classDirectorInit(Node *n) {
+  int classDirectorInit(Node *n) override {
     Delete(none_comparison);
     none_comparison = NewString("");  // not used
 
@@ -4932,7 +4932,7 @@ public:
    * classDirectorDestructor()
    * ---------------------------------------------------------------------- */
 
-  int classDirectorDestructor(Node *n) {
+  int classDirectorDestructor(Node *n) override {
     Node *current_class = getCurrentClass();
     String *full_classname = Getattr(current_class, "name");
     String *classname = Swig_class_name(current_class);
@@ -4974,7 +4974,7 @@ public:
    * classDirectorEnd()
    * ------------------------------------------------------------ */
 
-  int classDirectorEnd(Node *n) {
+  int classDirectorEnd(Node *n) override {
     String *full_classname = Getattr(n, "name");
     String *classname = getProxyName(full_classname, true);
     String *director_classname = directorClassName(n);
@@ -5074,7 +5074,7 @@ public:
    * classDirectorDisown()
    * ------------------------------------------------------------------*/
 
-  virtual int classDirectorDisown(Node *n) {
+  int classDirectorDisown(Node *n) override {
     (void)n;
     return SWIG_OK;
   }
@@ -5083,7 +5083,7 @@ public:
    * extraDirectorProtectedCPPMethodsRequired()
    *--------------------------------------------------------------------*/
 
-  bool extraDirectorProtectedCPPMethodsRequired() const {
+  bool extraDirectorProtectedCPPMethodsRequired() const override {
     return false;
   }
 
@@ -5112,7 +5112,7 @@ public:
    * nestedClassesSupport()
    *--------------------------------------------------------------------*/
 
-  NestedClassSupport nestedClassesSupport() const {
+  NestedClassSupport nestedClassesSupport() const override {
     return NCS_Full;
   }
 }; /* class JAVA */

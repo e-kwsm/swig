@@ -522,7 +522,7 @@ public:
    * main()
    * ------------------------------------------------------------ */
 
-  virtual void main(int argc, char *argv[]) {
+  void main(int argc, char *argv[]) override {
     SWIG_library_directory("php");
 
     for (int i = 1; i < argc; i++) {
@@ -553,7 +553,7 @@ public:
    * top()
    * ------------------------------------------------------------ */
 
-  virtual int top(Node *n) {
+  int top(Node *n) override {
 
     String *filen;
 
@@ -1263,7 +1263,7 @@ public:
     return false;
   }
 
-  virtual int functionWrapper(Node *n) {
+  int functionWrapper(Node *n) override {
     if (wrapperType == directordisown) {
       // Handled via __set magic method - no explicit wrapper method wanted.
       return SWIG_OK;
@@ -1702,7 +1702,7 @@ public:
    * constantWrapper()
    * ------------------------------------------------------------ */
 
-  virtual int constantWrapper(Node *n) {
+  int constantWrapper(Node *n) override {
     String *name = GetChar(n, "name");
     String *iname = GetChar(n, "sym:name");
     SwigType *type = Getattr(n, "type");
@@ -1763,7 +1763,7 @@ public:
    * %pragma(php) include="file.php"    # Includes a file in the .php file
    */
 
-  virtual int pragmaDirective(Node *n) {
+  int pragmaDirective(Node *n) override {
     if (!ImportMode) {
       String *lang = Getattr(n, "lang");
       String *type = Getattr(n, "name");
@@ -1798,7 +1798,7 @@ public:
    * classDeclaration()
    * ------------------------------------------------------------ */
 
-  virtual int classDeclaration(Node *n) {
+  int classDeclaration(Node *n) override {
     return Language::classDeclaration(n);
   }
 
@@ -1806,7 +1806,7 @@ public:
    * classHandler()
    * ------------------------------------------------------------ */
 
-  virtual int classHandler(Node *n) {
+  int classHandler(Node *n) override {
     String *symname = Getattr(n, "sym:name");
 
     class_name = symname;
@@ -2077,7 +2077,7 @@ public:
    * memberfunctionHandler()
    * ------------------------------------------------------------ */
 
-  virtual int memberfunctionHandler(Node *n) {
+  int memberfunctionHandler(Node *n) override {
     wrapperType = memberfn;
     Language::memberfunctionHandler(n);
     wrapperType = standard;
@@ -2089,7 +2089,7 @@ public:
    * membervariableHandler()
    * ------------------------------------------------------------ */
 
-  virtual int membervariableHandler(Node *n) {
+  int membervariableHandler(Node *n) override {
     if (magic_set == NULL) {
       magic_set = NewStringEmpty();
       magic_get = NewStringEmpty();
@@ -2126,7 +2126,7 @@ public:
    * staticmembervariableHandler()
    * ------------------------------------------------------------ */
 
-  virtual int staticmembervariableHandler(Node *n) {
+  int staticmembervariableHandler(Node *n) override {
     wrapperType = staticmembervar;
     Language::staticmembervariableHandler(n);
     wrapperType = standard;
@@ -2138,7 +2138,7 @@ public:
    * staticmemberfunctionHandler()
    * ------------------------------------------------------------ */
 
-  virtual int staticmemberfunctionHandler(Node *n) {
+  int staticmemberfunctionHandler(Node *n) override {
     wrapperType = staticmemberfn;
     Language::staticmemberfunctionHandler(n);
     wrapperType = standard;
@@ -2154,7 +2154,7 @@ public:
    * constructorHandler()
    * ------------------------------------------------------------ */
 
-  virtual int constructorHandler(Node *n) {
+  int constructorHandler(Node *n) override {
     if (Swig_directorclass(n)) {
 
       /* director ctor code is specific for each class */
@@ -2184,7 +2184,7 @@ public:
   /* ------------------------------------------------------------
    * destructorHandler()
    * ------------------------------------------------------------ */
-  virtual int destructorHandler(Node *n) {
+  int destructorHandler(Node *n) override {
     wrapperType = destructor;
     Language::destructorHandler(n);
     destructor_action = Getattr(n, "wrap:action");
@@ -2192,7 +2192,7 @@ public:
     return SWIG_OK;
   }
 
-  int classDirectorInit(Node *n) {
+  int classDirectorInit(Node *n) override {
     String *declaration = Swig_director_declaration(n);
     Printf(f_directors_h, "%s\n", declaration);
     Printf(f_directors_h, "public:\n");
@@ -2200,7 +2200,7 @@ public:
     return Language::classDirectorInit(n);
   }
 
-  int classDirectorEnd(Node *n) {
+  int classDirectorEnd(Node *n) override {
     Printf(f_directors_h, "};\n");
     return Language::classDirectorEnd(n);
   }
@@ -2220,7 +2220,7 @@ public:
     Setattr(n, "director:prefix_args", p);
   }
 
-  int classDirectorConstructor(Node *n) {
+  int classDirectorConstructor(Node *n) override {
     Node *parent = Getattr(n, "parentNode");
     String *decl = Getattr(n, "decl");
     String *supername = Swig_class_name(parent);
@@ -2269,7 +2269,7 @@ public:
     return Language::classDirectorConstructor(n);
   }
 
-  int classDirectorMethod(Node *n, Node *parent, String *super) {
+  int classDirectorMethod(Node *n, Node *parent, String *super) override {
     int is_void = 0;
     int is_pointer = 0;
     String *decl = Getattr(n, "decl");
@@ -2577,7 +2577,7 @@ public:
     return status;
   }
 
-  int classDirectorDisown(Node *n) {
+  int classDirectorDisown(Node *n) override {
     wrapperType = directordisown;
     int result = Language::classDirectorDisown(n);
     wrapperType = standard;
