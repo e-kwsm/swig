@@ -223,7 +223,7 @@ public:
     directorLanguage();
   }
 
-  ~PYTHON() {
+  ~PYTHON() override {
     delete doxygenTranslator;
   }
 
@@ -297,7 +297,7 @@ public:
    * main()
    * ------------------------------------------------------------ */
 
-  virtual void main(int argc, char *argv[]) {
+  void main(int argc, char *argv[]) override {
 
     SWIG_library_directory("python");
 
@@ -471,7 +471,7 @@ public:
    * top()
    * ------------------------------------------------------------ */
 
-  virtual int top(Node *n) {
+  int top(Node *n) override {
     /* check if directors are enabled for this module.  note: this
      * is a "master" switch, without which no director code will be
      * emitted.  %feature("director") statements are also required
@@ -1214,7 +1214,7 @@ public:
    * importDirective()
    * ------------------------------------------------------------ */
 
-  virtual int importDirective(Node *n) {
+  int importDirective(Node *n) override {
     if (shadow) {
       String *modname = Getattr(n, "module");
 
@@ -2682,7 +2682,7 @@ public:
   }
 
 
-  virtual int functionWrapper(Node *n) {
+  int functionWrapper(Node *n) override {
 
     String *name = Getattr(n, "name");
     String *iname = Getattr(n, "sym:name");
@@ -3428,7 +3428,7 @@ public:
    * variableWrapper()
    * ------------------------------------------------------------ */
 
-  virtual int variableWrapper(Node *n) {
+  int variableWrapper(Node *n) override {
     String *name = Getattr(n, "name");
     String *iname = Getattr(n, "sym:name");
     SwigType *t = Getattr(n, "type");
@@ -3580,7 +3580,7 @@ public:
     return result;
   }
 
-  virtual int constantWrapper(Node *n) {
+  int constantWrapper(Node *n) override {
     String *name = Getattr(n, "name");
     String *iname = Getattr(n, "sym:name");
     SwigType *type = Getattr(n, "type");
@@ -3682,7 +3682,7 @@ public:
    * nativeWrapper()
    * ------------------------------------------------------------ */
 
-  virtual int nativeWrapper(Node *n) {
+  int nativeWrapper(Node *n) override {
     String *name = Getattr(n, "sym:name");
     String *wrapname = Getattr(n, "wrap:name");
 
@@ -3718,15 +3718,15 @@ public:
    * ** Moved down due to gcc-2.96 internal error **
    * --------------------------------------------------------------- */
 
-  int classDirectorMethods(Node *n);
+  int classDirectorMethods(Node *n) override;
 
-  int classDirectorMethod(Node *n, Node *parent, String *super);
+  int classDirectorMethod(Node *n, Node *parent, String *super) override;
 
   /* ------------------------------------------------------------
    * classDirectorConstructor()
    * ------------------------------------------------------------ */
 
-  int classDirectorConstructor(Node *n) {
+  int classDirectorConstructor(Node *n) override {
     Node *parent = Getattr(n, "parentNode");
     String *sub = NewString("");
     String *decl = Getattr(n, "decl");
@@ -3780,7 +3780,7 @@ public:
    * classDirectorDefaultConstructor()
    * ------------------------------------------------------------ */
 
-  int classDirectorDefaultConstructor(Node *n) {
+  int classDirectorDefaultConstructor(Node *n) override {
     String *classname = Swig_class_name(n);
     {
       Node *parent = Swig_methodclass(n);
@@ -3802,7 +3802,7 @@ public:
    * classDirectorInit()
    * ------------------------------------------------------------ */
 
-  int classDirectorInit(Node *n) {
+  int classDirectorInit(Node *n) override {
     String *declaration = Swig_director_declaration(n);
     Printf(f_directors_h, "\n");
     Printf(f_directors_h, "%s\n", declaration);
@@ -3815,7 +3815,7 @@ public:
    * classDirectorEnd()
    * ------------------------------------------------------------ */
 
-  int classDirectorEnd(Node *n) {
+  int classDirectorEnd(Node *n) override {
     String *classname = Swig_class_name(n);
 
     if (dirprot_mode()) {
@@ -3874,7 +3874,7 @@ public:
    * classDirectorDisown()
    * ------------------------------------------------------------ */
 
-  int classDirectorDisown(Node *n) {
+  int classDirectorDisown(Node *n) override {
     int result;
     int oldshadow = shadow;
     /* disable shadowing */
@@ -3909,7 +3909,7 @@ public:
    * classDeclaration()
    * ------------------------------------------------------------ */
 
-  virtual int classDeclaration(Node *n) {
+  int classDeclaration(Node *n) override {
     if (shadow && !Getattr(n, "feature:onlychildren")) {
       Node *mod = Getattr(n, "module");
       if (mod) {
@@ -4418,7 +4418,7 @@ public:
     Delete(methods_name);
   }
 
-  virtual int classHandler(Node *n) {
+  int classHandler(Node *n) override {
     File *f_shadow_file = f_shadow;
     Node *base_node = NULL;
 
@@ -4656,7 +4656,7 @@ public:
    * functionHandler()  -  Mainly overloaded for callback handling
    * ------------------------------------------------------------ */
 
-  virtual int functionHandler(Node *n) {
+  int functionHandler(Node *n) override {
     String *pcb = GetFlagAttr(n, "feature:python:callback");
     if (pcb) {
       if (Strcmp(pcb, "1") == 0) {
@@ -4676,7 +4676,7 @@ public:
    * memberfunctionHandler()
    * ------------------------------------------------------------ */
 
-  virtual int memberfunctionHandler(Node *n) {
+  int memberfunctionHandler(Node *n) override {
     String *symname = Getattr(n, "sym:name");
     int oldshadow;
 
@@ -4780,7 +4780,7 @@ public:
    * staticmemberfunctionHandler()
    * ------------------------------------------------------------ */
 
-  virtual int staticmemberfunctionHandler(Node *n) {
+  int staticmemberfunctionHandler(Node *n) override {
     String *symname = Getattr(n, "sym:name");
     if (builtin && in_class) {
       Swig_save("builtin_memberconstantHandler", n, "pybuiltin:symname", NIL);
@@ -4868,7 +4868,7 @@ public:
    * constructorDeclaration()
    * ------------------------------------------------------------ */
 
-  virtual int constructorHandler(Node *n) {
+  int constructorHandler(Node *n) override {
     String *symname = Getattr(n, "sym:name");
     int oldshadow = shadow;
     int use_director = Swig_directorclass(n);
@@ -4999,7 +4999,7 @@ public:
    * destructorHandler()
    * ------------------------------------------------------------ */
 
-  virtual int destructorHandler(Node *n) {
+  int destructorHandler(Node *n) override {
     String *symname = Getattr(n, "sym:name");
     int oldshadow = shadow;
 
@@ -5049,7 +5049,7 @@ public:
    * membervariableHandler()
    * ------------------------------------------------------------ */
 
-  virtual int membervariableHandler(Node *n) {
+  int membervariableHandler(Node *n) override {
     String *symname = Getattr(n, "sym:name");
 
     int oldshadow = shadow;
@@ -5086,7 +5086,7 @@ public:
    * staticmembervariableHandler()
    * ------------------------------------------------------------ */
 
-  virtual int staticmembervariableHandler(Node *n) {
+  int staticmembervariableHandler(Node *n) override {
     Swig_save("builtin_staticmembervariableHandler", n, "builtin_symname", NIL);
     Language::staticmembervariableHandler(n);
     Swig_restore(n);
@@ -5178,7 +5178,7 @@ public:
    * memberconstantHandler()
    * ------------------------------------------------------------ */
 
-  virtual int memberconstantHandler(Node *n) {
+  int memberconstantHandler(Node *n) override {
     String *symname = Getattr(n, "sym:name");
     if (builtin && in_class) {
       Swig_save("builtin_memberconstantHandler", n, "pybuiltin:symname", NIL);
@@ -5207,7 +5207,7 @@ public:
    * as a special case so we can do indenting correctly
    * ------------------------------------------------------------ */
 
-  virtual int insertDirective(Node *n) {
+  int insertDirective(Node *n) override {
     String *code = Getattr(n, "code");
     String *section = Getattr(n, "section");
 
@@ -5229,7 +5229,7 @@ public:
     return SWIG_OK;
   }
 
-  virtual String *runtimeCode() {
+  String *runtimeCode() override {
     String *s = NewString("");
     String *shead = Swig_include_sys("pyhead.swg");
     if (!shead) {
@@ -5269,7 +5269,7 @@ public:
     return s;
   }
 
-  virtual String *defaultExternalRuntimeFilename() {
+  String *defaultExternalRuntimeFilename() override {
     return NewString("swigpyrun.h");
   }
 
@@ -5277,7 +5277,7 @@ public:
    * kwargsSupport()
    *--------------------------------------------------------------------*/
 
-  bool kwargsSupport() const {
+  bool kwargsSupport() const override {
     return true;
   }
 };

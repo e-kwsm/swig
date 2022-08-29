@@ -31,10 +31,10 @@ public:
   XML() :indent_level(0) , id(0) {
   }
   
-  virtual ~ XML() {
+  ~ XML() override {
   }
 
-  virtual void main(int argc, char *argv[]) {
+  void main(int argc, char *argv[]) override {
     SWIG_typemap_lang("xml");
     for (int iX = 0; iX < argc; iX++) {
       if (strcmp(argv[iX], "-xmllang") == 0) {
@@ -59,7 +59,7 @@ public:
 
   /* Top of the parse tree */
 
-  virtual int top(Node *n) {
+  int top(Node *n) override {
     if (out == 0) {
       String *outfile = Getattr(n, "outfile");
       String *ext = Swig_file_extension(outfile);
