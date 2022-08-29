@@ -89,7 +89,7 @@ public:
     docs = NewHash();
   }
 
-  virtual void main(int argc, char *argv[]) {
+  void main(int argc, char *argv[]) override {
 
     for (int i = 1; i < argc; i++) {
       if (argv[i]) {
@@ -139,7 +139,7 @@ public:
       Swig_cparse_cplusplusout(1);
   }
 
-  virtual int top(Node *n) {
+  int top(Node *n) override {
     {
       Node *mod = Getattr(n, "module");
       if (mod) {
@@ -391,7 +391,7 @@ public:
     }
   }
 
-  virtual int importDirective(Node *n) {
+  int importDirective(Node *n) override {
     String *modname = Getattr(n, "module");
     if (modname)
       Printf(f_init, "if (!SWIG_Octave_LoadModule(\"%s\")) return false;\n", modname);
@@ -536,7 +536,7 @@ public:
     return 0;
   }
 
-  virtual int functionWrapper(Node *n) {
+  int functionWrapper(Node *n) override {
     Parm *p;
     String *tm;
     int j;
@@ -818,7 +818,7 @@ public:
     Delete(wname);
   }
 
-  virtual int variableWrapper(Node *n) {
+  int variableWrapper(Node *n) override {
     String *name = Getattr(n, "name");
     String *iname = Getattr(n, "sym:name");
     SwigType *t = Getattr(n, "type");
@@ -888,7 +888,7 @@ public:
     return SWIG_OK;
   }
 
-  virtual int constantWrapper(Node *n) {
+  int constantWrapper(Node *n) override {
     String *name = Getattr(n, "name");
     String *iname = Getattr(n, "sym:name");
     SwigType *type = Getattr(n, "type");
@@ -918,23 +918,23 @@ public:
     return SWIG_OK;
   }
 
-  virtual int nativeWrapper(Node *n) {
+  int nativeWrapper(Node *n) override {
     return Language::nativeWrapper(n);
   }
 
-  virtual int enumDeclaration(Node *n) {
+  int enumDeclaration(Node *n) override {
     return Language::enumDeclaration(n);
   }
 
-  virtual int enumvalueDeclaration(Node *n) {
+  int enumvalueDeclaration(Node *n) override {
     return Language::enumvalueDeclaration(n);
   }
 
-  virtual int classDeclaration(Node *n) {
+  int classDeclaration(Node *n) override {
     return Language::classDeclaration(n);
   }
 
-  virtual int classHandler(Node *n) {
+  int classHandler(Node *n) override {
     have_constructor = 0;
     have_destructor = 0;
     constructor_name = 0;
@@ -1057,7 +1057,7 @@ public:
     return SWIG_OK;
   }
 
-  virtual int memberfunctionHandler(Node *n) {
+  int memberfunctionHandler(Node *n) override {
     Language::memberfunctionHandler(n);
 
     assert(s_members_tab);
@@ -1083,7 +1083,7 @@ public:
     return SWIG_OK;
   }
 
-  virtual int membervariableHandler(Node *n) {
+  int membervariableHandler(Node *n) override {
     Setattr(n, "feature:autodoc", "0");
 
     Language::membervariableHandler(n);
@@ -1106,7 +1106,7 @@ public:
     return SWIG_OK;
   }
 
-  virtual int constructorHandler(Node *n) {
+  int constructorHandler(Node *n) override {
     have_constructor = 1;
     if (!constructor_name)
       constructor_name = NewString(Getattr(n, "sym:name"));
@@ -1133,12 +1133,12 @@ public:
     return Language::constructorHandler(n);
   }
 
-  virtual int destructorHandler(Node *n) {
+  int destructorHandler(Node *n) override {
     have_destructor = 1;
     return Language::destructorHandler(n);
   }
 
-  virtual int staticmemberfunctionHandler(Node *n) {
+  int staticmemberfunctionHandler(Node *n) override {
     Language::staticmemberfunctionHandler(n);
 
     assert(s_members_tab);
@@ -1164,11 +1164,11 @@ public:
     return SWIG_OK;
   }
 
-  virtual int memberconstantHandler(Node *n) {
+  int memberconstantHandler(Node *n) override {
     return Language::memberconstantHandler(n);
   }
 
-  virtual int staticmembervariableHandler(Node *n) {
+  int staticmembervariableHandler(Node *n) override {
     Setattr(n, "feature:autodoc", "0");
 
     Language::staticmembervariableHandler(n);
@@ -1193,7 +1193,7 @@ public:
     return SWIG_OK;
   }
 
-  int classDirectorInit(Node *n) {
+  int classDirectorInit(Node *n) override {
     String *declaration = Swig_director_declaration(n);
     Printf(f_directors_h, "\n");
     Printf(f_directors_h, "%s\n", declaration);
@@ -1202,12 +1202,12 @@ public:
     return Language::classDirectorInit(n);
   }
 
-  int classDirectorEnd(Node *n) {
+  int classDirectorEnd(Node *n) override {
     Printf(f_directors_h, "};\n\n");
     return Language::classDirectorEnd(n);
   }
 
-  int classDirectorConstructor(Node *n) {
+  int classDirectorConstructor(Node *n) override {
     Node *parent = Getattr(n, "parentNode");
     String *sub = NewString("");
     String *decl = Getattr(n, "decl");
@@ -1256,7 +1256,7 @@ public:
     return Language::classDirectorConstructor(n);
   }
 
-  int classDirectorDefaultConstructor(Node *n) {
+  int classDirectorDefaultConstructor(Node *n) override {
     String *classname = Swig_class_name(n);
     {
       Wrapper *w = NewWrapper();
@@ -1271,7 +1271,7 @@ public:
     return Language::classDirectorDefaultConstructor(n);
   }
 
-  int classDirectorMethod(Node *n, Node *parent, String *super) {
+  int classDirectorMethod(Node *n, Node *parent, String *super) override {
     int is_void = 0;
     int is_pointer = 0;
     String *decl = Getattr(n, "decl");
@@ -1552,7 +1552,7 @@ public:
     return status;
   }
 
-  String *runtimeCode() {
+  String *runtimeCode() override {
     String *s = NewString("");
     String *srun = Swig_include_sys("octrun.swg");
     if (!srun) {
@@ -1564,7 +1564,7 @@ public:
     return s;
   }
 
-  String *defaultExternalRuntimeFilename() {
+  String *defaultExternalRuntimeFilename() override {
     return NewString("swigoctaverun.h");
   }
 };
