@@ -33,7 +33,7 @@ public:
   ~XML() {
   }
 
-  virtual void main(int argc, char *argv[]) override {
+  void main(int argc, char *argv[]) override {
     for (int iX = 0; iX < argc; iX++) {
       if (strcmp(argv[iX], "-help") == 0) {
 	fputs(usage, stdout);
