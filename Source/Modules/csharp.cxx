@@ -178,7 +178,7 @@ public:
    * ~CSHARP()
    * ----------------------------------------------------------------------------- */
 
-   ~CSHARP() {
+   ~CSHARP() override {
      delete doxygenTranslator;
    }
 
