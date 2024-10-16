@@ -15,7 +15,7 @@ extern int UseWrapperSuffix;
 }
 
 int SwigType_isbuiltin(SwigType *t) {
-  const char *builtins[] = {"void", "short", "int", "long", "char", "float", "double", "bool", 0};
+  const char *builtins[] = {"void", "short", "int", "long", "char", "float", "double", "bool", nullptr};
   int i = 0;
   char *c = Char(t);
   if (!t)
@@ -47,7 +47,7 @@ enum exceptions_support {
 // Delete a DOH object on scope exit.
 class scoped_dohptr {
 public:
-  scoped_dohptr() : obj_(NULL) {
+  scoped_dohptr() : obj_(nullptr) {
   }
   explicit scoped_dohptr(DOH *obj) : obj_(obj) {
   }
@@ -79,11 +79,11 @@ public:
 
   DOH *release() const /* not really */ {
     DOH *obj = obj_;
-    const_cast<DOH *&>(const_cast<scoped_dohptr *>(this)->obj_) = NULL;
+    const_cast<DOH *&>(const_cast<scoped_dohptr *>(this)->obj_) = nullptr;
     return obj;
   }
 
-  void reset(DOH *obj = NULL) {
+  void reset(DOH *obj = nullptr) {
     if (obj != obj_) {
       Delete(obj_);
       obj_ = obj;
@@ -101,7 +101,7 @@ protected:
 // Wrapper for a DOH object which can be owned or not.
 class maybe_owned_dohptr : public scoped_dohptr {
 public:
-  explicit maybe_owned_dohptr(DOH *obj = NULL) : scoped_dohptr(obj), owned_(true) {
+  explicit maybe_owned_dohptr(DOH *obj = nullptr) : scoped_dohptr(obj), owned_(true) {
   }
 
   maybe_owned_dohptr(maybe_owned_dohptr const &other) : scoped_dohptr(other) {
@@ -119,7 +119,7 @@ public:
 
   ~maybe_owned_dohptr() {
     if (!owned_)
-      obj_ = NULL;  // Prevent it from being deleted by the base class dtor.
+      obj_ = nullptr;  // Prevent it from being deleted by the base class dtor.
   }
 
   void assign_owned(DOH *obj) {
@@ -237,7 +237,7 @@ Node *find_first_named_import(Node *parent) {
     }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 /*
@@ -309,7 +309,7 @@ public:
 
     // We support 2 cases: either typemap is a statement, or multiple statements, containing assignment to $result, in which case this assignment must occur at
     // its beginning.
-    bool const has_result = strstr(Char(out_tm_), "$result = ") != NULL;
+    bool const has_result = strstr(Char(out_tm_), "$result = ") != nullptr;
     if (has_result) {
       Printv(code, cindent, "auto&& ", NIL);
     } else {
@@ -402,15 +402,15 @@ private:
 struct cxx_wrappers {
   // Default ctor doesn't do anything, use initialize() if C++ wrappers really need to be generated.
   cxx_wrappers() :
-    except_check_start(NULL),
-    except_check_end(NULL),
-    sect_cxx_h(NULL),
-    sect_types(NULL),
-    sect_decls(NULL),
-    sect_impls(NULL),
-    ptype_desc_(NULL),
-    rtype_desc_(NULL),
-    node_func_(NULL) {
+    except_check_start(nullptr),
+    except_check_end(nullptr),
+    sect_cxx_h(nullptr),
+    sect_types(nullptr),
+    sect_decls(nullptr),
+    sect_impls(nullptr),
+    ptype_desc_(nullptr),
+    rtype_desc_(nullptr),
+    node_func_(nullptr) {
   }
 
   void initialize() {
@@ -441,7 +441,7 @@ struct cxx_wrappers {
   }
 
   bool is_initialized() const {
-    return sect_types != NULL;
+    return sect_types != nullptr;
   }
 
   bool is_exception_support_enabled() const {
@@ -464,10 +464,10 @@ struct cxx_wrappers {
     temp_ptr_setter<cxx_rtype_desc *> set(&rtype_desc_, &rtype_desc);
 
     bool use_cxxout = true;
-    String *type(Swig_typemap_lookup("cxxouttype", n, "", NULL));
+    String *type(Swig_typemap_lookup("cxxouttype", n, "", nullptr));
     if (!type) {
       use_cxxout = false;
-      type = Swig_typemap_lookup("ctype", n, "", NULL);
+      type = Swig_typemap_lookup("ctype", n, "", nullptr);
     }
 
     if (!type) {
@@ -475,16 +475,16 @@ struct cxx_wrappers {
                    Getfile(n),
                    Getline(n),
                    "No ctype typemap defined for the return type \"%s\" of %s\n",
-                   SwigType_str(func_type, NULL),
+                   SwigType_str(func_type, nullptr),
                    Getattr(n, "sym:name"));
       return false;
     }
 
-    if (!do_resolve_type(n, func_type, type, NULL, &rtype_desc))
+    if (!do_resolve_type(n, func_type, type, nullptr, &rtype_desc))
       return false;
 
     if (use_cxxout) {
-      if (String *out_tm = Swig_typemap_lookup("cxxout", n, "", NULL))
+      if (String *out_tm = Swig_typemap_lookup("cxxout", n, "", nullptr))
         rtype_desc.apply_out_typemap(out_tm);
     }
 
@@ -497,10 +497,10 @@ struct cxx_wrappers {
     temp_ptr_setter<cxx_ptype_desc *> set(&ptype_desc_, &ptype_desc);
 
     bool use_cxxin = true;
-    String *type = Swig_typemap_lookup("cxxintype", p, "", NULL);
+    String *type = Swig_typemap_lookup("cxxintype", p, "", nullptr);
     if (!type) {
       use_cxxin = false;
-      type = Swig_typemap_lookup("ctype", p, "", NULL);
+      type = Swig_typemap_lookup("ctype", p, "", nullptr);
     }
 
     if (!type) {
@@ -513,7 +513,7 @@ struct cxx_wrappers {
       return false;
     }
 
-    if (!do_resolve_type(n, Getattr(p, "type"), type, &ptype_desc, NULL))
+    if (!do_resolve_type(n, Getattr(p, "type"), type, &ptype_desc, nullptr))
       return false;
 
     if (use_cxxin) {
@@ -619,7 +619,7 @@ private:
 
     scoped_dohptr typestr;
     if (SwigType_isenum(base_resolved_type)) {
-      String *enumname = NULL;
+      String *enumname = nullptr;
       if (Node *const enum_node = Language::instance()->enumLookup(base_resolved_type)) {
         // This is the name of the enum in C wrappers, it should be already set by getEnumName().
         enumname = Getattr(enum_node, "enumname");
@@ -699,7 +699,7 @@ private:
           if (strncmp(Char(resolved_type), "r.q(const).", 11) == 0) {
             scoped_dohptr deref_type(Copy(resolved_type));
             Delslice(deref_type, 0, 11);
-            typestr = SwigType_str(deref_type, 0);
+            typestr = SwigType_str(deref_type, nullptr);
           }
           break;
 
@@ -717,19 +717,19 @@ private:
         }
 
         if (!typestr)
-          typestr = SwigType_str(resolved_type, 0);
+          typestr = SwigType_str(resolved_type, nullptr);
 
         classname = Getattr(class_node, "sym:name");
 
         // We don't use namespaces, but the type may contain them, so get rid of them by replacing the base type name, which is fully qualified, with just the
         // class name, which is not.
         scoped_dohptr basetype(SwigType_base(resolved_type));
-        scoped_dohptr basetypestr(SwigType_str(basetype, 0));
+        scoped_dohptr basetypestr(SwigType_str(basetype, nullptr));
         if (Cmp(basetypestr, classname) != 0) {
           Replaceall(typestr, basetypestr, classname);
         }
       } else {
-        classname = NULL;
+        classname = nullptr;
       }
 
       if (!classname) {
@@ -738,7 +738,7 @@ private:
                      line_number,
                      "Unsupported C++ wrapper function %s type \"%s\"\n",
                      ptype_desc ? "parameter" : "return",
-                     SwigType_str(type, 0));
+                     SwigType_str(type, nullptr));
         return false;
       }
 
@@ -826,7 +826,7 @@ class cxx_function_wrapper {
 public:
   // Call can_wrap() to check if this wrapper can be emitted later.
   explicit cxx_function_wrapper(cxx_wrappers &cxx_wrappers, Node *n, Parm *p) : cxx_wrappers_(cxx_wrappers) {
-    func_node = NULL;
+    func_node = nullptr;
 
     except_check_start = except_check_end = "";
 
@@ -867,7 +867,7 @@ public:
         Setattr(p, "lname", name);
       }
 
-      Swig_typemap_attach_parms("cxxin", p, NULL);
+      Swig_typemap_attach_parms("cxxin", p, nullptr);
 
       for (; p; p = Getattr(p, "tmap:in:next")) {
         if (Checkattr(p, "tmap:in:numinputs", "0"))
@@ -901,7 +901,7 @@ public:
   }
 
   bool can_wrap() const {
-    return func_node != NULL;
+    return func_node != nullptr;
   }
 
   // Emit just the function body, including the braces around it.
@@ -959,7 +959,7 @@ private:
 
   The output first_base parameter is optional and is filled with the first base class (if any).
 */
-bool uses_multiple_inheritance(Node *n, scoped_dohptr *first_base_out = NULL) {
+bool uses_multiple_inheritance(Node *n, scoped_dohptr *first_base_out = nullptr) {
   if (first_base_out)
     first_base_out->reset();
 
@@ -998,7 +998,7 @@ public:
   //
   // The node pointer must be valid, point to a class and remain valid for the lifetime of this object.
   cxx_class_wrapper(cxx_wrappers &cxx_wrappers, Node *n) : cxx_wrappers_(cxx_wrappers) {
-    class_node_ = NULL;
+    class_node_ = nullptr;
 
     if (!cxx_wrappers_.is_initialized())
       return;
@@ -1035,7 +1035,7 @@ public:
     Setattr(dummy, "type", Getattr(n, "name"));
     Setfile(dummy, Getfile(n));
     Setline(dummy, Getline(n));
-    scoped_dohptr cxxcode(Swig_typemap_lookup("cxxcode", dummy, "", NULL));
+    scoped_dohptr cxxcode(Swig_typemap_lookup("cxxcode", dummy, "", nullptr));
     if (!cxxcode || *Char(cxxcode) != '\n')
       Append(cxx_wrappers_.sect_decls, "\n");
     if (cxxcode) {
@@ -1045,7 +1045,7 @@ public:
     }
 
     class_node_ = n;
-    dtor_wname_ = NULL;
+    dtor_wname_ = nullptr;
     has_copy_ctor_ = false;
   }
 
@@ -1507,7 +1507,7 @@ public:
    * C()
    * ----------------------------------------------------------------------------- */
 
-  C() : empty_string(NewString("")), ns_cxx(NULL), ns_prefix(NULL), module_name(NULL), outfile_h(NULL), cxx_class_wrapper_(NULL) {
+  C() : empty_string(NewString("")), ns_cxx(nullptr), ns_prefix(nullptr), module_name(nullptr), outfile_h(nullptr), cxx_class_wrapper_(nullptr) {
     UseWrapperSuffix = 1;
   }
 
@@ -1565,7 +1565,7 @@ public:
   String *getClassProxyName(SwigType *t) {
     Node *n = classLookup(t);
 
-    return n ? Copy(get_c_proxy_name(n)) : NULL;
+    return n ? Copy(get_c_proxy_name(n)) : nullptr;
   }
 
   /* -----------------------------------------------------------------------------
@@ -1582,12 +1582,12 @@ public:
       // We can't use forward-declared enums because we can't define them for C wrappers (we could forward declare them in C++ if their underlying type,
       // available as "inherit" node attribute, is specified, but not in C), so we have no choice but to use "int" for them.
       if (Checkattr(n, "sym:weak", "1"))
-        return NULL;
+        return nullptr;
 
       String *symname = Getattr(n, "sym:name");
       if (symname) {
         // Add in class scope when referencing enum if not a global enum
-        String *proxyname = 0;
+        String *proxyname = nullptr;
         if (String *name = Getattr(n, "name")) {
           if (String *scopename_prefix = Swig_scopename_prefix(name)) {
             proxyname = getClassProxyName(scopename_prefix);
@@ -1617,7 +1617,7 @@ public:
     scoped_dohptr btype(SwigType_base(classnametype));
     if (SwigType_isenum(btype)) {
       Node *const enum_node = enumLookup(btype);
-      String *const enumname = enum_node ? getEnumName(enum_node) : NULL;
+      String *const enumname = enum_node ? getEnumName(enum_node) : nullptr;
 
       // We use the enum name in the wrapper declaration if it's available, as this makes it more type safe, but we always use just int for the function
       // definition because we don't have the enum declaration in scope there. This obviously only actually works if the actual enum underlying type is int (or
@@ -1638,7 +1638,7 @@ public:
       if (!CPlusPlus) {
         // Just use the original C type when not using C++, we know that this type can be used in the wrappers.
         Clear(tm);
-        String *const s = SwigType_str(classnametype, 0);
+        String *const s = SwigType_str(classnametype, nullptr);
         Append(tm, s);
         Delete(s);
         return;
@@ -1653,7 +1653,7 @@ public:
         if (!typestr) {
           if (SwigType_isbuiltin(btype)) {
             // This should work just as well in C without any changes.
-            typestr = SwigType_str(classnametype, 0);
+            typestr = SwigType_str(classnametype, nullptr);
           } else {
             // Swig doesn't know anything about this type, use descriptor for it.
             typestr = NewStringf("SWIGTYPE%s", SwigType_manglestr(classnametype));
@@ -2055,7 +2055,7 @@ public:
 
   String *get_mangled_type(SwigType *type_arg) {
     String *result = NewString("");
-    SwigType *type = 0;
+    SwigType *type = nullptr;
     SwigType *tdtype = SwigType_typedef_resolve_all(type_arg);
     if (tdtype)
       type = tdtype;
@@ -2118,8 +2118,8 @@ public:
     String *name = Getattr(n, "sym:name");
     maybe_owned_dohptr wname = getFunctionWrapperName(n, name);
     SwigType *type = Getattr(n, "type");
-    SwigType *return_type = NULL;
-    String *arg_names = NULL;
+    SwigType *return_type = nullptr;
+    String *arg_names = nullptr;
     ParmList *parms = Getattr(n, "parms");
     Parm *p;
     String *proto = NewString("");
@@ -2138,11 +2138,11 @@ public:
       Delitem(arg_names, 0);
       Delitem(arg_names, DOH_END);
     }
-    return_type = SwigType_str(type, 0);
+    return_type = SwigType_str(type, nullptr);
 
     // emit wrapper prototype and code
     for (p = parms, gencomma = 0; p; p = nextSibling(p)) {
-      Printv(proto, gencomma ? ", " : "", SwigType_str(Getattr(p, "type"), 0), " ", Getattr(p, "lname"), NIL);
+      Printv(proto, gencomma ? ", " : "", SwigType_str(Getattr(p, "type"), nullptr), " ", Getattr(p, "lname"), NIL);
       gencomma = 1;
     }
     Printv(wrapper->def, return_type, " ", wname.get(), "(", proto, ") {\n", NIL);
@@ -2205,10 +2205,10 @@ public:
     SwigType *type = Getattr(n, "type");
     String *return_type;
 
-    if ((return_type = Swig_typemap_lookup("ctype", n, "", 0))) {
+    if ((return_type = Swig_typemap_lookup("ctype", n, "", nullptr))) {
       substituteResolvedType(type, return_type);
     } else {
-      Swig_warning(WARN_C_TYPEMAP_CTYPE_UNDEF, input_file, line_number, "No ctype typemap defined for %s\n", SwigType_str(type, 0));
+      Swig_warning(WARN_C_TYPEMAP_CTYPE_UNDEF, input_file, line_number, "No ctype typemap defined for %s\n", SwigType_str(type, nullptr));
       return_type = NewString("");
     }
 
@@ -2224,7 +2224,7 @@ public:
    * If a non-null wrapper is specified, it is used to emit typemap-defined code in it and it also determines whether we're generating the prototype for the
    * declarations or the definitions, which changes the type used for the C++ objects.
    * ---------------------------------------------------------------------- */
-  scoped_dohptr get_wrapper_func_proto(Node *n, Wrapper *wrapper = NULL) {
+  scoped_dohptr get_wrapper_func_proto(Node *n, Wrapper *wrapper = nullptr) {
     ParmList *parms = Getattr(n, "parms");
 
     Parm *p;
@@ -2237,17 +2237,17 @@ public:
     } else {
       // We can't call emit_attach_parmmaps() without a wrapper, it would just crash.
       // Attach "in" manually, we need it for tmap:in:numinputs below.
-      Swig_typemap_attach_parms("in", parms, 0);
+      Swig_typemap_attach_parms("in", parms, nullptr);
     }
     Setattr(n, "wrap:parms", parms);  // never read again?!
 
     // attach 'ctype' typemaps
-    Swig_typemap_attach_parms("ctype", parms, 0);
+    Swig_typemap_attach_parms("ctype", parms, nullptr);
 
     // prepare function definition
     for (p = parms, gencomma = 0; p;) {
       String *tm;
-      SwigType *type = NULL;
+      SwigType *type = nullptr;
 
       while (p && checkAttribute(p, "tmap:in:numinputs", "0")) {
         p = Getattr(p, "tmap:in:next");
@@ -2263,11 +2263,11 @@ public:
 
       if (SwigType_type(type) == T_VARARGS) {
         Swig_error(Getfile(n), Getline(n), "Vararg function %s not supported.\n", Getattr(n, "name"));
-        return scoped_dohptr(NULL);
+        return scoped_dohptr(nullptr);
       }
 
       String *lname = Getattr(p, "lname");
-      String *c_parm_type = 0;
+      String *c_parm_type = nullptr;
       String *arg_name = NewString("");
 
       Printf(arg_name, "c%s", lname);
@@ -2285,9 +2285,9 @@ public:
         }
 
         // template handling
-        Replaceall(c_parm_type, "$tt", SwigType_lstr(type, 0));
+        Replaceall(c_parm_type, "$tt", SwigType_lstr(type, nullptr));
       } else {
-        Swig_warning(WARN_C_TYPEMAP_CTYPE_UNDEF, input_file, line_number, "No ctype typemap defined for %s\n", SwigType_str(type, 0));
+        Swig_warning(WARN_C_TYPEMAP_CTYPE_UNDEF, input_file, line_number, "No ctype typemap defined for %s\n", SwigType_str(type, nullptr));
       }
 
       Printv(proto, gencomma ? ", " : "", c_parm_type, " ", arg_name, NIL);
@@ -2302,7 +2302,7 @@ public:
         }
         p = Getattr(p, "tmap:in:next");
       } else {
-        Swig_warning(WARN_TYPEMAP_IN_UNDEF, input_file, line_number, "Unable to use type %s as a function argument.\n", SwigType_str(type, 0));
+        Swig_warning(WARN_TYPEMAP_IN_UNDEF, input_file, line_number, "Unable to use type %s as a function argument.\n", SwigType_str(type, nullptr));
         p = nextSibling(p);
       }
 
@@ -2371,7 +2371,7 @@ public:
     // make sure lnames are set
     Parm *p;
     int index = 1;
-    String *lname = 0;
+    String *lname = nullptr;
 
     for (p = (Parm *)parms, index = 1; p; (p = nextSibling(p)), index++) {
       if (!(lname = Getattr(p, "lname"))) {
@@ -2468,7 +2468,7 @@ public:
           Printf(wrapper->code, "\n");
       } else {
         Swig_warning(
-          WARN_TYPEMAP_OUT_UNDEF, input_file, line_number, "Unable to use return type %s in function %s.\n", SwigType_str(type, 0), Getattr(n, "name"));
+          WARN_TYPEMAP_OUT_UNDEF, input_file, line_number, "Unable to use return type %s in function %s.\n", SwigType_str(type, nullptr), Getattr(n, "name"));
       }
     } else {
       Append(wrapper->code, action);
@@ -2582,7 +2582,7 @@ public:
       if (Cmp(name, Getattr(h, "name")) == 0)
         return h;
     }
-    return 0;
+    return nullptr;
   }
 
   /* ---------------------------------------------------------------------
@@ -2599,7 +2599,7 @@ public:
   String *make_c_var_decl(Node *n) {
     String *name = Getattr(n, "name");
     SwigType *type = Getattr(n, "type");
-    String *type_str = SwigType_str(type, 0);
+    String *type_str = SwigType_str(type, nullptr);
 
     if (Getattr(n, "unnamedinstance")) {
       // If this is an anonymous enum, we can declare the variable as int even though we can't reference this type.
@@ -2674,7 +2674,7 @@ public:
         SwigType_push(t, Getattr(node, "decl"));
         t = SwigType_typedef_resolve_all(t);
         if (SwigType_isfunction(t)) {
-          Swig_warning(WARN_C_UNSUPPORTTED, input_file, line_number, "Extending C struct with %s is not currently supported, ignored.\n", SwigType_str(t, 0));
+          Swig_warning(WARN_C_UNSUPPORTTED, input_file, line_number, "Extending C struct with %s is not currently supported, ignored.\n", SwigType_str(t, nullptr));
         } else {
           String *const var_decl = make_c_var_decl(node);
           Printv(out, cindent, var_decl, ";\n", NIL);
@@ -2869,7 +2869,7 @@ public:
     enum_decl = NewStringEmpty();
 
     // Another string for C++ enum declaration, which differs from the C one because it never uses the prefix, as C++ enums are declared in the correct scope.
-    cxx_enum_decl = cxx_wrappers_.is_initialized() ? NewStringEmpty() : NULL;
+    cxx_enum_decl = cxx_wrappers_.is_initialized() ? NewStringEmpty() : nullptr;
 
     // If we're currently generating a wrapper class, we need an extra level of indent.
     if (cxx_enum_decl) {
@@ -2902,13 +2902,13 @@ public:
     }
 
     // C++ enum names don't use the prefix, as they're defined in namespace or class scope.
-    String *cxx_enum_prefix = NULL;
+    String *cxx_enum_prefix = nullptr;
 
     scoped_dohptr enumname;
     scoped_dohptr cxx_enumname;
 
     // Unnamed enums may just have no name at all or have a synthesized invalid name of the form "$unnamedN$ which is indicated by "unnamed" attribute.
-    if (String *const name = Getattr(n, "unnamed") ? NULL : symname) {
+    if (String *const name = Getattr(n, "unnamed") ? nullptr : symname) {
       // If it's a typedef, its sym:name is the typedef name, but we don't want to use it here (we already use it for the typedef we generate), so use the
       // actual C++ name instead.
       if (is_typedef) {

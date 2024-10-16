@@ -40,11 +40,11 @@ void Wrapper_virtual_elimination_mode_set(int flag) {
    This is a major hack. Sorry.  */
 
 extern "C" {
-static String *search_decl = 0; /* Declarator being searched */
+static String *search_decl = nullptr; /* Declarator being searched */
 static Node *check_implemented(Node *n) {
   String *decl;
   if (!n)
-    return 0;
+    return nullptr;
   while (n) {
     if (Strcmp(nodeType(n), "cdecl") == 0) {
       decl = Getattr(n, "decl");
@@ -64,7 +64,7 @@ static Node *check_implemented(Node *n) {
     }
     n = Getattr(n, "csym:nextSibling");
   }
-  return 0;
+  return nullptr;
 }
 }
 
@@ -124,7 +124,7 @@ class Allocate : public Dispatcher {
       }
     }
     Delete(resolved_decl);
-    resolved_decl = 0;
+    resolved_decl = nullptr;
     for (int j = 0; j < Len(bases); j++) {
       Node *b = Getitem(bases, j);
       if (function_is_defined_in_bases(n, Getattr(b, "allbases")))
@@ -329,7 +329,7 @@ class Allocate : public Dispatcher {
   /* Checks to see if a class is abstract through inheritance,
      and saves the first node that seems to be abstract.
    */
-  int is_abstract_inherit(Node *n, Node *base = 0, int first = 0) {
+  int is_abstract_inherit(Node *n, Node *base = nullptr, int first = 0) {
     if (!first && (base == n))
       return 0;
     if (!base) {
@@ -356,7 +356,7 @@ class Allocate : public Dispatcher {
           base_decl = SwigType_typedef_resolve_all(base_decl);
         if (SwigType_isfunction(base_decl))
           search_decl = SwigType_pop_function(base_decl);
-        Node *dn = Swig_symbol_clookup_local_check(name, 0, check_implemented);
+        Node *dn = Swig_symbol_clookup_local_check(name, nullptr, check_implemented);
         Delete(search_decl);
         Delete(base_decl);
 
@@ -390,7 +390,7 @@ class Allocate : public Dispatcher {
 
   /* Grab methods used by smart pointers */
 
-  List *smart_pointer_methods(Node *cls, List *methods, int isconst, String *classname = 0) {
+  List *smart_pointer_methods(Node *cls, List *methods, int isconst, String *classname = nullptr) {
     if (!methods) {
       methods = NewList();
     }
@@ -410,7 +410,7 @@ class Allocate : public Dispatcher {
           if (!((Cmp(storage, "typedef") == 0)) && !Strstr(storage, "friend")) {
             String *name = Getattr(c, "name");
             String *symname = Getattr(c, "sym:name");
-            Node *e = Swig_symbol_clookup_local(name, 0);
+            Node *e = Swig_symbol_clookup_local(name, nullptr);
             if (e && is_public(e) && !GetFlag(e, "feature:ignore") && (Cmp(symname, Getattr(e, "sym:name")) == 0)) {
               Swig_warning(WARN_LANG_DEREF_SHADOW, Getfile(e), Getline(e), "Declaration of '%s' shadows declaration accessible via operator->(),\n", name);
               Swig_warning(WARN_LANG_DEREF_SHADOW, Getfile(c), Getline(c), "previous declaration of '%s'.\n", name);
@@ -493,7 +493,7 @@ class Allocate : public Dispatcher {
       if (SwigType_isreference(t) || SwigType_ispointer(t) || SwigType_isarray(t)) {
         Delete(SwigType_pop(t));
       }
-      Node *c = Swig_symbol_clookup(t, 0);
+      Node *c = Swig_symbol_clookup(t, nullptr);
       if (c) {
         if (!GetFlag(c, "feature:exceptionclass")) {
           SetFlag(c, "feature:exceptionclass");
@@ -505,7 +505,7 @@ class Allocate : public Dispatcher {
   }
 
   void process_exceptions(Node *n) {
-    ParmList *catchlist = 0;
+    ParmList *catchlist = nullptr;
     /*
        the "catchlist" attribute is used to emit the block
 
@@ -567,7 +567,7 @@ class Allocate : public Dispatcher {
        *   using Base::m;
        * };
        */
-      return 0;
+      return nullptr;
     }
 
     Node *nn = copyNode(c);
@@ -618,7 +618,7 @@ class Allocate : public Dispatcher {
         Setattr(nn, "throws", CopyParmList(throw_parm_list));
     } else {
       Delete(nn);
-      nn = 0;
+      nn = nullptr;
     }
     return nn;
   }
@@ -686,7 +686,7 @@ class Allocate : public Dispatcher {
   bool is_assignable_type(const SwigType *type) {
     bool assignable = true;
     if (SwigType_type(type) == T_USER) {
-      Node *cn = Swig_symbol_clookup(type, 0);
+      Node *cn = Swig_symbol_clookup(type, nullptr);
       if (cn) {
         if ((Strcmp(nodeType(cn), "class") == 0)) {
           if (Getattr(cn, "allocate:noassign")) {
@@ -725,12 +725,12 @@ class Allocate : public Dispatcher {
   }
 
 public:
-  Allocate() : inclass(NULL), extendmode(0) {
+  Allocate() : inclass(nullptr), extendmode(0) {
   }
 
   virtual int top(Node *n) {
     cplus_mode = PUBLIC;
-    inclass = 0;
+    inclass = nullptr;
     extendmode = 0;
     emit_children(n);
     return SWIG_OK;
@@ -950,7 +950,7 @@ public:
 
     /* Check if base classes allow smart pointers, but might be hidden */
     if (!Getattr(n, "allocate:smartpointer")) {
-      Node *sp = Swig_symbol_clookup("operator ->", 0);
+      Node *sp = Swig_symbol_clookup("operator ->", nullptr);
       if (sp) {
         /* Look for parent */
         Node *p = parentNode(sp);
@@ -1017,7 +1017,7 @@ public:
       return SWIG_OK;
 
     if (!Getattr(n, "namespace")) {
-      Node *ns = 0;
+      Node *ns = nullptr;
       /* using id */
       Symtab *stab = Getattr(n, "sym:symtab");
       if (stab) {
@@ -1025,7 +1025,7 @@ public:
         if (GetFlag(n, "usingctor")) {
           // Inherited constructors: don't try and lookup the constructor as it may be implicit - instead lookup the class
           SwigType *classname = Swig_scopename_prefix(uname);
-          Node *classnode = Swig_symbol_clookup(classname, 0);
+          Node *classnode = Swig_symbol_clookup(classname, nullptr);
           Node *parent = parentNode(n);
 
           // Check that the class specified in the inheriting constructor is actually a base class
@@ -1062,7 +1062,7 @@ public:
         } else {
           ns = Swig_symbol_clookup(uname, stab);
           if (!ns && SwigType_istemplate(uname)) {
-            String *tmp = Swig_symbol_template_deftype(uname, 0);
+            String *tmp = Swig_symbol_template_deftype(uname, nullptr);
             if (!Equal(tmp, uname)) {
               ns = Swig_symbol_clookup(tmp, stab);
             }
@@ -1089,7 +1089,7 @@ public:
             if (Equal(ntype, "cdecl") || Equal(ntype, "constructor") || Equal(ntype, "template") || Equal(ntype, "using")) {
               /* Add a new class member to the parse tree (copy it from the base class member pointed to by the using declaration in node n) */
               Node *c = ns;
-              Node *unodes = 0, *last_unodes = 0;
+              Node *unodes = nullptr, *last_unodes = nullptr;
               int ccount = 0;
 
               while (c) {
@@ -1208,7 +1208,7 @@ public:
         }
       }
 
-      Node *c = 0;
+      Node *c = nullptr;
       for (c = firstChild(n); c; c = nextSibling(c)) {
         if (Equal(nodeType(c), "cdecl")) {
           process_exceptions(c);
@@ -1289,7 +1289,7 @@ public:
               SwigType_push(type, Getattr(sn, "decl"));
               Delete(SwigType_pop_function(type));
               SwigType *base = SwigType_base(type);
-              Node *sc = Swig_symbol_clookup(base, 0);
+              Node *sc = Swig_symbol_clookup(base, nullptr);
               if ((sc) && (Strcmp(nodeType(sc), "class") == 0)) {
                 if (SwigType_check_decl(type, "p.")) {
                   /* Need to check if type is a const pointer */
@@ -1301,7 +1301,7 @@ public:
                   } else {
                     Setattr(inclass, "allocate:smartpointermutable", "1");
                   }
-                  List *methods = smart_pointer_methods(sc, 0, isconst);
+                  List *methods = smart_pointer_methods(sc, nullptr, isconst);
                   Setattr(inclass, "allocate:smartpointer", methods);
                   Setattr(inclass, "allocate:smartpointerpointeeclassname", Getattr(sc, "name"));
                 } else {
@@ -1393,10 +1393,10 @@ public:
       String *cc = SwigType_typedef_resolve_all(tn);
       SwigType *rt = SwigType_typedef_resolve_all(Getattr(parms, "type"));
       if (SwigType_istemplate(type)) {
-        String *tmp = Swig_symbol_template_deftype(cc, 0);
+        String *tmp = Swig_symbol_template_deftype(cc, nullptr);
         Delete(cc);
         cc = tmp;
-        tmp = Swig_symbol_template_deftype(rt, 0);
+        tmp = Swig_symbol_template_deftype(rt, nullptr);
         Delete(rt);
         rt = tmp;
       }
@@ -1526,7 +1526,7 @@ public:
 
       Symtab *oldscope = Swig_symbol_setscope(Getattr(n, "symtab"));
       Node *on = Swig_symbol_add(symname, cn);
-      Swig_features_get(Swig_cparse_features(), Swig_symbol_qualifiedscopename(0), name, decl, cn);
+      Swig_features_get(Swig_cparse_features(), Swig_symbol_qualifiedscopename(nullptr), name, decl, cn);
       Swig_symbol_setscope(oldscope);
 
       if (on == cn) {
@@ -1573,7 +1573,7 @@ public:
 
       Symtab *oldscope = Swig_symbol_setscope(Getattr(n, "symtab"));
       Node *on = Swig_symbol_add(symname, cn);
-      Swig_features_get(Swig_cparse_features(), Swig_symbol_qualifiedscopename(0), name, decl, cn);
+      Swig_features_get(Swig_cparse_features(), Swig_symbol_qualifiedscopename(nullptr), name, decl, cn);
       Swig_symbol_setscope(oldscope);
 
       if (on == cn) {
@@ -1606,7 +1606,7 @@ public:
     String *name = SwigType_templateprefix(lastname);
     Insert(name, 0, "~");
     String *decl = NewString("f().");
-    String *symname = Swig_name_make(cn, cname, name, decl, 0);
+    String *symname = Swig_name_make(cn, cname, name, decl, nullptr);
     if (Strcmp(symname, "$ignore") != 0) {
       String *possible_nonstandard_symname = NewStringf("~%s", Getattr(n, "sym:name"));
 
@@ -1617,9 +1617,9 @@ public:
       Setattr(cn, "parentNode", n);
 
       Symtab *oldscope = Swig_symbol_setscope(Getattr(n, "symtab"));
-      Node *nonstandard_destructor = Equal(possible_nonstandard_symname, symname) ? 0 : Swig_symbol_clookup(possible_nonstandard_symname, 0);
+      Node *nonstandard_destructor = Equal(possible_nonstandard_symname, symname) ? nullptr : Swig_symbol_clookup(possible_nonstandard_symname, nullptr);
       Node *on = Swig_symbol_add(symname, cn);
-      Swig_features_get(Swig_cparse_features(), Swig_symbol_qualifiedscopename(0), name, decl, cn);
+      Swig_features_get(Swig_cparse_features(), Swig_symbol_qualifiedscopename(nullptr), name, decl, cn);
       Swig_symbol_setscope(oldscope);
 
       if (on == cn) {

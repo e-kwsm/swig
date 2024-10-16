@@ -93,7 +93,7 @@ List *Swig_overload_rank(Node *n, bool script_lang_wrapping) {
   Node *c;
 
   if (!o)
-    return 0;
+    return nullptr;
 
   c = o;
   while (c) {
@@ -164,7 +164,7 @@ List *Swig_overload_rank(Node *n, bool script_lang_wrapping) {
                            Getline(nodes[i].n),
                            "Overloaded method %s not supported (incomplete type checking rule - no precedence level in typecheck typemap for '%s').\n",
                            Swig_name_decl(nodes[i].n),
-                           SwigType_str(Getattr(p1, "type"), 0));
+                           SwigType_str(Getattr(p1, "type"), nullptr));
               nodes[i].error = 1;
             } else if ((!t2) && (!nodes[j].error)) {
               Swig_warning(WARN_TYPEMAP_TYPECHECK,
@@ -172,7 +172,7 @@ List *Swig_overload_rank(Node *n, bool script_lang_wrapping) {
                            Getline(nodes[j].n),
                            "Overloaded method %s not supported (incomplete type checking rule - no precedence level in typecheck typemap for '%s').\n",
                            Swig_name_decl(nodes[j].n),
-                           SwigType_str(Getattr(p2, "type"), 0));
+                           SwigType_str(Getattr(p2, "type"), nullptr));
               nodes[j].error = 1;
             }
             if (t1 && t2) {
@@ -574,7 +574,7 @@ String *Swig_overload_dispatch_cast(Node *n, const_String_or_char_ptr fmt, int *
                        "Overloaded method %s with no explicit typecheck typemap for arg %d of type '%s'.\n",
                        Swig_name_decl(n),
                        j,
-                       SwigType_str(Getattr(pj, "type"), 0));
+                       SwigType_str(Getattr(pj, "type"), nullptr));
           Swig_warning(WARN_TYPEMAP_TYPECHECK_UNDEF,
                        Getfile(ni),
                        Getline(ni),
@@ -760,7 +760,7 @@ static String *overload_dispatch_fast(Node *n, const_String_or_char_ptr fmt, int
                        "Overloaded method %s with no explicit typecheck typemap for arg %d of type '%s'.\n",
                        Swig_name_decl(n),
                        j,
-                       SwigType_str(Getattr(pj, "type"), 0));
+                       SwigType_str(Getattr(pj, "type"), nullptr));
           Swig_warning(WARN_TYPEMAP_TYPECHECK_UNDEF,
                        Getfile(ni),
                        Getline(ni),
@@ -868,7 +868,7 @@ String *Swig_overload_dispatch(Node *n, const_String_or_char_ptr fmt, int *maxar
                      "Overloaded method %s with no explicit typecheck typemap for arg %d of type '%s'.\n",
                      Swig_name_decl(n),
                      j,
-                     SwigType_str(Getattr(pj, "type"), 0));
+                     SwigType_str(Getattr(pj, "type"), nullptr));
         Swig_warning(WARN_TYPEMAP_TYPECHECK_UNDEF,
                      Getfile(ni),
                      Getline(ni),
