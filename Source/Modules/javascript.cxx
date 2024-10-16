@@ -68,13 +68,13 @@ public:
   JSEmitterState();
   ~JSEmitterState();
   DOH *globals();
-  DOH *globals(const char *key, DOH *initial = 0);
+  DOH *globals(const char *key, DOH *initial = nullptr);
   DOH *clazz(bool reset = false);
-  DOH *clazz(const char *key, DOH *initial = 0);
+  DOH *clazz(const char *key, DOH *initial = nullptr);
   DOH *function(bool reset = false);
-  DOH *function(const char *key, DOH *initial = 0);
+  DOH *function(const char *key, DOH *initial = nullptr);
   DOH *variable(bool reset = false);
-  DOH *variable(const char *key, DOH *initial = 0);
+  DOH *variable(const char *key, DOH *initial = nullptr);
   static int IsSet(DOH *val);
 
 private:
@@ -254,7 +254,7 @@ protected:
 
   virtual String *emitCheckTypemap(Node *n, Parm *params, Wrapper *wrapper, String *arg);
 
-  virtual void marshalOutput(Node *n, ParmList *params, Wrapper *wrapper, String *actioncode, const String *cresult = 0, bool emitReturnVariable = true);
+  virtual void marshalOutput(Node *n, ParmList *params, Wrapper *wrapper, String *actioncode, const String *cresult = nullptr, bool emitReturnVariable = true);
 
   virtual void emitCleanupCode(Node *n, Wrapper *wrapper, ParmList *params);
 
@@ -307,7 +307,7 @@ JSEmitter *swig_javascript_create_NAPIEmitter();
 class JAVASCRIPT : public Language {
 
 public:
-  JAVASCRIPT() : emitter(NULL) {
+  JAVASCRIPT() : emitter(nullptr) {
   }
   ~JAVASCRIPT() {
     delete emitter;
@@ -650,10 +650,10 @@ extern "C" Language *swig_javascript(void) {
 JSEmitter::JSEmitter(JSEmitter::JSEngine engine) :
   engine(engine),
   templates(NewHash()),
-  namespaces(NULL),
-  current_namespace(NULL),
+  namespaces(nullptr),
+  current_namespace(nullptr),
   defaultResultName(NewString("result")),
-  f_wrappers(NULL) {
+  f_wrappers(nullptr) {
 }
 
 /* -----------------------------------------------------------------------------
@@ -699,11 +699,11 @@ JSEmitterState &JSEmitter::getState() {
 
 int JSEmitter::initialize(Node * /*n */) {
 
-  if (namespaces != NULL) {
+  if (namespaces != nullptr) {
     Delete(namespaces);
   }
   namespaces = NewHash();
-  Hash *global_namespace = createNamespaceEntry("exports", 0, 0);
+  Hash *global_namespace = createNamespaceEntry("exports", nullptr, nullptr);
 
   Setattr(namespaces, "::", global_namespace);
   current_namespace = global_namespace;
@@ -730,7 +730,7 @@ Node *JSEmitter::getBaseClass(Node *n) {
     }
     return base.item;
   }
-  return NULL;
+  return nullptr;
 }
 
 /* -----------------------------------------------------------------------------
@@ -922,13 +922,13 @@ int JSEmitter::emitCtor(Node *n) {
   Setattr(n, "wrap:name", wrap_name);
   // note: we can remove the is_abstract flag now, as this
   //       is called for non-abstract classes only.
-  Setattr(state.clazz(), IS_ABSTRACT, 0);
+  Setattr(state.clazz(), IS_ABSTRACT, nullptr);
 
   ParmList *params = Getattr(n, "parms");
   emit_parameter_variables(params, wrapper);
   emit_attach_parmmaps(params, wrapper);
 
-  Printf(wrapper->locals, "%sresult;", SwigType_str(Getattr(n, "type"), 0));
+  Printf(wrapper->locals, "%sresult;", SwigType_str(Getattr(n, "type"), nullptr));
 
   marshalInputArgs(n, params, wrapper, Ctor, true, false);
   String *action = emit_action(n);
@@ -1189,7 +1189,7 @@ int JSEmitter::emitConstant(Node *n) {
   String *value = Getattr(n, "value");
 
   // HACK: forcing usage of cppvalue for v8 (which turned out to fix typedef_struct.i, et. al)
-  if (State::IsSet(state.globals(FORCE_CPP)) && Getattr(n, "cppvalue") != NULL) {
+  if (State::IsSet(state.globals(FORCE_CPP)) && Getattr(n, "cppvalue") != nullptr) {
     value = Getattr(n, "cppvalue");
   }
 
@@ -1215,7 +1215,7 @@ int JSEmitter::emitConstant(Node *n) {
     value = mpointer_wname;
   }
 
-  marshalOutput(n, 0, wrapper, NewString(""), value, false);
+  marshalOutput(n, nullptr, wrapper, NewString(""), value, false);
 
   t_getter.replace("$jsmangledname", state.clazz(NAME_MANGLED))
     .replace("$jswrapper", wname)
@@ -1355,13 +1355,13 @@ String *JSEmitter::emitInputTypemap(Node *n, Parm *p, Wrapper *wrapper, String *
     argidx = GetInt(p, INDEX);
   }
 
-  if (tm_def != NULL) {
+  if (tm_def != nullptr) {
     is_optional = true;
   }
   if (argmin >= 0 && argidx >= 0 && argidx >= argmin) {
     is_optional = true;
   }
-  if (is_optional && Getattr(p, INDEX) == NULL) {
+  if (is_optional && Getattr(p, INDEX) == nullptr) {
     Printf(stderr, "Argument %s in %s cannot be a default argument\n", Getattr(p, NAME), state.function(NAME));
     return SWIG_ERROR;
   }
@@ -1373,7 +1373,7 @@ String *JSEmitter::emitInputTypemap(Node *n, Parm *p, Wrapper *wrapper, String *
     Printf(code, "{\n");
   }
 
-  if (tm != NULL) {
+  if (tm != nullptr) {
     Replaceall(tm, "$input", arg);
     Setattr(p, "emit:input", arg);
     // do replacements for built-in variables
@@ -1391,8 +1391,8 @@ String *JSEmitter::emitInputTypemap(Node *n, Parm *p, Wrapper *wrapper, String *
       Printf(code, "\n}\n");
     }
   } else {
-    Swig_warning(WARN_TYPEMAP_IN_UNDEF, input_file, line_number, "Unable to use type %s as a function argument.\n", SwigType_str(type, 0));
-    return NULL;
+    Swig_warning(WARN_TYPEMAP_IN_UNDEF, input_file, line_number, "Unable to use type %s as a function argument.\n", SwigType_str(type, nullptr));
+    return nullptr;
   }
 
   if (is_optional) {
@@ -1411,7 +1411,7 @@ String *JSEmitter::emitInputTypemap(Node *n, Parm *p, Wrapper *wrapper, String *
 String *JSEmitter::emitCheckTypemap(Node *, Parm *p, Wrapper *wrapper, String *arg) {
   String *tm = Getattr(p, "tmap:check");
 
-  if (tm != NULL) {
+  if (tm != nullptr) {
     Replaceall(tm, "$input", arg);
     Printf(wrapper->code, "%s\n", tm);
   }
@@ -1428,14 +1428,14 @@ void JSEmitter::marshalOutput(Node *n, ParmList *params, Wrapper *wrapper, Strin
   if (emitReturnVariable)
     emit_return_variable(n, type, wrapper);
   // if not given, use default result identifier ('result') for output typemap
-  if (cresult == 0)
+  if (cresult == nullptr)
     cresult = defaultResultName;
 
   tm = Swig_typemap_lookup_out("out", n, cresult, wrapper, actioncode);
   bool should_own = GetFlag(n, "feature:new") != 0;
 
   if (tm) {
-    Replaceall(tm, "$objecttype", Swig_scopename_last(SwigType_str(SwigType_strip_qualifiers(type), 0)));
+    Replaceall(tm, "$objecttype", Swig_scopename_last(SwigType_str(SwigType_strip_qualifiers(type), nullptr)));
 
     if (should_own) {
       Replaceall(tm, "$owner", "SWIG_POINTER_OWN");
@@ -1448,7 +1448,7 @@ void JSEmitter::marshalOutput(Node *n, ParmList *params, Wrapper *wrapper, Strin
       Printf(wrapper->code, "\n");
     }
   } else {
-    Swig_warning(WARN_TYPEMAP_OUT_UNDEF, input_file, line_number, "Unable to use return type %s in function %s.\n", SwigType_str(type, 0), Getattr(n, "name"));
+    Swig_warning(WARN_TYPEMAP_OUT_UNDEF, input_file, line_number, "Unable to use return type %s in function %s.\n", SwigType_str(type, nullptr), Getattr(n, "name"));
   }
 
   if (params) {
@@ -1482,7 +1482,7 @@ void JSEmitter::emitCleanupCode(Node *n, Wrapper *wrapper, ParmList *params) {
   }
 
   if (GetFlag(n, "feature:new")) {
-    tm = Swig_typemap_lookup("newfree", n, Swig_cresult_name(), 0);
+    tm = Swig_typemap_lookup("newfree", n, Swig_cresult_name(), nullptr);
     if (tm != NIL) {
       // addThrows(throws_hash, "newfree", n);
       Printv(wrapper->code, tm, "\n", NIL);
@@ -1490,7 +1490,7 @@ void JSEmitter::emitCleanupCode(Node *n, Wrapper *wrapper, ParmList *params) {
   }
 
   /* See if there is any return cleanup code */
-  if ((tm = Swig_typemap_lookup("ret", n, Swig_cresult_name(), 0))) {
+  if ((tm = Swig_typemap_lookup("ret", n, Swig_cresult_name(), nullptr))) {
     Printf(wrapper->code, "%s\n", tm);
     Delete(tm);
   }
@@ -1520,13 +1520,13 @@ int JSEmitter::switchNamespace(Node *n) {
 
   String *nspace = Getattr(n, "sym:nspace");
 
-  if (nspace == NULL) {
+  if (nspace == nullptr) {
     // It seems that only classes have 'sym:nspace' set.
     // We try to get the namespace from the qualified name (i.e., everything before the last '::')
     nspace = Swig_scopename_prefix(Getattr(n, "name"));
   }
   // If there is not even a scopename prefix then it must be global scope
-  if (nspace == NULL) {
+  if (nspace == nullptr) {
     current_namespace = Getattr(namespaces, "::");
     return SWIG_OK;
   }
@@ -1549,7 +1549,7 @@ int JSEmitter::createNamespace(String *scope) {
 
   String *parent_scope = Swig_scopename_prefix(scope);
   Hash *parent_namespace;
-  if (parent_scope == 0) {
+  if (parent_scope == nullptr) {
     parent_namespace = Getattr(namespaces, "::");
   } else if (!Getattr(namespaces, parent_scope)) {
     createNamespace(parent_scope);
@@ -1557,7 +1557,7 @@ int JSEmitter::createNamespace(String *scope) {
   } else {
     parent_namespace = Getattr(namespaces, parent_scope);
   }
-  assert(parent_namespace != 0);
+  assert(parent_namespace != nullptr);
 
   Hash *new_namespace = createNamespaceEntry(Char(scope), Char(Getattr(parent_namespace, "name")), Char(Getattr(parent_namespace, "name_mangled")));
   Setattr(namespaces, scope, new_namespace);
@@ -1617,10 +1617,10 @@ JSCEmitter::JSCEmitter() :
   JSEmitter(JSEmitter::JavascriptCore),
   NULL_STR(NewString("NULL")),
   VETO_SET(NewString("JS_veto_set_variable")),
-  f_wrap_cpp(NULL),
-  f_runtime(NULL),
-  f_header(NULL),
-  f_init(NULL) {
+  f_wrap_cpp(nullptr),
+  f_runtime(nullptr),
+  f_header(nullptr),
+  f_init(nullptr) {
 }
 
 JSCEmitter::~JSCEmitter() {
@@ -1638,7 +1638,7 @@ JSCEmitter::~JSCEmitter() {
 
 void JSCEmitter::marshalInputArgs(Node *n, ParmList *parms, Wrapper *wrapper, MarshallingMode mode, bool is_member, bool is_static) {
   Parm *p;
-  String *tm = NULL;
+  String *tm = nullptr;
 
   // determine an offset index, as members have an extra 'this' argument
   // except: static members and ctors.
@@ -1892,7 +1892,7 @@ int JSCEmitter::exitClass(Node *n) {
   /* prepare registration of base class */
   String *jsclass_inheritance = NewString("");
   Node *base_class = getBaseClass(n);
-  if (base_class != NULL) {
+  if (base_class != nullptr) {
     Template t_inherit(getTemplate("jsc_class_inherit"));
     t_inherit.replace("$jsmangledname", state.clazz(NAME_MANGLED))
       .replace("$jsbaseclassmangled", SwigType_manglestr(Getattr(base_class, "name")))
@@ -2278,7 +2278,7 @@ int V8Emitter::exitFunction(Node *n) {
 
 void V8Emitter::marshalInputArgs(Node *n, ParmList *parms, Wrapper *wrapper, MarshallingMode mode, bool is_member, bool is_static) {
   Parm *p;
-  String *tm = NULL;
+  String *tm = nullptr;
 
   int startIdx = 0;
   if (is_member && !is_static && mode != Ctor) {
@@ -3017,7 +3017,7 @@ DOH *JSEmitterState::globals() {
 }
 
 DOH *JSEmitterState::globals(const char *key, DOH *initial) {
-  if (initial != 0) {
+  if (initial != nullptr) {
     Setattr(globalHash, key, initial);
   }
   return Getattr(globalHash, key);
@@ -3029,7 +3029,7 @@ DOH *JSEmitterState::clazz(bool new_key) {
 
 DOH *JSEmitterState::clazz(const char *key, DOH *initial) {
   DOH *c = clazz();
-  if (initial != 0) {
+  if (initial != nullptr) {
     Setattr(c, key, initial);
   }
   return Getattr(c, key);
@@ -3041,7 +3041,7 @@ DOH *JSEmitterState::function(bool new_key) {
 
 DOH *JSEmitterState::function(const char *key, DOH *initial) {
   DOH *f = function();
-  if (initial != 0) {
+  if (initial != nullptr) {
     Setattr(f, key, initial);
   }
   return Getattr(f, key);
@@ -3053,7 +3053,7 @@ DOH *JSEmitterState::variable(bool new_key) {
 
 DOH *JSEmitterState::variable(const char *key, DOH *initial) {
   DOH *v = variable();
-  if (initial != 0) {
+  if (initial != nullptr) {
     Setattr(v, key, initial);
   }
   return Getattr(v, key);
@@ -3129,7 +3129,7 @@ String *Template::str() {
 
 Template &Template::trim() {
   const char *str = Char(code);
-  if (str == 0)
+  if (str == nullptr)
     return *this;
 
   int length = Len(code);
