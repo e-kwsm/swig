@@ -28,7 +28,7 @@
 
 // Global variables
 
-static Language *lang = 0;	// Language method
+static Language *lang = nullptr;	// Language method
 int CPlusPlus = 0;
 int Extend = 0;			// Extend flag
 int ForceExtern = 0;		// Force extern mode
@@ -170,23 +170,23 @@ Arguments may also be passed in a file, separated by whitespace. For example:\n\
 \n";
 
 // Local variables
-static String *LangSubDir = 0; // Target language library subdirectory
-static String *SwigLib = 0; // Library directory
-static String *SwigLibWinUnix = 0; // Extra library directory on Windows
+static String *LangSubDir = nullptr; // Target language library subdirectory
+static String *SwigLib = nullptr; // Library directory
+static String *SwigLibWinUnix = nullptr; // Extra library directory on Windows
 static int freeze = 0;
-static String *lang_config = 0;
+static String *lang_config = nullptr;
 static const char *hpp_extension = "h";
 static const char *cpp_extension = "cxx";
 static const char *depends_extension = "d";
-static String *outdir = 0;
-static String *xmlout = 0;
+static String *outdir = nullptr;
+static String *xmlout = nullptr;
 static int outcurrentdir = 0;
 static int help = 0;
 static int checkout = 0;
 static int cpp_only = 0;
 static int no_cpp = 0;
-static String *outfile_name = 0;
-static String *outfile_name_h = 0;
+static String *outfile_name = nullptr;
+static String *outfile_name_h = nullptr;
 static int tm_debug = 0;
 static int dump_symtabs = 0;
 static int dump_symbols = 0;
@@ -203,16 +203,16 @@ static int depend_only = 0;
 static int depend_phony = 0;
 static int memory_debug = 0;
 static int allkw = 0;
-static DOH *cpps = 0;
-static String *dependencies_file = 0;
-static String *dependencies_target = 0;
+static DOH *cpps = nullptr;
+static String *dependencies_file = nullptr;
+static String *dependencies_target = nullptr;
 static int external_runtime = 0;
-static String *external_runtime_name = 0;
+static String *external_runtime_name = nullptr;
 enum { STAGE1=1, STAGE2=2, STAGE3=4, STAGE4=8, STAGEOVERFLOW=16 };
-static List *libfiles = 0;
-static List *all_output_files = 0;
-static const char *stdcpp_define = NULL;
-static const char *stdc_define = NULL;
+static List *libfiles = nullptr;
+static List *all_output_files = nullptr;
+static const char *stdcpp_define = nullptr;
+static const char *stdc_define = nullptr;
 
 /* -----------------------------------------------------------------------------
  * check_extension()
@@ -312,7 +312,7 @@ static void SWIG_setfeature(const char *cfeature, const char *cvalue) {
   String *name = NewString("");
   String *fname = NewString(cfeature);
   String *fvalue = NewString(cvalue);
-  Swig_feature_set(features_hash, name, 0, fname, fvalue, 0);
+  Swig_feature_set(features_hash, name, nullptr, fname, fvalue, nullptr);
   Delete(name);
   Delete(fname);
   Delete(fvalue);
@@ -348,7 +348,7 @@ static void SWIG_setfeatures(const char *c) {
       Printf(fvalue, "1");
     }
     /* Printf(stderr,"%s %s\n", fname, fvalue);  */
-    Swig_feature_set(features_hash, name, 0, fname, fvalue, 0);
+    Swig_feature_set(features_hash, name, nullptr, fname, fvalue, nullptr);
     Delete(fname);
     Delete(fvalue);
   }
@@ -497,7 +497,7 @@ static void getoptions(int argc, char *argv[]) {
 	  }
 	} else {
 	  if (strcmp(std, "89") == 0 || strcmp(std, "90") == 0) {
-	    stdc_define = NULL;
+	    stdc_define = nullptr;
 	  } else if (strcmp(std, "95") == 0) {
 	    stdc_define = "__STDC_VERSION__ 199409L";
 	  } else if (strcmp(std, "99") == 0) {
@@ -895,7 +895,7 @@ int SWIG_main(int argc, char *argv[], const TargetLanguageModule *tlm) {
 
   // Check for SWIG_LIB environment variable
   c = getenv("SWIG_LIB");
-  if (c == (char *) 0 || *c == 0) {
+  if (c == (char *) nullptr || *c == 0) {
 #if defined(_WIN32)
     char buf[MAX_PATH];
     char *p;
@@ -1095,7 +1095,7 @@ int SWIG_main(int argc, char *argv[], const TargetLanguageModule *tlm) {
       if (depend) {
 	if (!no_cpp) {
 	  String *outfile;
-          File *f_dependencies_file = 0;
+          File *f_dependencies_file = nullptr;
 
 	  String *inputfile_filename = outcurrentdir ? Swig_file_filename(input_file): Copy(input_file);
 	  String *basename = Swig_file_basename(inputfile_filename);
@@ -1259,7 +1259,7 @@ int SWIG_main(int argc, char *argv[], const TargetLanguageModule *tlm) {
     }
 
     if (dump_tags) {
-      Swig_print_tags(top, 0);
+      Swig_print_tags(top, nullptr);
     }
     if (top) {
       if (!Getattr(top, "name")) {
@@ -1331,7 +1331,7 @@ int SWIG_main(int argc, char *argv[], const TargetLanguageModule *tlm) {
     }
     if (xmlout && top) {
       delete lang;
-      lang = 0;
+      lang = nullptr;
       Swig_print_xml(top, xmlout);
     }
     Delete(top);
@@ -1343,7 +1343,7 @@ int SWIG_main(int argc, char *argv[], const TargetLanguageModule *tlm) {
 
   char *outfiles = getenv("CCACHE_OUTFILES");
   if (outfiles) {
-    File *f_outfiles = NewFile(outfiles, "w", 0);
+    File *f_outfiles = NewFile(outfiles, "w", nullptr);
     if (!f_outfiles) {
       Printf(stderr, "Failed to write list of output files to the filename '%s' specified in CCACHE_OUTFILES environment variable - ", outfiles);
       FileErrorDisplay(outfiles);
