@@ -108,7 +108,7 @@ private:
   /*
    * Helper for getting the value of doxygen:ignore feature or its argument.
    */
-  String *getIgnoreFeature(const std::string &theCommand, const char *argument = NULL) const;
+  String *getIgnoreFeature(const std::string &theCommand, const char *argument = nullptr) const;
 
   /*
    * Whether to print lots of debug info during parsing

@@ -1067,7 +1067,7 @@ DoxygenParser::StringVector DoxygenParser::split(const std::string &text, char s
  * characters: *, /, or !
  */
 bool DoxygenParser::isStartOfDoxyCommentChar(char c) {
-  return (strchr("*/!", c) != NULL);
+  return (strchr("*/!", c) != nullptr);
 }
 
 /*
