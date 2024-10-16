@@ -27,7 +27,7 @@ class CSharpDocConverter : public DoxygenTranslator {
 public:
   CSharpDocConverter(int flags = 0);
 
-  String *makeDocumentation(Node *node);
+  String *makeDocumentation(Node *node) override;
 
 protected:
 
