@@ -2458,7 +2458,7 @@ public:
     return status;
   }
 
-  int classDirectorDisown(Node *n) {
+  int classDirectorDisown(Node *n) override {
     int rv;
     member_func = 1;
     rv = Language::classDirectorDisown(n);
@@ -2471,7 +2471,7 @@ public:
     return rv;
   }
 
-  int classDirectorDestructor(Node *n) {
+  int classDirectorDestructor(Node *n) override {
     /* TODO: it would be nice if this didn't have to copy the body of Language::classDirectorDestructor() */
     String *DirectorClassName = directorClassName(getCurrentClass());
     String *body = NewString("\n");
