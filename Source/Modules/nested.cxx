@@ -15,7 +15,7 @@
 #include "cparse.h"
 
 // Nested classes processing section
-static Hash *classhash = 0;
+static Hash *classhash = nullptr;
 
 static String *make_name(Node *n, String *name, SwigType *decl) {
   int destructor = name && (*(Char(name)) == '~');
@@ -29,15 +29,15 @@ static String *make_name(Node *n, String *name, SwigType *decl) {
   }
 
   if (!name)
-    return 0;
-  return Swig_name_make(n, 0, name, decl, 0);
+    return nullptr;
+  return Swig_name_make(n, nullptr, name, decl, nullptr);
 }
 
 // C version of add_symbols()
 static void add_symbols_c(Node *n) {
   String *decl;
-  String *wrn = 0;
-  String *symname = 0;
+  String *wrn = nullptr;
+  String *symname = nullptr;
   int iscdecl = Cmp(nodeType(n), "cdecl") == 0;
   Setattr(n, "ismember", "1");
   Setattr(n, "access", "public");
@@ -63,20 +63,20 @@ static void add_symbols_c(Node *n) {
 	}
       }
     }
-    Swig_features_get(Swig_cparse_features(), 0, name, 0, n);
+    Swig_features_get(Swig_cparse_features(), nullptr, name, nullptr, n);
     if (makename) {
-      symname = make_name(n, makename, 0);
+      symname = make_name(n, makename, nullptr);
       Delattr(n, "parser:makename");	/* temporary information, don't leave it hanging around */
     } else {
       makename = name;
-      symname = make_name(n, makename, 0);
+      symname = make_name(n, makename, nullptr);
     }
 
     if (!symname) {
       symname = Copy(Getattr(n, "unnamed"));
     }
     if (symname) {
-      wrn = Swig_name_warning(n, 0, symname, 0);
+      wrn = Swig_name_warning(n, nullptr, symname, nullptr);
     }
   } else {
     String *name = Getattr(n, "name");
@@ -86,10 +86,10 @@ static void add_symbols_c(Node *n) {
       Setattr(n, "kind", "function");
     }
 
-    Swig_features_get(Swig_cparse_features(), 0, name, fun, n);
+    Swig_features_get(Swig_cparse_features(), nullptr, name, fun, n);
 
     symname = make_name(n, name, fun);
-    wrn = Swig_name_warning(n, 0, symname, fun);
+    wrn = Swig_name_warning(n, nullptr, symname, fun);
 
     Delete(fdecl);
     Delete(fun);
@@ -99,7 +99,7 @@ static void add_symbols_c(Node *n) {
     return;
   if (GetFlag(n, "feature:ignore")) {
     /* Only add to C symbol table and continue */
-    Swig_symbol_add(0, n);
+    Swig_symbol_add(nullptr, n);
   } else if (strncmp(Char(symname), "$ignore", 7) == 0) {
     char *c = Char(symname) + 7;
     SetFlag(n, "feature:ignore");
@@ -108,7 +108,7 @@ static void add_symbols_c(Node *n) {
       Swig_warning(0, Getfile(n), Getline(n), "%s\n", c + 1);
       SWIG_WARN_NODE_END(n);
     }
-    Swig_symbol_add(0, n);
+    Swig_symbol_add(nullptr, n);
   } else {
     Node *c;
     if ((wrn) && (Len(wrn))) {
@@ -312,7 +312,7 @@ void Swig_nested_name_unnamed_c_structs(Node *n) {
 	Swig_symbol_setscopename(name);
 	// now that we have a name - gather base symbols
 	if (List *publicBases = Getattr(c, "baselist")) {
-	  List *bases = Swig_make_inherit_list(name, publicBases, 0);
+	  List *bases = Swig_make_inherit_list(name, publicBases, nullptr);
 	  Swig_inherit_base_symbols(bases);
 	  Delete(bases);
 	}

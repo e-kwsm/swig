@@ -129,7 +129,7 @@ String *Swig_method_call(const_String_or_char_ptr name, ParmList *parms) {
 
 String *Swig_method_decl(SwigType *return_base_type, SwigType *decl, const_String_or_char_ptr id, List *args, int default_args) {
   String *result = NewString("");
-  bool conversion_operator = Strstr(id, "operator ") != 0 && !return_base_type;
+  bool conversion_operator = Strstr(id, "operator ") != nullptr && !return_base_type;
 
   Parm *parm = args;
   int arg_idx = 0;
@@ -146,9 +146,9 @@ String *Swig_method_decl(SwigType *return_base_type, SwigType *decl, const_Strin
 
   String *rettype = Copy(decl);
   String *quals = SwigType_pop_function_qualifiers(rettype);
-  String *qualifiers = 0;
+  String *qualifiers = nullptr;
   if (quals)
-    qualifiers = SwigType_str(quals, 0);
+    qualifiers = SwigType_str(quals, nullptr);
 
   String *popped_decl = SwigType_pop_function(rettype);
   if (return_base_type)
@@ -156,7 +156,7 @@ String *Swig_method_decl(SwigType *return_base_type, SwigType *decl, const_Strin
 
   if (!conversion_operator) {
     SwigType *rettype_stripped = SwigType_strip_qualifiers(rettype);
-    String *rtype = SwigType_str(rettype, 0);
+    String *rtype = SwigType_str(rettype, nullptr);
     Append(result, rtype);
     if ((SwigType_issimple(rettype_stripped) && return_base_type) || SwigType_isqualifier(rettype))
       Append(result, " ");
@@ -220,7 +220,7 @@ void Swig_director_parms_fixup(ParmList *parms) {
   int i;
   for (i = 0, p = parms; p; p = nextSibling(p), ++i) {
     String *arg = Getattr(p, "name");
-    String *lname = 0;
+    String *lname = nullptr;
 
     if (!arg && !Equal(Getattr(p, "type"), "void")) {
       lname = NewStringf("arg%d", i);

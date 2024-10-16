@@ -26,7 +26,7 @@ struct contract {
 static contract Rules[] = {
   {"require:", "&&"},
   {"ensure:", "||"},
-  {NULL, NULL}
+  {nullptr, nullptr}
 };
 
 /* ----------------------------------------------------------------------------
@@ -56,7 +56,7 @@ public:
 static int Contract_Mode = 0;	/* contract option */
 static int InClass = 0;		/* Parsing C++ or not */
 static int InConstructor = 0;
-static Node *CurrentClass = 0;
+static Node *CurrentClass = nullptr;
 
 /* Set the contract mode, default is 0 (not open) */
 /* Normally set in main.cxx, when get the "-contracts" option */
@@ -83,7 +83,7 @@ Hash *Contracts::ContractSplit(Node *n) {
   String *contract = Getattr(n, "feature:contract");
   Hash *result;
   if (!contract)
-    return NULL;
+    return nullptr;
 
   result = NewHash();
   String *current_section = NewString("");
@@ -190,7 +190,7 @@ static void inherit_contracts(Node *c, Node *n, Hash *contracts, Hash *messages)
    Splitting the assertion into pieces */
 
 String *Contracts::make_expression(String *s, Node *n) {
-  String *str_assert, *expr = 0;
+  String *str_assert, *expr = nullptr;
   List *list_assert;
 
   str_assert = NewString(s);

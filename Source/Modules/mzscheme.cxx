@@ -22,30 +22,30 @@ Mzscheme Options (available with -mzscheme)\n\
      -prefix <name>                - Set a prefix <name> to be prepended to all names\n\
 ";
 
-static String *fieldnames_tab = 0;
-static String *convert_tab = 0;
-static String *convert_proto_tab = 0;
-static String *struct_name = 0;
-static String *mangled_struct_name = 0;
+static String *fieldnames_tab = nullptr;
+static String *convert_tab = nullptr;
+static String *convert_proto_tab = nullptr;
+static String *struct_name = nullptr;
+static String *mangled_struct_name = nullptr;
 
-static String *prefix = 0;
+static String *prefix = nullptr;
 static bool declaremodule = false;
 static bool noinit = false;
-static String *load_libraries = NULL;
-static String *module = 0;
+static String *load_libraries = nullptr;
+static String *module = nullptr;
 static const char *mzscheme_path = "mzscheme";
-static String *init_func_def = 0;
+static String *init_func_def = nullptr;
 
-static File *f_begin = 0;
-static File *f_runtime = 0;
-static File *f_header = 0;
-static File *f_wrappers = 0;
-static File *f_init = 0;
+static File *f_begin = nullptr;
+static File *f_runtime = nullptr;
+static File *f_header = nullptr;
+static File *f_wrappers = nullptr;
+static File *f_init = nullptr;
 
 // Used for garbage collection
 static int exporting_destructor = 0;
-static String *swigtype_ptr = 0;
-static String *cls_swigtype = 0;
+static String *swigtype_ptr = nullptr;
+static String *cls_swigtype = nullptr;
 
 class MZSCHEME:public Language {
 public:
@@ -198,7 +198,7 @@ public:
    * ------------------------------------------------------------ */
 
   void throw_unhandled_mzscheme_type_error(SwigType *d) {
-    Swig_warning(WARN_TYPEMAP_UNDEF, input_file, line_number, "Unable to handle type %s.\n", SwigType_str(d, 0));
+    Swig_warning(WARN_TYPEMAP_UNDEF, input_file, line_number, "Unable to handle type %s.\n", SwigType_str(d, nullptr));
   }
 
   /* Return true iff T is a pointer type */
@@ -225,7 +225,7 @@ public:
     int i = 0;
     int numargs;
     int numreq;
-    String *overname = 0;
+    String *overname = nullptr;
 
     if (load_libraries) {
       ParmList *parms = Getattr(n, "parms");
@@ -394,13 +394,13 @@ public:
     // Look for any remaining cleanup
 
     if (GetFlag(n, "feature:new")) {
-      if ((tm = Swig_typemap_lookup("newfree", n, Swig_cresult_name(), 0))) {
+      if ((tm = Swig_typemap_lookup("newfree", n, Swig_cresult_name(), nullptr))) {
 	Printv(f->code, tm, "\n", NIL);
       }
     }
     // Free any memory allocated by the function being wrapped..
 
-    if ((tm = Swig_typemap_lookup("ret", n, Swig_cresult_name(), 0))) {
+    if ((tm = Swig_typemap_lookup("ret", n, Swig_cresult_name(), nullptr))) {
       Printv(f->code, tm, "\n", NIL);
     }
     // Wrap things up (in a manner of speaking)
@@ -508,7 +508,7 @@ public:
       if (!GetFlag(n, "feature:immutable")) {
 	/* Check for a setting of the variable value */
 	Printf(f->code, "if (argc) {\n");
-	if ((tm = Swig_typemap_lookup("varin", n, name, 0))) {
+	if ((tm = Swig_typemap_lookup("varin", n, name, nullptr))) {
 	  Replaceall(tm, "$input", "argv[0]");
 	  Replaceall(tm, "$argnum", "1");
 	  emit_action_code(n, f->code, tm);
@@ -520,7 +520,7 @@ public:
       // Now return the value of the variable (regardless
       // of evaluating or setting)
 
-      if ((tm = Swig_typemap_lookup("varout", n, name, 0))) {
+      if ((tm = Swig_typemap_lookup("varout", n, name, nullptr))) {
 	Replaceall(tm, "$result", "swig_result");
 	/* Printf (f->code, "%s\n", tm); */
 	emit_action_code(n, f->code, tm);
@@ -539,7 +539,7 @@ public:
 	     "scheme_add_global(\"", proc_name, "\", scheme_make_prim_w_arity(", var_name, ", \"", proc_name, "\", ", "0", ", ", "1", "), menv);\n", NIL);
 
     } else {
-      Swig_warning(WARN_TYPEMAP_VAR_UNDEF, input_file, line_number, "Unsupported variable type %s (ignored).\n", SwigType_str(t, 0));
+      Swig_warning(WARN_TYPEMAP_VAR_UNDEF, input_file, line_number, "Unsupported variable type %s (ignored).\n", SwigType_str(t, nullptr));
     }
     Delete(var_name);
     Delete(proc_name);
@@ -568,7 +568,7 @@ public:
     }
 
     // See if there's a typemap
-    if ((tm = Swig_typemap_lookup("constant", n, name, 0))) {
+    if ((tm = Swig_typemap_lookup("constant", n, name, nullptr))) {
       Replaceall(tm, "$value", value);
       Printf(f_init, "%s\n", tm);
     } else {
@@ -656,15 +656,15 @@ public:
 	   "_swig_struct_", cls_swigtype, "_field_names_cnt,", "(char**) _swig_struct_", cls_swigtype, "_field_names);\n", NIL);
 
     Delete(swigtype_ptr);
-    swigtype_ptr = 0;
+    swigtype_ptr = nullptr;
     Delete(fieldnames_tab);
     Delete(convert_tab);
     Delete(ctype_ptr);
     Delete(convert_proto_tab);
-    struct_name = 0;
-    mangled_struct_name = 0;
+    struct_name = nullptr;
+    mangled_struct_name = nullptr;
     Delete(cls_swigtype);
-    cls_swigtype = 0;
+    cls_swigtype = nullptr;
 
     return SWIG_OK;
   }
@@ -681,7 +681,7 @@ public:
       String *name = Getattr(n, "name");
       SwigType *type = Getattr(n, "type");
       String *swigtype = SwigType_manglestr(Getattr(n, "type"));
-      String *tm = 0;
+      String *tm = nullptr;
       String *access_mem = NewString("");
       SwigType *ctype_ptr = NewStringf("p.%s", Getattr(n, "type"));
 
@@ -689,12 +689,12 @@ public:
       Printv(access_mem, "(ptr)->", name, NIL);
       if ((SwigType_type(type) == T_USER) && (!is_a_pointer(type))) {
 	Printv(convert_tab, tab4, "fields[i++] = ", NIL);
-	Printv(convert_tab, "_swig_convert_struct_", swigtype, "((", SwigType_str(ctype_ptr, 0), ")&((ptr)->", name, "));\n", NIL);
-      } else if ((tm = Swig_typemap_lookup("varout", n, access_mem, 0))) {
+	Printv(convert_tab, "_swig_convert_struct_", swigtype, "((", SwigType_str(ctype_ptr, nullptr), ")&((ptr)->", name, "));\n", NIL);
+      } else if ((tm = Swig_typemap_lookup("varout", n, access_mem, nullptr))) {
 	Replaceall(tm, "$result", "fields[i++]");
 	Printv(convert_tab, tm, "\n", NIL);
       } else
-	Swig_warning(WARN_TYPEMAP_VAR_UNDEF, input_file, line_number, "Unsupported member variable type %s (ignored).\n", SwigType_str(type, 0));
+	Swig_warning(WARN_TYPEMAP_VAR_UNDEF, input_file, line_number, "Unsupported member variable type %s (ignored).\n", SwigType_str(type, nullptr));
 
       Delete(access_mem);
     }
