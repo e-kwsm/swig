@@ -1525,7 +1525,7 @@ public:
     UseWrapperSuffix = 1;
   }
 
-  ~C()
+  ~C() override
   {
     Delete(ns_cxx);
     Delete(ns_prefix);
@@ -1742,7 +1742,7 @@ public:
    * Override the base class method to ensure that $resolved_type is expanded correctly inside $typemap().
    *--------------------------------------------------------------------*/
 
-  virtual void replaceSpecialVariables(String *method, String *tm, Parm *parm) {
+  void replaceSpecialVariables(String *method, String *tm, Parm *parm) override {
     // This function is called by Swig_typemap_lookup(), which may be called when generating C or C++ wrappers, so delegate to the latter one if necessary.
     if (cxx_wrappers_.is_initialized() && cxx_wrappers_.replaceSpecialVariables(method, tm, parm))
       return;
@@ -1755,7 +1755,7 @@ public:
    * main()
    * ------------------------------------------------------------ */
 
-  virtual void main(int argc, char *argv[]) {
+  void main(int argc, char *argv[]) override {
     bool except_flag = CPlusPlus;
     bool use_cxx_wrappers = CPlusPlus;
 
@@ -1827,7 +1827,7 @@ public:
    * top()
    * --------------------------------------------------------------------- */
 
-  virtual int top(Node *n) {
+  int top(Node *n) override {
     module_name = Getattr(n, "name");
     String *outfile = Getattr(n, "outfile");
 
@@ -1990,7 +1990,7 @@ public:
    * importDirective()
    * ------------------------------------------------------------------------ */
 
-  virtual int importDirective(Node *n) {
+  int importDirective(Node *n) override {
     // When we import another module, we need access to its declarations in our header, so we must include the header generated for that module. Unfortunately
     // there doesn't seem to be any good way to get the name of that header, so we try to guess it from the header name of this module. This is obviously not
     // completely reliable, but works reasonably well in practice and it's not clear what else could we do, short of requiring some C-specific %import attribute
@@ -2018,7 +2018,7 @@ public:
    * globalvariableHandler()
    * ------------------------------------------------------------------------ */
 
-  virtual int globalvariableHandler(Node *n) {
+  int globalvariableHandler(Node *n) override {
     // Don't export static globals, they won't be accessible when using a shared library, for example.
     if (Checkattr(n, "storage", "static"))
       return SWIG_NOWRAP;
@@ -2572,7 +2572,7 @@ public:
    * functionWrapper()
    * ---------------------------------------------------------------------- */
 
-  virtual int functionWrapper(Node *n) {
+  int functionWrapper(Node *n) override {
     if (!Getattr(n, "sym:overloaded")) {
       if (!addSymbol(Getattr(n, "sym:name"), n))
 	return SWIG_ERROR;
@@ -2738,7 +2738,7 @@ public:
    * classDeclaration()
    * --------------------------------------------------------------------- */
 
-  virtual int classDeclaration(Node *n) {
+  int classDeclaration(Node *n) override {
     if (Cmp(Getattr(n, "name"), "SWIG_CException") == 0) {
       // Ignore this class only if it was already wrapped in another module, imported from this one (if exceptions are disabled, we shouldn't be even parsing
       // SWIG_CException in the first place and if they're enabled, we handle it normally).
@@ -2753,7 +2753,7 @@ public:
    * classHandler()
    * --------------------------------------------------------------------- */
 
-  virtual int classHandler(Node *n) {
+  int classHandler(Node *n) override {
     String* const name = get_c_proxy_name(n);
 
     if (CPlusPlus) {
@@ -2826,7 +2826,7 @@ public:
    * staticmembervariableHandler()
    * --------------------------------------------------------------------- */
 
-  virtual int staticmembervariableHandler(Node *n) {
+  int staticmembervariableHandler(Node *n) override {
     SwigType *type = Getattr(n, "type");
     SwigType *tdtype = SwigType_typedef_resolve_all(type);
     if (tdtype) {
@@ -2849,7 +2849,7 @@ public:
    * membervariableHandler()
    * --------------------------------------------------------------------- */
 
-  virtual int membervariableHandler(Node *n) {
+  int membervariableHandler(Node *n) override {
     SwigType *type = Getattr(n, "type");
     SwigType *tdtype = SwigType_typedef_resolve_all(type);
     if (tdtype) {
@@ -2872,7 +2872,7 @@ public:
    * constructorHandler()
    * --------------------------------------------------------------------- */
 
-  virtual int constructorHandler(Node *n) {
+  int constructorHandler(Node *n) override {
     // For some reason, the base class implementation of constructorDeclaration() only takes care of the copy ctor automatically for the languages not
     // supporting overloading (i.e. not calling allow_overloading(), as we do). So duplicate the relevant part of its code here,
     if (!Abstract && Getattr(n, "copy_constructor")) {
@@ -2892,7 +2892,7 @@ public:
    * Language::enumforwardDeclaration()
    * ---------------------------------------------------------------------- */
 
-  virtual int enumforwardDeclaration(Node *n) {
+  int enumforwardDeclaration(Node *n) override {
     // Base implementation of this function calls enumDeclaration() for "missing" enums, i.e. those without any definition at all. This results in invalid (at
     // least in C++) enum declarations in the output, so simply don't do this here.
     (void) n;
@@ -2903,7 +2903,7 @@ public:
    * enumDeclaration()
    * --------------------------------------------------------------------- */
 
-  virtual int enumDeclaration(Node *n) {
+  int enumDeclaration(Node *n) override {
     if (ImportMode)
       return SWIG_OK;
 
@@ -3036,7 +3036,7 @@ public:
    * enumvalueDeclaration()
    * --------------------------------------------------------------------- */
 
-  virtual int enumvalueDeclaration(Node *n) {
+  int enumvalueDeclaration(Node *n) override {
     if (Cmp(Getattr(n, "ismember"), "1") == 0 && Cmp(Getattr(n, "access"), "public") != 0)
       return SWIG_NOWRAP;
     Swig_require("enumvalueDeclaration", n, "?enumvalueex", "?enumvalue", NIL);
@@ -3088,7 +3088,7 @@ public:
    * constantWrapper()
    * --------------------------------------------------------------------- */
 
-  virtual int constantWrapper(Node *n) {
+  int constantWrapper(Node *n) override {
     String *name = Getattr(n, "sym:name");
     // We use the "value" and hope that it will work in C as well as in C++.
     String *value = Getattr(n, "value");
