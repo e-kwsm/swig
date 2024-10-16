@@ -22,49 +22,49 @@ Tcl 8 Options (available with -tcl8)\n\
      -namespace      - Build module into a Tcl 8 namespace\n\
      -pkgversion     - Set package version\n\n";
 
-static String *cmd_tab = 0;	/* Table of command names    */
-static String *var_tab = 0;	/* Table of global variables */
-static String *const_tab = 0;	/* Constant table            */
-static String *methods_tab = 0;	/* Methods table             */
-static String *attr_tab = 0;	/* Attribute table           */
-static String *prefix = 0;
-static String *module = 0;
+static String *cmd_tab = nullptr;	/* Table of command names    */
+static String *var_tab = nullptr;	/* Table of global variables */
+static String *const_tab = nullptr;	/* Constant table            */
+static String *methods_tab = nullptr;	/* Methods table             */
+static String *attr_tab = nullptr;	/* Attribute table           */
+static String *prefix = nullptr;
+static String *module = nullptr;
 static int namespace_option = 0;
-static String *init_name = 0;
-static String *ns_name = 0;
+static String *init_name = nullptr;
+static String *ns_name = nullptr;
 static int have_constructor;
 static String *constructor_name;
 static int have_destructor;
 static int have_base_classes;
-static String *destructor_action = 0;
+static String *destructor_action = nullptr;
 static String *version = (String *) "0.0";
-static String *class_name = 0;
+static String *class_name = nullptr;
 
 static int have_attributes;
 static int have_methods;
 static int nosafe = 0;
 
-static File *f_header = 0;
-static File *f_wrappers = 0;
-static File *f_init = 0;
-static File *f_begin = 0;
-static File *f_runtime = 0;
+static File *f_header = nullptr;
+static File *f_wrappers = nullptr;
+static File *f_init = nullptr;
+static File *f_begin = nullptr;
+static File *f_runtime = nullptr;
 
 
 //  Itcl support
 static int itcl = 0;
-static File *f_shadow = 0;
-static File *f_shadow_stubs = 0;
+static File *f_shadow = nullptr;
+static File *f_shadow_stubs = nullptr;
 
-static String *constructor = 0;
-static String *destructor = 0;
-static String *base_classes = 0;
-static String *base_class_init = 0;
-static String *methods = 0;
-static String *imethods = 0;
-static String *attributes = 0;
-static String *attribute_traces = 0;
-static String *iattribute_traces = 0;
+static String *constructor = nullptr;
+static String *destructor = nullptr;
+static String *base_classes = nullptr;
+static String *base_class_init = nullptr;
+static String *methods = nullptr;
+static String *imethods = nullptr;
+static String *attributes = nullptr;
+static String *attribute_traces = nullptr;
+static String *iattribute_traces = nullptr;
 
 
 
@@ -179,7 +179,7 @@ public:
 
       Insert(module, 0, "_");
 
-      if ((f_shadow = NewFile(filen, "w", SWIG_output_files())) == 0) {
+      if ((f_shadow = NewFile(filen, "w", SWIG_output_files())) == nullptr) {
 	FileErrorDisplay(filen);
 	Exit(EXIT_FAILURE);
       }
@@ -262,7 +262,7 @@ public:
     String *iname = Getattr(n, "sym:name");
     SwigType *returntype = Getattr(n, "type");
     ParmList *parms = Getattr(n, "parms");
-    String *overname = 0;
+    String *overname = nullptr;
 
     Parm *p;
     int i;
@@ -370,7 +370,7 @@ public:
 	p = Getattr(p, "tmap:in:next");
 	continue;
       } else {
-	Swig_warning(WARN_TYPEMAP_IN_UNDEF, input_file, line_number, "Unable to use type %s as a function argument.\n", SwigType_str(pt, 0));
+	Swig_warning(WARN_TYPEMAP_IN_UNDEF, input_file, line_number, "Unable to use type %s as a function argument.\n", SwigType_str(pt, nullptr));
       }
       p = nextSibling(p);
     }
@@ -454,7 +454,7 @@ public:
       }
       Printf(f->code, "%s\n", tm);
     } else {
-      Swig_warning(WARN_TYPEMAP_OUT_UNDEF, input_file, line_number, "Unable to use return type %s in function %s.\n", SwigType_str(returntype, 0), name);
+      Swig_warning(WARN_TYPEMAP_OUT_UNDEF, input_file, line_number, "Unable to use return type %s in function %s.\n", SwigType_str(returntype, nullptr), name);
     }
     emit_return_variable(n, returntype, f);
 
@@ -466,12 +466,12 @@ public:
 
     /* Look for any remaining cleanup */
     if (GetFlag(n, "feature:new")) {
-      if ((tm = Swig_typemap_lookup("newfree", n, Swig_cresult_name(), 0))) {
+      if ((tm = Swig_typemap_lookup("newfree", n, Swig_cresult_name(), nullptr))) {
 	Printf(f->code, "%s\n", tm);
       }
     }
 
-    if ((tm = Swig_typemap_lookup("ret", n, Swig_cresult_name(), 0))) {
+    if ((tm = Swig_typemap_lookup("ret", n, Swig_cresult_name(), nullptr))) {
       Printf(f->code, "%s\n", tm);
     }
 #ifdef SWIG_USE_RESULTOBJ
@@ -554,9 +554,9 @@ public:
     String *iname = Getattr(n, "sym:name");
     SwigType *t = Getattr(n, "type");
 
-    String *setname = 0;
-    String *setfname = 0;
-    Wrapper *setf = 0, *getf = 0;
+    String *setname = nullptr;
+    String *setfname = nullptr;
+    Wrapper *setf = nullptr, *getf = nullptr;
     int readonly = 0;
     String *tm;
 
@@ -571,7 +571,7 @@ public:
     Setattr(n, "wrap:name", getfname);
     Printv(getf->def, "SWIGINTERN const char *", getfname, "(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, char *name1, char *name2, int flags) {", NIL);
     Wrapper_add_local(getf, "value", "Tcl_Obj *value = 0");
-    if ((tm = Swig_typemap_lookup("varout", n, name, 0))) {
+    if ((tm = Swig_typemap_lookup("varout", n, name, nullptr))) {
       Replaceall(tm, "$result", "value");
       /* Printf(getf->code, "%s\n",tm); */
       addfail = emit_action_code(n, getf->code, tm);
@@ -587,7 +587,7 @@ public:
       Printf(getf->code, "}\n");
       Wrapper_print(getf, f_wrappers);
     } else {
-      Swig_warning(WARN_TYPEMAP_VAROUT_UNDEF, input_file, line_number, "Unable to read variable of type %s\n", SwigType_str(t, 0));
+      Swig_warning(WARN_TYPEMAP_VAROUT_UNDEF, input_file, line_number, "Unable to read variable of type %s\n", SwigType_str(t, nullptr));
       DelWrapper(getf);
       return SWIG_NOWRAP;
     }
@@ -605,7 +605,7 @@ public:
         Wrapper_add_local(setf, "value", "Tcl_Obj *value = 0");
         Wrapper_add_local(setf, "name1o", "Tcl_Obj *name1o = 0");
 
-        if ((tm = Swig_typemap_lookup("varin", n, name, 0))) {
+        if ((tm = Swig_typemap_lookup("varin", n, name, nullptr))) {
 	  Replaceall(tm, "$input", "value");
 	  Printf(setf->code, "name1o = Tcl_NewStringObj(name1,-1);\n");
 	  Printf(setf->code, "value = Tcl_ObjGetVar2(interp, name1o, 0, flags);\n");
@@ -619,7 +619,7 @@ public:
 	  Printf(setf->code, "}\n");
 	  Wrapper_print(setf, f_wrappers);
         } else {
-	  Swig_warning(WARN_TYPEMAP_VARIN_UNDEF, input_file, line_number, "Unable to set variable of type %s.\n", SwigType_str(t, 0));
+	  Swig_warning(WARN_TYPEMAP_VARIN_UNDEF, input_file, line_number, "Unable to set variable of type %s.\n", SwigType_str(t, nullptr));
 	  readonly = 1;
         }
       }
@@ -676,11 +676,11 @@ public:
       value = Char(wname);
     }
 
-    if ((tm = Swig_typemap_lookup("consttab", n, name, 0))) {
+    if ((tm = Swig_typemap_lookup("consttab", n, name, nullptr))) {
       Replaceall(tm, "$value", value);
       Replaceall(tm, "$nsname", nsname);
       Printf(const_tab, "%s,\n", tm);
-    } else if ((tm = Swig_typemap_lookup("constcode", n, name, 0))) {
+    } else if ((tm = Swig_typemap_lookup("constcode", n, name, nullptr))) {
       Replaceall(tm, "$value", value);
       Replaceall(tm, "$nsname", nsname);
       Printf(f_init, "%s\n", tm);
@@ -714,13 +714,13 @@ public:
 
   virtual int classHandler(Node *n) {
     static Hash *emitted = NewHash();
-    String *mangled_classname = 0;
-    SwigType *real_classname = 0;
+    String *mangled_classname = nullptr;
+    SwigType *real_classname = nullptr;
 
     have_constructor = 0;
     have_destructor = 0;
-    destructor_action = 0;
-    constructor_name = 0;
+    destructor_action = nullptr;
+    constructor_name = nullptr;
 
     if (itcl) {
       constructor = NewString("");
@@ -776,11 +776,11 @@ public:
     if (have_destructor) {
       Printv(f_wrappers, "SWIGINTERN void swig_delete_", class_name, "(void *obj) {\n", NIL);
       if (destructor_action) {
-	Printv(f_wrappers, SwigType_str(rt, "arg1"), " = (", SwigType_str(rt, 0), ") obj;\n", NIL);
+	Printv(f_wrappers, SwigType_str(rt, "arg1"), " = (", SwigType_str(rt, nullptr), ") obj;\n", NIL);
 	Printv(f_wrappers, destructor_action, "\n", NIL);
       } else {
 	if (CPlusPlus) {
-	  Printv(f_wrappers, "    delete (", SwigType_str(rt, 0), ") obj;\n", NIL);
+	  Printv(f_wrappers, "    delete (", SwigType_str(rt, nullptr), ") obj;\n", NIL);
 	} else {
 	  Printv(f_wrappers, "    free((char *) obj);\n", NIL);
 	}
@@ -936,7 +936,7 @@ public:
     if (have_constructor) {
       Printf(f_wrappers, "%s", Swig_name_wrapper(Swig_name_construct(NSPACE_TODO, constructor_name)));
       Delete(constructor_name);
-      constructor_name = 0;
+      constructor_name = nullptr;
     } else {
       Printf(f_wrappers, "0");
     }
@@ -979,7 +979,7 @@ public:
 
     if (itcl) {
       ParmList *l = Getattr(n, "parms");
-      Parm *p = 0;
+      Parm *p = nullptr;
       String *pname = NewString("");
 
       // Add this member to our class handler function
@@ -1101,7 +1101,7 @@ public:
       String *realname;
 
       ParmList *l = Getattr(n, "parms");
-      Parm *p = 0;
+      Parm *p = nullptr;
 
       String *pname = NewString("");
 
@@ -1212,7 +1212,7 @@ public:
    * ------------------------------------------------------------ */
 
   char *usage_string(char *iname, SwigType *, ParmList *l) {
-    static String *temp = 0;
+    static String *temp = nullptr;
     Parm *p;
     int i, numopt, pcount;
 
@@ -1239,7 +1239,7 @@ public:
 	if (Len(pn) > 0) {
 	  Printf(temp, "%s", pn);
 	} else {
-	  Printf(temp, "%s", SwigType_str(pt, 0));
+	  Printf(temp, "%s", SwigType_str(pt, nullptr));
 	}
 	if (i >= (pcount - numopt))
 	  Putc('?', temp);

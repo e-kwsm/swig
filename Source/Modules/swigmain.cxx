@@ -51,10 +51,10 @@ extern "C" {
    list sorted alphabetically. */
 
 static TargetLanguageModule modules[] = {
-  {"-allegrocl", NULL, "ALLEGROCL", Disabled},
+  {"-allegrocl", nullptr, "ALLEGROCL", Disabled},
   {"-c", swig_c, "C", Experimental},
-  {"-chicken", NULL, "CHICKEN", Disabled},
-  {"-clisp", NULL, "CLISP", Disabled},
+  {"-chicken", nullptr, "CHICKEN", Disabled},
+  {"-clisp", nullptr, "CLISP", Disabled},
   {"-csharp", swig_csharp, "C#", Supported},
   {"-d", swig_d, "D", Supported},
   {"-go", swig_go, "Go", Supported},
@@ -62,25 +62,25 @@ static TargetLanguageModule modules[] = {
   {"-java", swig_java, "Java", Supported},
   {"-javascript", swig_javascript, "Javascript", Supported},
   {"-lua", swig_lua, "Lua", Supported},
-  {"-modula3", NULL, "Modula 3", Disabled},
+  {"-modula3", nullptr, "Modula 3", Disabled},
   {"-ocaml", swig_ocaml, "OCaml", Experimental},
   {"-octave", swig_octave, "Octave", Supported},
-  {"-perl", swig_perl5, NULL, Supported},
+  {"-perl", swig_perl5, nullptr, Supported},
   {"-perl5", swig_perl5, "Perl 5", Supported},
-  {"-php", swig_php, NULL, Supported},
-  {"-php5", NULL, "PHP 5", Disabled},
+  {"-php", swig_php, nullptr, Supported},
+  {"-php5", nullptr, "PHP 5", Disabled},
   {"-php7", swig_php, "PHP 8 or later", Supported},
-  {"-pike", NULL, "Pike", Disabled},
+  {"-pike", nullptr, "Pike", Disabled},
   {"-python", swig_python, "Python", Supported},
   {"-r", swig_r, "R (aka GNU S)", Supported},
   {"-ruby", swig_ruby, "Ruby", Supported},
   {"-scilab", swig_scilab, "Scilab", Supported},
-  {"-sexp", NULL, "Lisp S-Expressions", Disabled},
-  {"-tcl", swig_tcl, NULL, Supported},
+  {"-sexp", nullptr, "Lisp S-Expressions", Disabled},
+  {"-tcl", swig_tcl, nullptr, Supported},
   {"-tcl8", swig_tcl, "Tcl 8", Supported},
-  {"-uffi", NULL, "Common Lisp / UFFI", Disabled},
+  {"-uffi", nullptr, "Common Lisp / UFFI", Disabled},
   {"-xml", swig_xml, "XML", Supported},
-  {NULL, NULL, NULL, Disabled}
+  {nullptr, nullptr, nullptr, Disabled}
 };
 
 //-----------------------------------------------------------------
@@ -121,7 +121,7 @@ static void SWIG_merge_envopt(const char *env, int oargc, char *oargv[], int *na
   for (int i = 1; (i < oargc) && (argc < arge); ++i, ++argc) {
     argv[argc] = oargv[i];
   }
-  argv[argc] = NULL;
+  argv[argc] = nullptr;
 
   *nargc = argc;
   *nargv = argv;
@@ -208,7 +208,7 @@ static void merge_options_files(int *argc, char ***argv) {
 
 int main(int margc, char **margv) {
   int i;
-  const TargetLanguageModule *language_module = 0;
+  const TargetLanguageModule *language_module = nullptr;
 
   int argc;
   char **argv;

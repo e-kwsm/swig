@@ -27,7 +27,7 @@ static String* replaceInitialDash(const String *name)
   return retval;
 }
 
-static String * getRTypeName(SwigType *t, int *outCount = NULL) {
+static String * getRTypeName(SwigType *t, int *outCount = nullptr) {
   String *b = SwigType_base(t);
   List *els = SwigType_split(t);
   int count = 0;
@@ -238,7 +238,7 @@ public:
     class_name = Getattr(n, "name");
     int status = Language::classHandler(n);
 
-    class_name = NULL;
+    class_name = nullptr;
     return status;
   }
 
@@ -268,7 +268,7 @@ protected:
     Append(namespaceMethods, name);
   }
 
-  String* processType(SwigType *t, Node *n, int *nargs = NULL);
+  String* processType(SwigType *t, Node *n, int *nargs = nullptr);
   String *createFunctionPointerHandler(SwigType *t, Node *n, int *nargs);
   int addFunctionPointerProxy(String *name, Node *n, SwigType *t, String *s_paramTypes) {
     /*XXX Do we need to put the t in there to get the return type later. */
@@ -385,49 +385,49 @@ R::R() :
   copyStruct(false),
   memoryProfile(false),
   aggressiveGc(false),
-  enum_values(0),
-  enum_def_calls(0),
-  sfile(0),
-  f_init(0),
-  s_classes(0),
-  f_begin(0),
-  f_runtime(0),
-  f_wrapper(0),
-  s_header(0),
-  f_wrappers(0),
-  s_init(0),
-  s_init_routine(0),
-  s_namespace(0),
-  opaqueClassDeclaration(0),
+  enum_values(nullptr),
+  enum_def_calls(nullptr),
+  sfile(nullptr),
+  f_init(nullptr),
+  s_classes(nullptr),
+  f_begin(nullptr),
+  f_runtime(nullptr),
+  f_wrapper(nullptr),
+  s_header(nullptr),
+  f_wrappers(nullptr),
+  s_init(nullptr),
+  s_init_routine(nullptr),
+  s_namespace(nullptr),
+  opaqueClassDeclaration(nullptr),
   processing_variable(0),
   processing_member_access_function(0),
-  member_name(0),
-  class_name(0),
+  member_name(nullptr),
+  class_name(nullptr),
   R_MEMBER_NORMAL(NewString("normal")),
   R_MEMBER_SET(NewString("set")),
   R_MEMBER_GET(NewString("get")),
   processing_class_member_function(0),
-  class_member_function_types(0),
-  class_member_function_names(0),
-  class_member_function_membernames(0),
-  class_member_function_wrappernames(0),
-  ClassMemberTable(0),
-  ClassMethodsTable(0),
-  SClassDefs(0),
-  SMethodInfo(0),
-  registrationTable(0),
-  functionPointerProxyTable(0),
-  namespaceFunctions(0),
-  namespaceMethods(0),
-  namespaceClasses(0),
-  Argv(0),
+  class_member_function_types(nullptr),
+  class_member_function_names(nullptr),
+  class_member_function_membernames(nullptr),
+  class_member_function_wrappernames(nullptr),
+  ClassMemberTable(nullptr),
+  ClassMethodsTable(nullptr),
+  SClassDefs(nullptr),
+  SMethodInfo(nullptr),
+  registrationTable(nullptr),
+  functionPointerProxyTable(nullptr),
+  namespaceFunctions(nullptr),
+  namespaceMethods(nullptr),
+  namespaceClasses(nullptr),
+  Argv(nullptr),
   Argc(0),
   inCPlusMode(false),
-  DllName(0),
-  Rpackage(0),
+  DllName(nullptr),
+  Rpackage(nullptr),
   noInitializationCode(false),
   outputNamespaceInfo(false),
-  UnProtectWrapupCode(0) {
+  UnProtectWrapupCode(nullptr) {
 }
 
 bool R::debugMode = false;
@@ -487,7 +487,7 @@ String * R::createFunctionPointerHandler(SwigType *t, Node *n, int *numArgs) {
 
   SwigType *rettype = Copy(Getattr(n, "type"));
   SwigType *funcparams = SwigType_functionpointer_decompose(rettype);
-  String *rtype = SwigType_str(rettype, 0);
+  String *rtype = SwigType_str(rettype, nullptr);
 
   // ParmList *parms = Getattr(n, "parms");
   // memory leak
@@ -552,11 +552,11 @@ String * R::createFunctionPointerHandler(SwigType *t, Node *n, int *numArgs) {
     String *tm = Getattr(p, "tmap:out");
     bool isVoidParm = Strcmp(tt, "void") == 0;
     if (isVoidParm)
-      Printf(f->def, "%s", SwigType_str(tt, 0));
+      Printf(f->def, "%s", SwigType_str(tt, nullptr));
     else
-      Printf(f->def, "%s %s", SwigType_str(tt, 0), swig_parm_name);
+      Printf(f->def, "%s %s", SwigType_str(tt, nullptr), swig_parm_name);
     if (tm) {
-      String *lstr = SwigType_lstr(tt, 0);
+      String *lstr = SwigType_lstr(tt, nullptr);
       if (SwigType_isreference(tt) || SwigType_isrvalue_reference(tt)) {
 	Printf(f->code, "%s = (%s) &%s;\n", Getattr(p, "lname"), lstr, swig_parm_name);
       } else if (!isVoidParm) {
@@ -759,7 +759,7 @@ int R::top(Node *n) {
   if(ClassMemberTable) {
     //XXX OutputClassAccessInfo(ClassMemberTable, sfile);
     Delete(ClassMemberTable);
-    ClassMemberTable = NULL;
+    ClassMemberTable = nullptr;
   }
 
   Printf(f_init,"}\n");
@@ -1141,7 +1141,7 @@ int R::enumDeclaration(Node *n) {
     Delete(name);
     // set up a call to create the R enum structure. The list of
     // individual elements will be built in enum_code
-    enum_values = 0;
+    enum_values = nullptr;
     // Emit each enum item
     Language::enumDeclaration(n);
       
@@ -1167,7 +1167,7 @@ int R::enumvalueDeclaration(Node *n) {
   String *name = Getattr(n, "name");
   Node *parent = parentNode(n);
   String *parent_name = Getattr(parent, "name");
-  String *newsymname = 0;
+  String *newsymname = nullptr;
   String *tmpValue;
 
   // Strange hack from parent method
@@ -1192,7 +1192,7 @@ int R::enumvalueDeclaration(Node *n) {
   }
 
   if (GetFlag(parent, "scopedenum")) {
-    newsymname = Swig_name_member(0, Getattr(parent, "sym:name"), symname);
+    newsymname = Swig_name_member(nullptr, Getattr(parent, "sym:name"), symname);
     symname = newsymname;
   }
 
@@ -1315,7 +1315,7 @@ List * R::Swig_overload_rank(Node *n,
   Node *o = Getattr(n,"sym:overloaded");
 
 
-  if (!o) return 0;
+  if (!o) return nullptr;
 
   Node *c = o;
   while (c) {
@@ -1380,12 +1380,12 @@ List * R::Swig_overload_rank(Node *n,
 	    if ((!t1) && (!nodes[i].error)) {
 	      Swig_warning(WARN_TYPEMAP_TYPECHECK, Getfile(nodes[i].n), Getline(nodes[i].n),
 			   "Overloaded method %s not supported (incomplete type checking rule - no precedence level in typecheck typemap for '%s').\n",
-			   Swig_name_decl(nodes[i].n), SwigType_str(Getattr(p1, "type"), 0));
+			   Swig_name_decl(nodes[i].n), SwigType_str(Getattr(p1, "type"), nullptr));
 	      nodes[i].error = 1;
 	    } else if ((!t2) && (!nodes[j].error)) {
 	      Swig_warning(WARN_TYPEMAP_TYPECHECK, Getfile(nodes[j].n), Getline(nodes[j].n),
 			   "Overloaded method %s not supported (incomplete type checking rule - no precedence level in typecheck typemap for '%s').\n",
-			   Swig_name_decl(nodes[j].n), SwigType_str(Getattr(p2, "type"), 0));
+			   Swig_name_decl(nodes[j].n), SwigType_str(Getattr(p2, "type"), nullptr));
 	      nodes[j].error = 1;
 	    }
 	    if (t1 && t2) {
@@ -1600,7 +1600,7 @@ void R::dispatchFunction(Node *n) {
 	if (debugMode) {
 	  Swig_print_node(p);
 	}
-	String *tm = Swig_typemap_lookup("rtype", p, "", 0);
+	String *tm = Swig_typemap_lookup("rtype", p, "", nullptr);
 	if (tm) {
 	  replaceRClass(tm, pt);
 	}
@@ -1626,7 +1626,7 @@ void R::dispatchFunction(Node *n) {
 	  Delete(tmp_arg);
 	  Delete(tmp_argtype);
 	} else {
-	  Swig_warning(WARN_R_TYPEMAP_RTYPECHECK_UNDEF, input_file, line_number, "No rtypecheck typemap defined for %s\n", SwigType_str(pt, 0));
+	  Swig_warning(WARN_R_TYPEMAP_RTYPECHECK_UNDEF, input_file, line_number, "No rtypecheck typemap defined for %s\n", SwigType_str(pt, nullptr));
 	}
 	p = Getattr(p, "tmap:in:next");
       }
@@ -1662,7 +1662,7 @@ int R::functionWrapper(Node *n) {
     Printf(stdout,
 	   "<functionWrapper> %s %s %s\n", fname, iname, returntype);
   }
-  String *overname = 0;
+  String *overname = nullptr;
   String *nodeType = Getattr(n, "nodeType");
   bool constructor = (!Cmp(nodeType, "constructor"));
   bool destructor = (!Cmp(nodeType, "destructor"));
@@ -1927,7 +1927,7 @@ int R::functionWrapper(Node *n) {
     }
 
 
-    tm = Swig_typemap_lookup("rtype", curP, "", 0);
+    tm = Swig_typemap_lookup("rtype", curP, "", nullptr);
     if(tm) {
       replaceRClass(tm, Getattr(curP, "type"));
     }
@@ -2013,7 +2013,7 @@ int R::functionWrapper(Node *n) {
 
   } else {
     Swig_warning(WARN_TYPEMAP_OUT_UNDEF, input_file, line_number,
-		 "Unable to use return type %s in function %s.\n", SwigType_str(returntype, 0), fname);
+		 "Unable to use return type %s in function %s.\n", SwigType_str(returntype, nullptr), fname);
   }
 
 
@@ -2050,13 +2050,13 @@ int R::functionWrapper(Node *n) {
 
   /* Look to see if there is any newfree cleanup code */
   if (GetFlag(n, "feature:new")) {
-    if ((tm = Swig_typemap_lookup("newfree", n, Swig_cresult_name(), 0))) {
+    if ((tm = Swig_typemap_lookup("newfree", n, Swig_cresult_name(), nullptr))) {
       Printf(f->code, "%s\n", tm);
     }
   }
 
   /* See if there is any return cleanup code */
-  if ((tm = Swig_typemap_lookup("ret", n, Swig_cresult_name(), 0))) {
+  if ((tm = Swig_typemap_lookup("ret", n, Swig_cresult_name(), nullptr))) {
     Printf(f->code, "%s\n", tm);
     Delete(tm);
   }
@@ -2116,7 +2116,7 @@ int R::functionWrapper(Node *n) {
   Wrapper_print(sfun, sfile);
 
   Printf(sfun->code, "\n# End of %s\n", iname);
-  tm = Swig_typemap_lookup("rtype", n, "", 0);
+  tm = Swig_typemap_lookup("rtype", n, "", nullptr);
   if(tm) {
     SwigType *retType = Getattr(n, "type");
     if (debugMode) {
@@ -2323,7 +2323,7 @@ int R::classDeclaration(Node *n) {
 
   int status = Language::classDeclaration(n);
 
-  opaqueClassDeclaration = NULL;
+  opaqueClassDeclaration = nullptr;
 
 
   if (class_member_function_types) {
@@ -2361,13 +2361,13 @@ int R::classDeclaration(Node *n) {
 
   if (class_member_function_types) {
     Delete(class_member_function_types);
-    class_member_function_types = NULL;
+    class_member_function_types = nullptr;
     Delete(class_member_function_names);
-    class_member_function_names = NULL;
+    class_member_function_names = nullptr;
     Delete(class_member_function_membernames);
-    class_member_function_membernames = NULL;
+    class_member_function_membernames = nullptr;
     Delete(class_member_function_wrappernames);
-    class_member_function_wrappernames = NULL;
+    class_member_function_wrappernames = nullptr;
    }
   if (Getattr(n, "has_destructor")) {
     Printf(sfile, "setMethod('delete', '_p%s', function(obj) {delete%s(obj)})\n", getRClassName(name), getRClassName(name));
@@ -2394,7 +2394,7 @@ int R::classDeclaration(Node *n) {
 	c = nextSibling(c);
 	continue;
       }
-      tp = Swig_typemap_lookup("rtype", c, "", 0);
+      tp = Swig_typemap_lookup("rtype", c, "", nullptr);
       if(!tp) {
 	c = nextSibling(c);
 	continue;
@@ -2490,7 +2490,7 @@ int R::generateCopyRoutines(Node *n) {
       continue;
     }
 
-    String *tp = Swig_typemap_lookup("rtype", c, "", 0);
+    String *tp = Swig_typemap_lookup("rtype", c, "", nullptr);
     if(!tp) {
       continue;
     }
@@ -2582,7 +2582,7 @@ int R::typedefHandler(Node *n) {
 
 int R::membervariableHandler(Node *n) {
   SwigType *t = Getattr(n, "type");
-  processType(t, n, NULL);
+  processType(t, n, nullptr);
   processing_member_access_function = 1;
   member_name = Getattr(n,"sym:name");
   if (debugMode)
@@ -2595,7 +2595,7 @@ int R::membervariableHandler(Node *n) {
     Printf(stdout, "<membervariableHandler> %s %s\n", Getattr(n, "name"), Getattr(n, "type"));
 
   processing_member_access_function = 0;
-  member_name = NULL;
+  member_name = nullptr;
 
   return status;
 }
@@ -2791,7 +2791,7 @@ String * R::processType(SwigType *t, Node *n, int *nargs) {
     return tmp;
   }
 
-    return NULL;
+    return nullptr;
 }
 
 
@@ -2804,7 +2804,7 @@ String * R::processType(SwigType *t, Node *n, int *nargs) {
 String *R::enumValue(Node *n) {
   String *symname = Getattr(n, "sym:name");
   String *value = Getattr(n, "value");
-  String *newsymname = 0;
+  String *newsymname = nullptr;
 
   Node *parent = parentNode(n);
   symname = Getattr(n, "sym:name");
@@ -2824,7 +2824,7 @@ String *R::enumValue(Node *n) {
   Setattr(n, "type", etype);
 
   if (!getCurrentClass()) {
-    newsymname = Swig_name_member(0, Getattr(parent, "sym:name"), symname);
+    newsymname = Swig_name_member(nullptr, Getattr(parent, "sym:name"), symname);
     // Strange hack to change the name
     Setattr(n, "name", Getattr(n, "value"));
     Setattr(n, "sym:name", newsymname);
@@ -2832,7 +2832,7 @@ String *R::enumValue(Node *n) {
     value = Swig_name_get(NSPACE_TODO, newsymname);
   } else {
     String *enumClassPrefix = getEnumClassPrefix();
-    newsymname = Swig_name_member(0, enumClassPrefix, symname);
+    newsymname = Swig_name_member(nullptr, enumClassPrefix, symname);
     Setattr(n, "name", Getattr(n, "value"));
     Setattr(n, "sym:name", newsymname);
     variableWrapper(n);

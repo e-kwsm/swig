@@ -25,45 +25,45 @@
 #define PYTHON_INT_MAX (2147483647)
 #define PYTHON_INT_MIN (-2147483647-1)
 
-static String *const_code = 0;
-static String *module = 0;
-static String *package = 0;
-static String *mainmodule = 0;
-static String *interface = 0;
-static String *global_name = 0;
+static String *const_code = nullptr;
+static String *module = nullptr;
+static String *package = nullptr;
+static String *mainmodule = nullptr;
+static String *interface = nullptr;
+static String *global_name = nullptr;
 static int shadow = 1;
 static int use_kw = 0;
 static int director_method_index = 0;
 static int builtin = 0;
 
-static File *f_begin = 0;
-static File *f_runtime = 0;
-static File *f_runtime_h = 0;
-static File *f_header = 0;
-static File *f_wrappers = 0;
-static File *f_directors = 0;
-static File *f_directors_h = 0;
-static File *f_init = 0;
-static File *f_shadow_py = 0;
-static String *f_shadow = 0;
-static String *f_shadow_begin = 0;
-static Hash *f_shadow_imports = 0;
-static String *f_shadow_after_begin = 0;
-static String *f_shadow_stubs = 0;
-static Hash *builtin_getset = 0;
-static Hash *builtin_closures = 0;
-static Hash *class_members = 0;
-static File *f_builtins = 0;
-static String *builtin_tp_init = 0;
-static String *builtin_methods = 0;
-static String *builtin_default_unref = 0;
-static String *builtin_closures_code = 0;
-static String *f_varlinks = 0;
+static File *f_begin = nullptr;
+static File *f_runtime = nullptr;
+static File *f_runtime_h = nullptr;
+static File *f_header = nullptr;
+static File *f_wrappers = nullptr;
+static File *f_directors = nullptr;
+static File *f_directors_h = nullptr;
+static File *f_init = nullptr;
+static File *f_shadow_py = nullptr;
+static String *f_shadow = nullptr;
+static String *f_shadow_begin = nullptr;
+static Hash *f_shadow_imports = nullptr;
+static String *f_shadow_after_begin = nullptr;
+static String *f_shadow_stubs = nullptr;
+static Hash *builtin_getset = nullptr;
+static Hash *builtin_closures = nullptr;
+static Hash *class_members = nullptr;
+static File *f_builtins = nullptr;
+static String *builtin_tp_init = nullptr;
+static String *builtin_methods = nullptr;
+static String *builtin_default_unref = nullptr;
+static String *builtin_closures_code = nullptr;
+static String *f_varlinks = nullptr;
 
 static String *methods;
 static String *methods_proxydocs;
 static String *class_name;
-static String *shadow_indent = 0;
+static String *shadow_indent = nullptr;
 static int in_class = 0;
 static int no_header_file = 0;
 static int max_bases = 0;
@@ -137,9 +137,9 @@ static const char *usage3 = "\
                          -fastdispatch -fastproxy -fvirtual\n\
 \n";
 
-static String *getSlot(Node *n = NULL, const char *key = NULL, String *default_slot = NULL) {
+static String *getSlot(Node *n = nullptr, const char *key = nullptr, String *default_slot = nullptr) {
   static String *zero = NewString("0");
-  String *val = n && key && *key ? Getattr(n, key) : NULL;
+  String *val = n && key && *key ? Getattr(n, key) : nullptr;
   return val ? val : default_slot ? default_slot : zero;
 }
 
@@ -189,7 +189,7 @@ static String *getClosure(String *functype, String *wrapper, int funpack = 0) {
     "reprfunc", "SWIGPY_REPRFUNC_CLOSURE",
     "hashfunc", "SWIGPY_HASHFUNC_CLOSURE",
     "iternextfunc", "SWIGPY_ITERNEXTFUNC_CLOSURE",
-    NULL
+    nullptr
   };
 
   static const char *funpack_functypes[] = {
@@ -209,25 +209,25 @@ static String *getClosure(String *functype, String *wrapper, int funpack = 0) {
     "reprfunc", "SWIGPY_REPRFUNC_CLOSURE",
     "hashfunc", "SWIGPY_HASHFUNC_CLOSURE",
     "iternextfunc", "SWIGPY_ITERNEXTFUNC_CLOSURE",
-    NULL
+    nullptr
   };
 
   if (!functype)
-    return NULL;
+    return nullptr;
   char *c = Char(functype);
   int i;
   if (funpack) {
-    for (i = 0; funpack_functypes[i] != NULL; i += 2) {
+    for (i = 0; funpack_functypes[i] != nullptr; i += 2) {
       if (!strcmp(c, funpack_functypes[i]))
 	return NewStringf("%s(%s)", funpack_functypes[i + 1], wrapper);
     }
   } else {
-    for (i = 0; functypes[i] != NULL; i += 2) {
+    for (i = 0; functypes[i] != nullptr; i += 2) {
       if (!strcmp(c, functypes[i]))
 	return NewStringf("%s(%s)", functypes[i + 1], wrapper);
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 class PYTHON:public Language {
@@ -503,8 +503,8 @@ public:
      * use %module(directors="1") modulename at the start of the
      * interface file to enable director generation.
      */
-    String *mod_docstring = NULL;
-    String *moduleimport = NULL;
+    String *mod_docstring = nullptr;
+    String *moduleimport = nullptr;
     {
       Node *mod = Getattr(n, "module");
       if (mod) {
@@ -559,7 +559,7 @@ public:
 
     /* Initialize all of the output files */
     String *outfile = Getattr(n, "outfile");
-    String *outfile_h = !no_header_file ? Getattr(n, "outfile_h") : 0;
+    String *outfile_h = !no_header_file ? Getattr(n, "outfile_h") : nullptr;
 
     f_begin = NewFile(outfile, "w", SWIG_output_files());
     if (!f_begin) {
@@ -696,12 +696,12 @@ public:
 	module = interface;
       else
 	Insert(module, 0, "_");
-      if ((f_shadow_py = NewFile(filen, "w", SWIG_output_files())) == 0) {
+      if ((f_shadow_py = NewFile(filen, "w", SWIG_output_files())) == nullptr) {
 	FileErrorDisplay(filen);
 	Exit(EXIT_FAILURE);
       }
       Delete(filen);
-      filen = NULL;
+      filen = nullptr;
 
       f_shadow = NewString("");
       f_shadow_begin = NewString("");
@@ -884,11 +884,11 @@ public:
 	  const char *triple_double = "\"\"\"";
 	  // follow PEP257 rules: https://www.python.org/dev/peps/pep-0257/
 	  // reported by pep257: https://github.com/GreenSteam/pep257
-	  bool multi_line_ds = Strchr(mod_docstring, '\n') != 0;
+	  bool multi_line_ds = Strchr(mod_docstring, '\n') != nullptr;
 	  Printv(f_shadow_py, "\n", triple_double, multi_line_ds ? "\n":"", mod_docstring, multi_line_ds ? "\n":"", triple_double, "\n", NIL);
 	}
 	Delete(mod_docstring);
-	mod_docstring = NULL;
+	mod_docstring = nullptr;
       }
 
       if (Len(f_shadow_begin) > 0)
@@ -1024,10 +1024,10 @@ public:
       } else if (baselen == otherlen) {
         return NewString("");
       } else {
-        return 0;
+        return nullptr;
       }
     } else {
-      return 0;
+      return nullptr;
     }
   }
 
@@ -1107,8 +1107,8 @@ public:
      * NOTE: [1] is necessary for pkg2.foo to be present in the importing module
      */
 
-    String *apkg = 0; // absolute (FQDN) package name of pkg
-    String *rpkg = 0; // relative package name
+    String *apkg = nullptr; // absolute (FQDN) package name of pkg
+    String *rpkg = nullptr; // relative package name
     int py3_rlen1 = 0; // length of 1st level sub-package name, used by py3
     String *out = NewString("");
 
@@ -1212,7 +1212,7 @@ public:
   static String *rel_import_name_string(const String *mainpkg, const String *mainmod, const String *pkg, const String *mod, const String *sym) {
     String *out = NewString("");
     if (pkg && *Char(pkg)) {
-      String *tail = 0;
+      String *tail = nullptr;
       if (mainpkg)
         tail = subpkg_tail(mainpkg, pkg);
       if (!tail)
@@ -1258,7 +1258,7 @@ public:
 	  mod = nextSibling(mod);
 
 	Node *options = Getattr(mod, "options");
-	String *pkg = options ? Getattr(options, "package") : 0;
+	String *pkg = options ? Getattr(options, "package") : nullptr;
 
 	if (!options || (!Getattr(options, "noshadow") && !Getattr(options, "noproxy"))) {
 	  String *_import = import_directive_string(package, pkg, modname, "_");
@@ -1320,7 +1320,7 @@ public:
     // Line number within the pythoncode.
     int py_line = 0;
 
-    String *initial = 0;
+    String *initial = nullptr;
     Iterator si;
 
     /* Get the initial indentation.  Skip lines which only contain whitespace
@@ -1537,7 +1537,7 @@ public:
 	return node_with_doc;
     }
 
-    return NULL;
+    return nullptr;
   }
 
   /* ------------------------------------------------------------
@@ -1559,7 +1559,7 @@ public:
     if (docstr) {
       // Simplify the code below by just ignoring empty docstrings.
       if (!Len(docstr))
-	docstr = NULL;
+	docstr = nullptr;
       else
 	docstr = Copy(docstr);
     }
@@ -1576,7 +1576,7 @@ public:
       if (doxygen && doxygenTranslator->hasDocumentation(n)) {
 	docstr = Getattr(n, "python:docstring");
 	if (!docstr) {
-	  docstr = doxygenTranslator->getDocumentation(n, 0);
+	  docstr = doxygenTranslator->getDocumentation(n, nullptr);
 
 	  // Avoid rebuilding it again the next time: notice that we can't do
 	  // this for the combined doc string as autodoc part of it depends on
@@ -1753,7 +1753,7 @@ public:
   String *make_autodocParmList(Node *n, bool showTypes, int arg_num = 1, bool calling = false, bool func_annotation = false) {
 
     String *doc = NewString("");
-    String *pdocs = 0;
+    String *pdocs = nullptr;
     ParmList *plist = CopyParmList(Getattr(n, "parms"));
     Parm *p;
     Parm *pnext;
@@ -1762,8 +1762,8 @@ public:
       func_annotation = false;
 
     addMissingParameterNames(n, plist, arg_num); // for $1_name substitutions done in Swig_typemap_attach_parms
-    Swig_typemap_attach_parms("in", plist, 0);
-    Swig_typemap_attach_parms("doc", plist, 0);
+    Swig_typemap_attach_parms("in", plist, nullptr);
+    Swig_typemap_attach_parms("doc", plist, nullptr);
 
     if (Strcmp(ParmList_protostr(plist), "void") == 0) {
       //No parameters actually
@@ -1781,9 +1781,9 @@ public:
 	pnext = nextSibling(p);
       }
 
-      String *name = 0;
-      String *type = 0;
-      String *value = 0;
+      String *name = nullptr;
+      String *type = nullptr;
+      String *value = nullptr;
       String *pdoc = Getattr(p, "tmap:doc");
       if (pdoc) {
 	name = Getattr(p, "tmap:doc:name");
@@ -1798,7 +1798,7 @@ public:
       }
 
       // Note: the generated name should be consistent with that in kwnames[]
-      String *made_name = 0;
+      String *made_name = nullptr;
       if (!name) {
 	name = made_name = makeParameterName(n, p, arg_num);
       }
@@ -1821,7 +1821,7 @@ public:
 
       // Do the param type too?
       Node *nn = classLookup(Getattr(p, "type"));
-      String *type_str = nn ? Copy(Getattr(nn, "sym:name")) : SwigType_str(type, 0);
+      String *type_str = nn ? Copy(Getattr(nn, "sym:name")) : SwigType_str(type, nullptr);
       if (showTypes)
 	Printf(doc, "%s ", type_str);
 
@@ -1844,7 +1844,7 @@ public:
 	} else {
 	  // Even if the value is not representable in the target language, still use it in the documentation, for compatibility with the previous SWIG versions
 	  // and because it can still be useful to see the C++ expression there.
-	  Node *lookup = Swig_symbol_clookup(value, 0);
+	  Node *lookup = Swig_symbol_clookup(value, nullptr);
 	  if (lookup)
 	    value = Getattr(lookup, "sym:name");
 	}
@@ -1919,10 +1919,10 @@ public:
 	}
 
 	SwigType *type = Getattr(n, "type");
-	String *type_str = NULL;
+	String *type_str = nullptr;
 
 	// If the function has default arguments, then that documentation covers this version too
-	if (Getattr(n, "defaultargs") != NULL) {
+	if (Getattr(n, "defaultargs") != nullptr) {
 	  n = Getattr(n, "sym:nextSibling");
 	  continue;
 	}
@@ -1932,10 +1932,10 @@ public:
 
 	if (type) {
 	  if (Strcmp(type, "void") == 0) {
-	    type_str = NULL;
+	    type_str = nullptr;
 	  } else {
 	    Node *nn = classLookup(type);
-	    type_str = nn ? Copy(Getattr(nn, "sym:name")) : SwigType_str(type, 0);
+	    type_str = nn ? Copy(Getattr(nn, "sym:name")) : SwigType_str(type, nullptr);
 	  }
 	}
 
@@ -2030,7 +2030,7 @@ public:
 	case AUTODOC_CONST:
 	  // There is no autodoc support for constants currently, this enum
 	  // element only exists to allow calling docstring() with it.
-	  return NULL;
+	  return nullptr;
 	case AUTODOC_VAR:
 	  // Variables can also be documented (e.g. through the property() function in python)
 	  Printf(doc, "%s", symname);
@@ -2192,7 +2192,7 @@ public:
       // representable in Python if it doesn't include any scope (which could,
       // but currently is not, translated).
       else if (!Strchr(v, ':')) {
-	Node *lookup = Swig_symbol_clookup(v, 0);
+	Node *lookup = Swig_symbol_clookup(v, nullptr);
 	if (lookup) {
 	  if (Cmp(Getattr(lookup, "nodeType"), "enumitem") == 0)
 	    result = Copy(Getattr(lookup, "sym:name"));
@@ -2217,7 +2217,7 @@ public:
    * ------------------------------------------------------------ */
   bool is_representable_as_pyargs(Node *n) {
     ParmList *plist = CopyParmList(Getattr(n, "parms"));
-    Swig_typemap_attach_parms("default", plist, NULL);
+    Swig_typemap_attach_parms("default", plist, nullptr);
 
     Parm *p;
     Parm *pnext;
@@ -2411,14 +2411,14 @@ public:
    * of the returning type, return a empty string for Python 2.x
    * ------------------------------------------------------------ */
   String *returnTypeAnnotation(Node *n) {
-    String *ret = 0;
+    String *ret = nullptr;
     Parm *p = Getattr(n, "parms");
     String *tm;
     /* Try to guess the returning type by argout typemap,
      * however the result may not accurate. */
     while (p) {
       if ((tm = Getattr(p, "tmap:argout:match_type"))) {
-	tm = SwigType_str(tm, 0);
+	tm = SwigType_str(tm, nullptr);
 	if (ret)
 	  Printv(ret, ", ", tm, NULL);
 	else
@@ -2433,7 +2433,7 @@ public:
     if (!ret) {
       ret = Getattr(n, "type");
       if (ret)
-	ret = SwigType_str(ret, 0);
+	ret = SwigType_str(ret, nullptr);
     }
     bool funcanno = Equal(Getattr(n, "feature:python:annotations"), "c") ? true : false;
     return (ret && funcanno) ? NewStringf(" -> \"%s\"", ret) : NewString("");
@@ -2448,7 +2448,7 @@ public:
   String *variableAnnotation(Node *n) {
     String *type = Getattr(n, "type");
     if (type)
-      type = SwigType_str(type, 0);
+      type = SwigType_str(type, nullptr);
     bool anno = Equal(Getattr(n, "feature:python:annotations"), "c") ? true : false;
     anno = GetFlag(n, "feature:python:annotations:novar") ? false : anno;
     String *annotation = (type && anno) ? NewStringf(": \"%s\"", type) : NewString("");
@@ -2516,7 +2516,7 @@ public:
    * add_method()
    * ------------------------------------------------------------ */
 
-  void add_method(String *name, String *function, int kw, Node *n = 0, int funpack = 0, int num_required = -1, int num_arguments = -1) {
+  void add_method(String *name, String *function, int kw, Node *n = nullptr, int funpack = 0, int num_required = -1, int num_arguments = -1) {
     String * meth_str = NewString("");
     if (!kw) {
       if (funpack) {
@@ -2685,7 +2685,7 @@ public:
     Printv(f->code, "}\n", NIL);
     Wrapper_print(f, f_wrappers);
     if (!builtin_self && (use_static_method || !builtin))
-      add_method(symname, wname, 0, Getattr(n, "sym:previousSibling") ? n : NULL);
+      add_method(symname, wname, 0, Getattr(n, "sym:previousSibling") ? n : nullptr);
 
     /* Create a shadow for this function (if enabled and not in a member function) */
     if (!builtin && shadow && !(shadow & PYSHADOW_MEMBER) && use_static_method) {
@@ -2752,7 +2752,7 @@ public:
     String *outarg;
     String *kwargs;
     String *tm;
-    String *overname = 0;
+    String *overname = nullptr;
 
     int num_required;
     int num_arguments;
@@ -2766,7 +2766,7 @@ public:
     int constructor = (!Cmp(nodeType, "constructor"));
     int destructor = (!Cmp(nodeType, "destructor"));
     String *storage = Getattr(n, "storage");
-    int isfriend = Strstr(storage, "friend") != NULL;
+    int isfriend = Strstr(storage, "friend") != nullptr;
     /* Only the first constructor is handled as init method. Others
        constructor can be emitted via %rename */
     int handled_as_init = 0;
@@ -3002,7 +3002,7 @@ public:
 	p = Getattr(p, "tmap:in:next");
 	continue;
       } else {
-	Swig_warning(WARN_TYPEMAP_IN_UNDEF, input_file, line_number, "Unable to use type %s as a function argument.\n", SwigType_str(pt, 0));
+	Swig_warning(WARN_TYPEMAP_IN_UNDEF, input_file, line_number, "Unable to use type %s as a function argument.\n", SwigType_str(pt, nullptr));
 	break;
       }
     }
@@ -3086,7 +3086,7 @@ public:
 	    convflag = get_implicitconv_flag(classLookup(ptype));
 	  }
 	  if (strcmp(convflag, "0") == 0) {
-	    tm = 0;
+	    tm = nullptr;
 	  }
 	}
 	if (tm && (Len(tm) != 0)) {
@@ -3218,7 +3218,7 @@ public:
 
       Delete(tm);
     } else {
-      Swig_warning(WARN_TYPEMAP_OUT_UNDEF, input_file, line_number, "Unable to use return type %s in function %s.\n", SwigType_str(returntype, 0), name);
+      Swig_warning(WARN_TYPEMAP_OUT_UNDEF, input_file, line_number, "Unable to use return type %s in function %s.\n", SwigType_str(returntype, nullptr), name);
     }
     emit_return_variable(n, returntype, f);
 
@@ -3233,20 +3233,20 @@ public:
 
     /* Look to see if there is any newfree cleanup code */
     if (GetFlag(n, "feature:new")) {
-      if ((tm = Swig_typemap_lookup("newfree", n, Swig_cresult_name(), 0))) {
+      if ((tm = Swig_typemap_lookup("newfree", n, Swig_cresult_name(), nullptr))) {
 	Printf(f->code, "%s\n", tm);
 	Delete(tm);
       }
     }
 
     /* See if there is any return cleanup code */
-    if ((tm = Swig_typemap_lookup("ret", n, Swig_cresult_name(), 0))) {
+    if ((tm = Swig_typemap_lookup("ret", n, Swig_cresult_name(), nullptr))) {
       Printf(f->code, "%s\n", tm);
       Delete(tm);
     }
 
     if (director_method) {
-      if ((tm = Swig_typemap_lookup("directorfree", n, Swig_cresult_name(), 0))) {
+      if ((tm = Swig_typemap_lookup("directorfree", n, Swig_cresult_name(), nullptr))) {
 	Replaceall(tm, "$input", Swig_cresult_name());
 	Replaceall(tm, "$result", "resultobj");
 	Printf(f->code, "%s\n", tm);
@@ -3427,7 +3427,7 @@ public:
 	String *func_type = Getattr(n, "feature:python:slot:functype");
 	String *closure_decl = getClosure(func_type, wrapper_name, overname ? 0 : funpack);
 	String *feature_name = NewStringf("feature:python:%s", slot);
-	String *closure_name = 0;
+	String *closure_name = nullptr;
 	if (closure_decl) {
 	  closure_name = NewStringf("%s_%s_closure", wrapper_name, func_type);
 	  if (!GetFlag(builtin_closures, closure_name))
@@ -3527,7 +3527,7 @@ public:
 	Delete(set_wrapper);
       }
       Printf(setf->def, "SWIGINTERN int %s(PyObject *_val) {", varsetname);
-      if ((tm = Swig_typemap_lookup("varin", n, name, 0))) {
+      if ((tm = Swig_typemap_lookup("varin", n, name, nullptr))) {
 	Replaceall(tm, "$input", "_val");
 	if (Getattr(n, "tmap:varin:implicitconv")) {
 	  Replaceall(tm, "$implicitconv", get_implicitconv_flag(n));
@@ -3535,7 +3535,7 @@ public:
 	emit_action_code(n, setf->code, tm);
 	Delete(tm);
       } else {
-	Swig_warning(WARN_TYPEMAP_VARIN_UNDEF, input_file, line_number, "Unable to set variable of type %s.\n", SwigType_str(t, 0));
+	Swig_warning(WARN_TYPEMAP_VARIN_UNDEF, input_file, line_number, "Unable to set variable of type %s.\n", SwigType_str(t, nullptr));
       }
       Printv(setf->code, "  return 0;\n", NULL);
       Append(setf->code, "fail:\n");
@@ -3567,12 +3567,12 @@ public:
       Wrapper_add_local(getf, "self", "PyObject *self = 0");
       Append(getf->code, "  (void)self;\n");
     }
-    if ((tm = Swig_typemap_lookup("varout", n, name, 0))) {
+    if ((tm = Swig_typemap_lookup("varout", n, name, nullptr))) {
       Replaceall(tm, "$result", "pyobj");
       addfail = emit_action_code(n, getf->code, tm);
       Delete(tm);
     } else {
-      Swig_warning(WARN_TYPEMAP_VAROUT_UNDEF, input_file, line_number, "Unable to read variable of type %s\n", SwigType_str(t, 0));
+      Swig_warning(WARN_TYPEMAP_VAROUT_UNDEF, input_file, line_number, "Unable to read variable of type %s\n", SwigType_str(t, nullptr));
     }
     Append(getf->code, "  return pyobj;\n");
     if (addfail) {
@@ -3645,7 +3645,7 @@ public:
       value = wname;
     }
 
-    if ((tm = Swig_typemap_lookup("consttab", n, name, 0))) {
+    if ((tm = Swig_typemap_lookup("consttab", n, name, nullptr))) {
       Replaceall(tm, "$value", value);
       Printf(const_code, "%s,\n", tm);
       Delete(tm);
@@ -3659,7 +3659,7 @@ public:
       Setattr(n, "sym:name", Getattr(n, "pybuiltin:symname"));
     }
 
-    if ((tm = Swig_typemap_lookup("constcode", n, name, 0))) {
+    if ((tm = Swig_typemap_lookup("constcode", n, name, nullptr))) {
       Replaceall(tm, "$value", value);
       if (needs_swigconstant(n) && !builtin && shadow && !(shadow & PYSHADOW_MEMBER) && (!in_class || !Getattr(n, "feature:python:callback"))) {
 	// Generate `*_swigconstant()` method which registers the new constant.
@@ -3682,7 +3682,7 @@ public:
 
         // Register the method in SwigMethods array
 	String *cname = NewStringf("%s_swigconstant", iname);
-	add_method(cname, cname, 0, 0, 1, 1, 1);
+	add_method(cname, cname, 0, nullptr, 1, 1, 1);
 	Delete(cname);
       } else {
         Printf(f_init, "%s\n", tm);
@@ -3793,8 +3793,8 @@ public:
 	Wrapper *w = NewWrapper();
 	String *call;
 	String *basetype = Getattr(parent, "classtype");
-	String *target = Swig_method_decl(0, decl, classname, parms, 0);
-	call = Swig_csuperclass_call(0, basetype, superparms);
+	String *target = Swig_method_decl(nullptr, decl, classname, parms, 0);
+	call = Swig_csuperclass_call(nullptr, basetype, superparms);
 	Printf(w->def, "%s::%s: %s, Swig::Director(self) { \n", classname, target, call);
 	Printf(w->def, "   SWIG_DIRECTOR_RGTR((%s *)this, this); \n", basetype);
 	Append(w->def, "}\n");
@@ -3806,7 +3806,7 @@ public:
 
       /* constructor header */
       {
-	String *target = Swig_method_decl(0, decl, classname, parms, 1);
+	String *target = Swig_method_decl(nullptr, decl, classname, parms, 1);
 	Printf(f_directors_h, "    %s;\n", target);
 	Delete(target);
       }
@@ -3958,7 +3958,7 @@ public:
       if (mod) {
 	String *modname = Getattr(mod, "name");
 	Node *options = Getattr(mod, "options");
-	String *pkg = options ? Getattr(options, "package") : 0;
+	String *pkg = options ? Getattr(options, "package") : nullptr;
 	String *sym = Getattr(n, "sym:name");
 	String *importname = import_name_string(package, mainmodule, pkg, modname, sym);
 	Setattr(n, "python:proxy", importname);
@@ -4092,7 +4092,7 @@ public:
       Printf(f, "  PyTuple_SET_ITEM(tuple, 0, other);\n");
       Printf(f, "  SWIG_Py_XINCREF(other);\n");
     }
-    List *richcompare_list = SortedKeys(richcompare, 0);
+    List *richcompare_list = SortedKeys(richcompare, nullptr);
     Iterator rich_iter = First(richcompare_list);
     if (rich_iter.item) {
       Printf(f, "  switch (op) {\n");
@@ -4125,7 +4125,7 @@ public:
       Setattr(n, "feature:python:tp_setattro", "SWIG_Python_NonDynamicSetAttr");
 
     Node *mod = Getattr(n, "module");
-    String *modname = mod ? Getattr(mod, "name") : 0;
+    String *modname = mod ? Getattr(mod, "name") : nullptr;
     String *quoted_symname;
     if (package) {
       if (modname)
@@ -4630,7 +4630,7 @@ public:
 
   virtual int classHandler(Node *n) {
     File *f_shadow_file = f_shadow;
-    Node *base_node = NULL;
+    Node *base_node = nullptr;
 
     if (shadow) {
 
@@ -4682,8 +4682,8 @@ public:
       }
 
       if (builtin) {
-	Hash *base_richcompare = NULL;
-	Hash *richcompare = NULL;
+	Hash *base_richcompare = nullptr;
+	Hash *richcompare = nullptr;
 	if (base_node)
 	  base_richcompare = Getattr(base_node, "python:richcompare");
 	if (base_richcompare)
@@ -4803,7 +4803,7 @@ public:
 	Printv(f_wrappers,
 	       "  SWIG_TypeNewClientData(SWIGTYPE", SwigType_manglestr(ct), ", SWIG_NewClientData(obj));\n", "  return SWIG_Py_Void();\n", "}\n\n", NIL);
 	String *cname = NewStringf("%s_swigregister", class_name);
-	add_method(cname, cname, 0, 0, 1, 1, 1);
+	add_method(cname, cname, 0, nullptr, 1, 1, 1);
 	Delete(cname);
       }
       Delete(ct);
@@ -4832,7 +4832,7 @@ public:
 
       if (builtin_tp_init) {
 	Delete(builtin_tp_init);
-	builtin_tp_init = 0;
+	builtin_tp_init = nullptr;
       }
 
       if (!builtin) {
@@ -4843,7 +4843,7 @@ public:
 	Printf(f_shadow_file, "%s.%s_swigregister(%s)\n", module, class_name, class_name);
       }
 
-      shadow_indent = 0;
+      shadow_indent = nullptr;
       if (Len(f_shadow_stubs) > 0)
 	Printf(f_shadow_file, "%s\n", f_shadow_stubs);
       Clear(f_shadow_stubs);
@@ -5341,7 +5341,7 @@ public:
 	  Append(f->code, "return !res ? SWIG_Py_Void() : NULL;\n");
 	  Append(f->code, "}\n");
 	  Wrapper_print(f, f_wrappers);
-	  add_method(setname, wrapsetname, 0, 0, funpack, 1, 1);
+	  add_method(setname, wrapsetname, 0, nullptr, funpack, 1, 1);
 	  DelWrapper(f);
 	}
 	if (!builtin) {
@@ -5357,7 +5357,7 @@ public:
 	}
 	String *getter = Getattr(n, "pybuiltin:getter");
 	String *setter = Getattr(n, "pybuiltin:setter");
-	Hash *h = NULL;
+	Hash *h = nullptr;
 	if (getter || setter) {
 	  h = Getattr(builtin_getset, symname);
 	  if (!h) {
@@ -5551,7 +5551,7 @@ int PYTHON::classDirectorMethod(Node *n, Node *parent, String *super) {
   String *target;
   String *pclassname = NewStringf("SwigDirector_%s", classname);
   String *qualified_name = NewStringf("%s::%s", pclassname, name);
-  SwigType *rtype = Getattr(n, "conversion_operator") ? 0 : Getattr(n, "classDirectorMethods:type");
+  SwigType *rtype = Getattr(n, "conversion_operator") ? nullptr : Getattr(n, "classDirectorMethods:type");
   target = Swig_method_decl(rtype, decl, qualified_name, l, 0);
   Printf(w->def, "%s", target);
   Delete(qualified_name);
@@ -5566,7 +5566,7 @@ int PYTHON::classDirectorMethod(Node *n, Node *parent, String *super) {
     Append(w->def, " noexcept");
     Append(declaration, " noexcept");
   }
-  ParmList *throw_parm_list = 0;
+  ParmList *throw_parm_list = nullptr;
   if ((throw_parm_list = Getattr(n, "throws")) || Getattr(n, "throw")) {
     Parm *p;
     int gencomma = 0;
@@ -5575,14 +5575,14 @@ int PYTHON::classDirectorMethod(Node *n, Node *parent, String *super) {
     Append(declaration, " throw(");
 
     if (throw_parm_list)
-      Swig_typemap_attach_parms("throws", throw_parm_list, 0);
+      Swig_typemap_attach_parms("throws", throw_parm_list, nullptr);
     for (p = throw_parm_list; p; p = nextSibling(p)) {
       if (Getattr(p, "tmap:throws")) {
 	if (gencomma++) {
 	  Append(w->def, ", ");
 	  Append(declaration, ", ");
 	}
-	String *str = SwigType_str(Getattr(p, "type"), 0);
+	String *str = SwigType_str(Getattr(p, "type"), nullptr);
 	Append(w->def, str);
 	Append(declaration, str);
 	Delete(str);
@@ -5603,7 +5603,7 @@ int PYTHON::classDirectorMethod(Node *n, Node *parent, String *super) {
   if (!is_void && (!ignored_method || pure_virtual)) {
     if (!SwigType_isclass(returntype)) {
       if (!(SwigType_ispointer(returntype) || SwigType_isreference(returntype))) {
-	String *construct_result = NewStringf("= SwigValueInit< %s >()", SwigType_lstr(returntype, 0));
+	String *construct_result = NewStringf("= SwigValueInit< %s >()", SwigType_lstr(returntype, nullptr));
 	Wrapper_add_localv(w, "c_result", SwigType_lstr(returntype, "c_result"), construct_result, NIL);
 	Delete(construct_result);
       } else {
@@ -5640,7 +5640,7 @@ int PYTHON::classDirectorMethod(Node *n, Node *parent, String *super) {
     Swig_director_parms_fixup(l);
 
     /* remove the wrapper 'w' since it was producing spurious temps */
-    Swig_typemap_attach_parms("in", l, 0);
+    Swig_typemap_attach_parms("in", l, nullptr);
     Swig_typemap_attach_parms("directorin", l, w);
     Swig_typemap_attach_parms("directorargout", l, w);
 
@@ -5661,14 +5661,14 @@ int PYTHON::classDirectorMethod(Node *n, Node *parent, String *super) {
 	continue;
       }
 
-      if (Getattr(p, "tmap:directorargout") != 0)
+      if (Getattr(p, "tmap:directorargout") != nullptr)
 	outputs++;
 
       String *pname = Getattr(p, "name");
       String *ptype = Getattr(p, "type");
 
       Putc(',', arglist);
-      if ((tm = Getattr(p, "tmap:directorin")) != 0) {
+      if ((tm = Getattr(p, "tmap:directorin")) != nullptr) {
 	String *parse = Getattr(p, "tmap:directorin:parse");
 	if (!parse) {
 	  sprintf(source, "obj%d", idx++);
@@ -5709,7 +5709,7 @@ int PYTHON::classDirectorMethod(Node *n, Node *parent, String *super) {
 	  Node *module = Getattr(parent, "module");
 	  Node *target = Swig_directormap(module, ptype);
 	  sprintf(source, "obj%d", idx++);
-	  String *nonconst = 0;
+	  String *nonconst = nullptr;
 	  /* strip pointer/reference --- should move to Swig/stype.c */
 	  String *nptype = NewString(Char(ptype) + 2);
 	  /* name as pointer */
@@ -5720,8 +5720,8 @@ int PYTHON::classDirectorMethod(Node *n, Node *parent, String *super) {
 	  /* if necessary, cast away const since Python doesn't support it! */
 	  if (SwigType_isconst(nptype)) {
 	    nonconst = NewStringf("nc_tmp_%s", pname);
-	    String *nonconst_i = NewStringf("= const_cast< %s >(%s)", SwigType_lstr(ptype, 0), ppname);
-	    Wrapper_add_localv(w, nonconst, SwigType_lstr(ptype, 0), nonconst, nonconst_i, NIL);
+	    String *nonconst_i = NewStringf("= const_cast< %s >(%s)", SwigType_lstr(ptype, nullptr), ppname);
+	    Wrapper_add_localv(w, nonconst, SwigType_lstr(ptype, nullptr), nonconst, nonconst_i, NIL);
 	    Delete(nonconst_i);
 	    Swig_warning(WARN_LANG_DISCARD_CONST, input_file, line_number,
 			 "Target language argument '%s' discards const in director method %s::%s.\n",
@@ -5757,7 +5757,7 @@ int PYTHON::classDirectorMethod(Node *n, Node *parent, String *super) {
 	  Delete(nonconst);
 	} else {
 	  Swig_warning(WARN_TYPEMAP_DIRECTORIN_UNDEF, input_file, line_number,
-		       "Unable to use type %s as a function argument in director method %s::%s (skipping method).\n", SwigType_str(ptype, 0),
+		       "Unable to use type %s as a function argument in director method %s::%s (skipping method).\n", SwigType_str(ptype, nullptr),
 		       SwigType_namestr(c_classname), SwigType_namestr(name));
 	  status = SWIG_NOWRAP;
 	  break;
@@ -5821,7 +5821,7 @@ int PYTHON::classDirectorMethod(Node *n, Node *parent, String *super) {
       Printf(w->code, "swig_set_inner(\"%s\", false);\n", name);
 
     /* exception handling */
-    tm = Swig_typemap_lookup("director:except", n, Swig_cresult_name(), 0);
+    tm = Swig_typemap_lookup("director:except", n, Swig_cresult_name(), nullptr);
     if (!tm) {
       tm = Getattr(n, "feature:director:except");
       if (tm)
@@ -5864,7 +5864,7 @@ int PYTHON::classDirectorMethod(Node *n, Node *parent, String *super) {
     /* marshal return value */
     if (!is_void) {
       tm = Swig_typemap_lookup("directorout", n, Swig_cresult_name(), w);
-      if (tm != 0) {
+      if (tm != nullptr) {
 	if (outputs > 1) {
 	  Printf(w->code, "output = PyTuple_GetItem(%s, %d);\n", Swig_cresult_name(), idx++);
 	  Replaceall(tm, "$input", "output");
@@ -5889,7 +5889,7 @@ int PYTHON::classDirectorMethod(Node *n, Node *parent, String *super) {
 	Delete(tm);
       } else {
 	Swig_warning(WARN_TYPEMAP_DIRECTOROUT_UNDEF, input_file, line_number,
-		     "Unable to use return type %s in director method %s::%s (skipping method).\n", SwigType_str(returntype, 0), SwigType_namestr(c_classname),
+		     "Unable to use return type %s in director method %s::%s (skipping method).\n", SwigType_str(returntype, nullptr), SwigType_namestr(c_classname),
 		     SwigType_namestr(name));
 	status = SWIG_ERROR;
       }
@@ -5897,7 +5897,7 @@ int PYTHON::classDirectorMethod(Node *n, Node *parent, String *super) {
 
     /* marshal outputs */
     for (p = l; p;) {
-      if ((tm = Getattr(p, "tmap:directorargout")) != 0) {
+      if ((tm = Getattr(p, "tmap:directorargout")) != nullptr) {
 	if (outputs > 1) {
 	  Printf(w->code, "output = PyTuple_GetItem(%s, %d);\n", Swig_cresult_name(), idx++);
 	  Replaceall(tm, "$result", "output");
@@ -5926,7 +5926,7 @@ int PYTHON::classDirectorMethod(Node *n, Node *parent, String *super) {
 
   if (!is_void) {
     if (!(ignored_method && !pure_virtual)) {
-      String *rettype = SwigType_str(returntype, 0);
+      String *rettype = SwigType_str(returntype, nullptr);
       if (!SwigType_isreference(returntype)) {
 	Printf(w->code, "return (%s) c_result;\n", rettype);
       } else {

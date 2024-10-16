@@ -26,38 +26,38 @@ static int in_constructor = 0, in_destructor = 0, in_copyconst = 0;
 static int const_enum = 0;
 static int static_member_function = 0;
 static int generate_sizeof = 0;
-static String *prefix = 0;
+static String *prefix = nullptr;
 static const char *ocaml_path = "ocaml";
 static bool old_variable_names = false;
-static String *classname = 0;
-static String *module = 0;
-static String *init_func_def = 0;
-static String *f_classtemplate = 0;
-static SwigType *name_qualifier_type = 0;
+static String *classname = nullptr;
+static String *module = nullptr;
+static String *init_func_def = nullptr;
+static String *f_classtemplate = nullptr;
+static SwigType *name_qualifier_type = nullptr;
 
-static Hash *seen_enums = 0;
-static Hash *seen_enumvalues = 0;
-static Hash *seen_constructors = 0;
+static Hash *seen_enums = nullptr;
+static Hash *seen_enumvalues = nullptr;
+static Hash *seen_constructors = nullptr;
 
-static File *f_header = 0;
-static File *f_begin = 0;
-static File *f_runtime = 0;
-static File *f_wrappers = 0;
-static File *f_directors = 0;
-static File *f_directors_h = 0;
-static File *f_init = 0;
-static File *f_mlout = 0;
-static File *f_mliout = 0;
-static File *f_mlbody = 0;
-static File *f_mlibody = 0;
-static File *f_mltail = 0;
-static File *f_mlitail = 0;
-static File *f_enumtypes_type = 0;
-static File *f_enumtypes_value = 0;
-static File *f_class_ctors = 0;
-static File *f_class_ctors_end = 0;
-static File *f_enum_to_int = 0;
-static File *f_int_to_enum = 0;
+static File *f_header = nullptr;
+static File *f_begin = nullptr;
+static File *f_runtime = nullptr;
+static File *f_wrappers = nullptr;
+static File *f_directors = nullptr;
+static File *f_directors_h = nullptr;
+static File *f_init = nullptr;
+static File *f_mlout = nullptr;
+static File *f_mliout = nullptr;
+static File *f_mlbody = nullptr;
+static File *f_mlibody = nullptr;
+static File *f_mltail = nullptr;
+static File *f_mlitail = nullptr;
+static File *f_enumtypes_type = nullptr;
+static File *f_enumtypes_value = nullptr;
+static File *f_class_ctors = nullptr;
+static File *f_class_ctors_end = nullptr;
+static File *f_enum_to_int = nullptr;
+static File *f_int_to_enum = nullptr;
 
 class OCAML:public Language {
 public:
@@ -88,7 +88,7 @@ public:
   virtual void main(int argc, char *argv[]) {
     int i;
 
-    prefix = 0;
+    prefix = nullptr;
 
     SWIG_library_directory(ocaml_path);
 
@@ -188,7 +188,7 @@ public:
      * use %module(directors="1") modulename at the start of the 
      * interface file to enable director generation.
      */
-    String *mod_docstring = NULL;
+    String *mod_docstring = nullptr;
     {
       Node *module = Getattr(n, "module");
       if (module) {
@@ -295,12 +295,12 @@ public:
     Printv(mlifile, module, ".mli", NIL);
 
     String *mlfilen = NewStringf("%s%s", SWIG_output_directory(), mlfile);
-    if ((f_mlout = NewFile(mlfilen, "w", SWIG_output_files())) == 0) {
+    if ((f_mlout = NewFile(mlfilen, "w", SWIG_output_files())) == nullptr) {
       FileErrorDisplay(mlfilen);
       Exit(EXIT_FAILURE);
     }
     String *mlifilen = NewStringf("%s%s", SWIG_output_directory(), mlifile);
-    if ((f_mliout = NewFile(mlifilen, "w", SWIG_output_files())) == 0) {
+    if ((f_mliout = NewFile(mlifilen, "w", SWIG_output_files())) == nullptr) {
       FileErrorDisplay(mlifilen);
       Exit(EXIT_FAILURE);
     }
@@ -314,7 +314,7 @@ public:
 	Printv(f_mliout, "(** ", mod_docstring, " *)\n", NIL);
       }
       Delete(mod_docstring);
-      mod_docstring = NULL;
+      mod_docstring = nullptr;
     }
 
     Printf(f_enum_to_int, ") | _ -> (C_int (get_int v))\n" "let _ = Callback.register \"%s_enum_to_int\" enum_to_int\n", module);
@@ -370,7 +370,7 @@ public:
 
   /* Produce an error for the given type */
   void throw_unhandled_ocaml_type_error(SwigType *d, const char *types) {
-    Swig_warning(WARN_TYPEMAP_UNDEF, input_file, line_number, "Unable to handle type %s (%s).\n", SwigType_str(d, 0), types);
+    Swig_warning(WARN_TYPEMAP_UNDEF, input_file, line_number, "Unable to handle type %s (%s).\n", SwigType_str(d, nullptr), types);
   }
 
   /* Return true iff T is a pointer type */
@@ -463,7 +463,7 @@ public:
     int newobj = GetFlag(n, "feature:new");
     String *nodeType = Getattr(n, "nodeType");
     int destructor = (!Cmp(nodeType, "destructor"));
-    String *overname = 0;
+    String *overname = nullptr;
     bool isOverloaded = Getattr(n, "sym:overloaded") ? true : false;
     // For overloaded functions, only the dispatch function needs to be exposed in the ml and mli files.
     bool expose_func = !isOverloaded || !Getattr(n, "sym:nextSibling");
@@ -670,20 +670,20 @@ public:
     // Look for any remaining cleanup
 
     if (GetFlag(n, "feature:new")) {
-      if ((tm = Swig_typemap_lookup("newfree", n, Swig_cresult_name(), 0))) {
+      if ((tm = Swig_typemap_lookup("newfree", n, Swig_cresult_name(), nullptr))) {
 	Printv(f->code, tm, "\n", NIL);
       }
     }
 
     /* See if there is any return cleanup code */
-    if ((tm = Swig_typemap_lookup("ret", n, Swig_cresult_name(), 0))) {
+    if ((tm = Swig_typemap_lookup("ret", n, Swig_cresult_name(), nullptr))) {
       Printf(f->code, "%s\n", tm);
       Delete(tm);
     }
 
     // Free any memory allocated by the function being wrapped..
 
-    if ((tm = Swig_typemap_lookup("swig_result", n, Swig_cresult_name(), 0))) {
+    if ((tm = Swig_typemap_lookup("swig_result", n, Swig_cresult_name(), nullptr))) {
       Printv(f->code, tm, "\n", NIL);
     }
     // Wrap things up (in a manner of speaking)
@@ -822,10 +822,10 @@ public:
     if (assignable) {
       /* Check for a setting of the variable value */
       Printf(f->code, "if (args != Val_int(0)) {\n");
-      if ((tm = Swig_typemap_lookup("varin", n, name, 0))) {
+      if ((tm = Swig_typemap_lookup("varin", n, name, nullptr))) {
 	Replaceall(tm, "$input", "args");
 	emit_action_code(n, f->code, tm);
-      } else if ((tm = Swig_typemap_lookup("in", n, name, 0))) {
+      } else if ((tm = Swig_typemap_lookup("in", n, name, nullptr))) {
 	Replaceall(tm, "$input", "args");
 	emit_action_code(n, f->code, tm);
       } else {
@@ -836,10 +836,10 @@ public:
     // Now return the value of the variable (regardless
     // of evaluating or setting)
 
-    if ((tm = Swig_typemap_lookup("varout", n, name, 0))) {
+    if ((tm = Swig_typemap_lookup("varout", n, name, nullptr))) {
       Replaceall(tm, "$result", "swig_result");
       emit_action_code(n, f->code, tm);
-    } else if ((tm = Swig_typemap_lookup("out", n, name, 0))) {
+    } else if ((tm = Swig_typemap_lookup("out", n, name, nullptr))) {
       Replaceall(tm, "$result", "swig_result");
       emit_action_code(n, f->code, tm);
     } else {
@@ -1164,7 +1164,7 @@ public:
       }
     } while (took_action);
 
-    return SwigType_str(name_normalized, 0);
+    return SwigType_str(name_normalized, nullptr);
   }
 
   /*
@@ -1205,9 +1205,9 @@ public:
   }
 
   SwigType *fully_qualified_enum_type(Node *n) {
-    Node *parent = 0;
+    Node *parent = nullptr;
     String *fully_qualified_name = NewString("");
-    String *parent_type = 0;
+    String *parent_type = nullptr;
 
     parent = parentNode(n);
     while (parent) {
@@ -1231,7 +1231,7 @@ public:
   int enumvalueDeclaration(Node *n) {
     String *name = Getattr(n, "name");
     String *symname = Getattr(n, "sym:name");
-    SwigType *qtype = 0;
+    SwigType *qtype = nullptr;
 
     if (name_qualifier_type) {
       qtype = Copy(name_qualifier_type);
@@ -1389,7 +1389,7 @@ public:
     String *target;
     String *pclassname = NewStringf("SwigDirector_%s", classname);
     String *qualified_name = NewStringf("%s::%s", pclassname, name);
-    SwigType *rtype = Getattr(n, "conversion_operator") ? 0 : Getattr(n, "classDirectorMethods:type");
+    SwigType *rtype = Getattr(n, "conversion_operator") ? nullptr : Getattr(n, "classDirectorMethods:type");
     target = Swig_method_decl(rtype, decl, qualified_name, l, 0);
     Printf(w->def, "%s", target);
     Delete(qualified_name);
@@ -1404,7 +1404,7 @@ public:
       Append(w->def, " noexcept");
       Append(declaration, " noexcept");
     }
-    ParmList *throw_parm_list = 0;
+    ParmList *throw_parm_list = nullptr;
     if ((throw_parm_list = Getattr(n, "throws")) || Getattr(n, "throw")) {
       Parm *p;
       int gencomma = 0;
@@ -1413,14 +1413,14 @@ public:
       Append(declaration, " throw(");
 
       if (throw_parm_list)
-	Swig_typemap_attach_parms("throws", throw_parm_list, 0);
+	Swig_typemap_attach_parms("throws", throw_parm_list, nullptr);
       for (p = throw_parm_list; p; p = nextSibling(p)) {
 	if (Getattr(p, "tmap:throws")) {
 	  if (gencomma++) {
 	    Append(w->def, ", ");
 	    Append(declaration, ", ");
 	  }
-	  String *str = SwigType_str(Getattr(p, "type"), 0);
+	  String *str = SwigType_str(Getattr(p, "type"), nullptr);
 	  Append(w->def, str);
 	  Append(declaration, str);
 	  Delete(str);
@@ -1438,7 +1438,7 @@ public:
     if (!is_void && (!ignored_method || pure_virtual)) {
       if (!SwigType_isclass(returntype)) {
 	if (!(SwigType_ispointer(returntype) || SwigType_isreference(returntype))) {
-	  String *construct_result = NewStringf("= SwigValueInit< %s >()", SwigType_lstr(returntype, 0));
+	  String *construct_result = NewStringf("= SwigValueInit< %s >()", SwigType_lstr(returntype, nullptr));
 	  Wrapper_add_localv(w, "c_result", SwigType_lstr(returntype, "c_result"), construct_result, NIL);
 	  Delete(construct_result);
 	} else {
@@ -1457,7 +1457,7 @@ public:
 	if (is_void)
 	  Printf(w->code, "%s;\n", super_call);
 	else
-	  Printf(w->code, "CAMLreturnT(%s, %s);\n", SwigType_str(returntype, 0), super_call);
+	  Printf(w->code, "CAMLreturnT(%s, %s);\n", SwigType_str(returntype, nullptr), super_call);
 	Delete(super_call);
       } else {
 	Printf(w->code, "Swig::DirectorPureVirtualException::raise(\"Attempted to invoke pure virtual method %s::%s\");\n", SwigType_namestr(c_classname),
@@ -1470,7 +1470,7 @@ public:
 
       Swig_director_parms_fixup(l);
 
-      Swig_typemap_attach_parms("in", l, 0);
+      Swig_typemap_attach_parms("in", l, nullptr);
       Swig_typemap_attach_parms("directorin", l, w);
       Swig_typemap_attach_parms("directorargout", l, w);
 
@@ -1485,7 +1485,7 @@ public:
 	String *ptype = Getattr(p, "type");
 
 	Putc(',', arglist);
-	if ((tm = Getattr(p, "tmap:directorin")) != 0) {
+	if ((tm = Getattr(p, "tmap:directorin")) != nullptr) {
 	  Setattr(p, "emit:directorinput", pname);
 	  Replaceall(tm, "$input", pname);
 	  Replaceall(tm, "$owner", "0");
@@ -1508,7 +1508,7 @@ public:
 	    Node *module = Getattr(parent, "module");
 	    Node *target = Swig_directormap(module, ptype);
 	    sprintf(source, "obj%d", idx++);
-	    String *nonconst = 0;
+	    String *nonconst = nullptr;
 	    /* strip pointer/reference --- should move to Swig/stype.c */
 	    String *nptype = NewString(Char(ptype) + 2);
 	    /* name as pointer */
@@ -1519,8 +1519,8 @@ public:
 	    /* if necessary, cast away const since Python doesn't support it! */
 	    if (SwigType_isconst(nptype)) {
 	      nonconst = NewStringf("nc_tmp_%s", pname);
-	      String *nonconst_i = NewStringf("= const_cast< %s >(%s)", SwigType_lstr(ptype, 0), ppname);
-	      Wrapper_add_localv(w, nonconst, SwigType_lstr(ptype, 0), nonconst, nonconst_i, NIL);
+	      String *nonconst_i = NewStringf("= const_cast< %s >(%s)", SwigType_lstr(ptype, nullptr), ppname);
+	      Wrapper_add_localv(w, nonconst, SwigType_lstr(ptype, nullptr), nonconst, nonconst_i, NIL);
 	      Delete(nonconst_i);
 	      Swig_warning(WARN_LANG_DISCARD_CONST, input_file, line_number,
 			   "Target language argument '%s' discards const in director method %s::%s.\n", SwigType_str(ptype, pname),
@@ -1554,7 +1554,7 @@ public:
 	    Delete(nonconst);
 	  } else {
 	    Swig_warning(WARN_TYPEMAP_DIRECTORIN_UNDEF, input_file, line_number,
-			 "Unable to use type %s as a function argument in director method %s::%s (skipping method).\n", SwigType_str(ptype, 0),
+			 "Unable to use type %s as a function argument in director method %s::%s (skipping method).\n", SwigType_str(ptype, nullptr),
 			 SwigType_namestr(c_classname), SwigType_namestr(name));
 	    status = SWIG_NOWRAP;
 	    break;
@@ -1576,7 +1576,7 @@ public:
       Printf(w->code, "  swig_ocaml_func_val = caml_named_value(\"swig_runmethod\");\n  }\n");
       Printf(w->code, "swig_result = caml_callback3(*swig_ocaml_func_val,swig_get_self(),caml_copy_string(\"%s\"),args);\n", Getattr(n, "name"));
       /* exception handling */
-      tm = Swig_typemap_lookup("director:except", n, Swig_cresult_name(), 0);
+      tm = Swig_typemap_lookup("director:except", n, Swig_cresult_name(), nullptr);
       if (!tm) {
 	tm = Getattr(n, "feature:director:except");
       }
@@ -1602,7 +1602,7 @@ public:
       String *outarg = NewString("");
 
       tm = Swig_typemap_lookup("directorout", n, "c_result", w);
-      if (tm != 0) {
+      if (tm != nullptr) {
 	Replaceall(tm, "$input", "swig_result");
 	/* TODO check this */
 	if (Getattr(n, "wrap:disown")) {
@@ -1616,7 +1616,7 @@ public:
 
       /* marshal outputs */
       for (p = l; p;) {
-	if ((tm = Getattr(p, "tmap:directorargout")) != 0) {
+	if ((tm = Getattr(p, "tmap:directorargout")) != nullptr) {
 	  Replaceall(tm, "$result", "swig_result");
 	  Replaceall(tm, "$input", Getattr(p, "emit:directorinput"));
 	  Printv(w->code, tm, "\n", NIL);
@@ -1634,7 +1634,7 @@ public:
     /* any existing helper functions to handle this? */
     if (!is_void) {
       if (!(ignored_method && !pure_virtual)) {
-	String *rettype = SwigType_str(returntype, 0);
+	String *rettype = SwigType_str(returntype, nullptr);
 	if (!SwigType_isreference(returntype)) {
 	  Printf(w->code, "CAMLreturnT(%s, (%s)c_result);\n", rettype, rettype);
 	} else {
@@ -1710,8 +1710,8 @@ public:
 	Wrapper *w = NewWrapper();
 	String *call;
 	String *basetype = Getattr(parent, "classtype");
-	String *target = Swig_method_decl(0, decl, classname, parms, 0);
-	call = Swig_csuperclass_call(0, basetype, superparms);
+	String *target = Swig_method_decl(nullptr, decl, classname, parms, 0);
+	call = Swig_csuperclass_call(nullptr, basetype, superparms);
 	Printf(w->def, "%s::%s: %s, Swig::Director(self) { }", classname, target, call);
 	Delete(target);
 	Wrapper_print(w, f_directors);
@@ -1721,7 +1721,7 @@ public:
 
       /* constructor header */
       {
-	String *target = Swig_method_decl(0, decl, classname, parms, 1);
+	String *target = Swig_method_decl(nullptr, decl, classname, parms, 1);
 	Printf(f_directors_h, "    %s;\n", target);
 	Delete(target);
       }
@@ -1800,7 +1800,7 @@ public:
    * --------------------------------------------------------------------- */
   int typedefHandler(Node *n) {
     String *type = Getattr(n, "type");
-    Node *enum_node = type ? Getattr(seen_enums, type) : 0;
+    Node *enum_node = type ? Getattr(seen_enums, type) : nullptr;
     if (enum_node) {
       String *name = Getattr(enum_node, "name");
 

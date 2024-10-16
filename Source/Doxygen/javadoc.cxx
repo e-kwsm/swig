@@ -593,9 +593,9 @@ string JavaDocConverter::convertLink(string linkObject) {
     }
 
     // make dummy param list, to lookup typemaps for it
-    Parm *dummyParam = NewParm(swigType, "", 0);
-    Swig_typemap_attach_parms("jstype", dummyParam, NULL);
-    Language::instance()->replaceSpecialVariables(0, Getattr(dummyParam, "tmap:jstype"), dummyParam);
+    Parm *dummyParam = NewParm(swigType, "", nullptr);
+    Swig_typemap_attach_parms("jstype", dummyParam, nullptr);
+    Language::instance()->replaceSpecialVariables(nullptr, Getattr(dummyParam, "tmap:jstype"), dummyParam);
 
     //Swig_print(dummyParam, 1);
     linkObject += Char(Getattr(dummyParam, "tmap:jstype"));
@@ -789,7 +789,7 @@ String *JavaDocConverter::makeDocumentation(Node *node) {
 
   String *documentation = getDoxygenComment(node);
 
-  if (documentation == NULL) {
+  if (documentation == nullptr) {
     return NewString("");
   }
 

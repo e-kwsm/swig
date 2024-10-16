@@ -86,29 +86,29 @@ public:
     sourceFileList = NewList();
     cflags = NewList();
     ldflags = NewList();
-    verboseBuildLevel = NULL;
-    buildFlagsScript = NULL;
+    verboseBuildLevel = nullptr;
+    buildFlagsScript = nullptr;
 
-    gatewayHeader = NULL;
-    gatewayHeaderV5 = NULL;
-    gatewayHeaderV6 = NULL;
+    gatewayHeader = nullptr;
+    gatewayHeaderV5 = nullptr;
+    gatewayHeaderV6 = nullptr;
 
     createGatewayXML = false;
-    gatewayXML = NULL;
-    gatewayXMLFile = NULL;
-    gatewayID = NULL;
+    gatewayXML = nullptr;
+    gatewayXMLFile = nullptr;
+    gatewayID = nullptr;
 
     createGatewayXMLV6 = false;
-    gatewayXMLV6 = NULL;
-    gatewayXMLFileV6 = NULL;
+    gatewayXMLV6 = nullptr;
+    gatewayXMLFileV6 = nullptr;
 
     createLoader = true;
-    loaderFile = NULL;
-    loaderScript = NULL;
+    loaderFile = nullptr;
+    loaderScript = nullptr;
 
     /* Manage command line arguments */
     for (int argIndex = 1; argIndex < argc; argIndex++) {
-      if (argv[argIndex] != NULL) {
+      if (argv[argIndex] != nullptr) {
 	if (strcmp(argv[argIndex], "-help") == 0) {
 	  Printf(stdout, "%s\n", usage);
 	} else if (strcmp(argv[argIndex], "-builder") == 0) {
@@ -116,24 +116,24 @@ public:
 	  generateBuilder = true;
 	  createLoader = false;
 	} else if (strcmp(argv[argIndex], "-buildersources") == 0) {
-	  if (argv[argIndex + 1] != NULL) {
+	  if (argv[argIndex + 1] != nullptr) {
 	    Swig_mark_arg(argIndex);
 	    char *sourceFile = strtok(argv[argIndex + 1], ",");
-	    while (sourceFile != NULL) {
+	    while (sourceFile != nullptr) {
 	      Insert(sourceFileList, Len(sourceFileList), sourceFile);
-	      sourceFile = strtok(NULL, ",");
+	      sourceFile = strtok(nullptr, ",");
 	    }
 	    Swig_mark_arg(argIndex + 1);
 	  }
 	} else if (strcmp(argv[argIndex], "-buildercflags") == 0) {
           Swig_mark_arg(argIndex);
-          if (argv[argIndex + 1] != NULL) {
+          if (argv[argIndex + 1] != nullptr) {
             Insert(cflags, Len(cflags), argv[argIndex + 1]);
             Swig_mark_arg(argIndex + 1);
           }
         } else if (strcmp(argv[argIndex], "-builderldflags") == 0) {
           Swig_mark_arg(argIndex);
-          if (argv[argIndex + 1] != NULL) {
+          if (argv[argIndex + 1] != nullptr) {
             Insert(ldflags, Len(ldflags), argv[argIndex + 1]);
             Swig_mark_arg(argIndex + 1);
           }
@@ -157,7 +157,7 @@ public:
       }
     }
 
-    if (verboseBuildLevel == NULL) {
+    if (verboseBuildLevel == nullptr) {
       verboseBuildLevel = NewString("0");
     }
 
@@ -337,7 +337,7 @@ public:
     ParmList *functionParamsList = Getattr(node, "parms");
 
     int paramIndex = 0;		// Used for loops over ParmsList
-    Parm *param = NULL;		// Used for loops over ParamsList
+    Parm *param = nullptr;		// Used for loops over ParamsList
 
     /* Create the wrapper object */
     Wrapper *wrapper = NewWrapper();
@@ -422,7 +422,7 @@ public:
 	}
 	param = Getattr(param, "tmap:in:next");
       } else {
-	Swig_warning(WARN_TYPEMAP_IN_UNDEF, input_file, line_number, "Unable to use type %s as a function argument.\n", SwigType_str(paramType, 0));
+	Swig_warning(WARN_TYPEMAP_IN_UNDEF, input_file, line_number, "Unable to use type %s as a function argument.\n", SwigType_str(paramType, nullptr));
 	break;
       }
     }
@@ -463,7 +463,7 @@ public:
       Delete(functionReturnTypemap);
 
     } else {
-      Swig_warning(WARN_TYPEMAP_OUT_UNDEF, input_file, line_number, "Unable to use return type %s in function %s.\n", SwigType_str(functionReturnType, 0),
+      Swig_warning(WARN_TYPEMAP_OUT_UNDEF, input_file, line_number, "Unable to use return type %s in function %s.\n", SwigType_str(functionReturnType, nullptr),
 		   functionName);
     }
 
@@ -499,7 +499,7 @@ public:
 
     /* See if there is any return cleanup code */
     String *tm;
-    if ((tm = Swig_typemap_lookup("ret", node, Swig_cresult_name(), 0))) {
+    if ((tm = Swig_typemap_lookup("ret", node, Swig_cresult_name(), nullptr))) {
       Printf(wrapper->code, "%s\n", tm);
       Delete(tm);
     }
@@ -628,8 +628,8 @@ public:
     Printf(getFunctionWrapper->def, "SWIG_CheckOutputArgument(pvApiCtx, 0, 1);\n");
     Printf(getFunctionWrapper->def, "SWIG_Scilab_SetApiContext(pvApiCtx);\n");
 
-    String *varoutTypemap = Swig_typemap_lookup("varout", node, origVariableName, 0);
-    if (varoutTypemap != NULL) {
+    String *varoutTypemap = Swig_typemap_lookup("varout", node, origVariableName, nullptr);
+    if (varoutTypemap != nullptr) {
       Printf(getFunctionWrapper->code, "SWIG_Scilab_SetOutputPosition(%d);\n", 1);
       Replaceall(varoutTypemap, "$value", origVariableName);
       Replaceall(varoutTypemap, "$result", "1");
@@ -658,8 +658,8 @@ public:
       Printf(setFunctionWrapper->def, "SWIG_CheckOutputArgument(pvApiCtx, 0, 1);\n");
       Printf(setFunctionWrapper->def, "SWIG_Scilab_SetApiContext(pvApiCtx);\n");
 
-      String *varinTypemap = Swig_typemap_lookup("varin", node, origVariableName, 0);
-      if (varinTypemap != NULL) {
+      String *varinTypemap = Swig_typemap_lookup("varin", node, origVariableName, nullptr);
+      if (varinTypemap != nullptr) {
 	Replaceall(varinTypemap, "$input", "1");
 	emit_action_code(node, setFunctionWrapper->code, varinTypemap);
 	Delete(varinTypemap);
@@ -689,7 +689,7 @@ public:
     SwigType *type = Getattr(node, "type");
     String *constantName = Getattr(node, "sym:name");
     String *constantValue = Getattr(node, "value");
-    String *constantTypemap = NULL;
+    String *constantTypemap = nullptr;
 
     // If feature scilab:const enabled, constants & enums are wrapped to Scilab variables
     if (GetFlag(node, "feature:scilab:const")) {
@@ -702,8 +702,8 @@ public:
 	  constantValue = Getattr(node, "value");
 	}
 
-	constantTypemap = Swig_typemap_lookup("scilabconstcode", node, nodeName, 0);
-	if (constantTypemap != NULL) {
+	constantTypemap = Swig_typemap_lookup("scilabconstcode", node, nodeName, nullptr);
+	if (constantTypemap != nullptr) {
 
 	  Setattr(node, "wrap:name", constantName);
 	  Replaceall(constantTypemap, "$result", constantName);
@@ -741,8 +741,8 @@ public:
     Printf(getFunctionWrapper->def, "SWIG_CheckOutputArgument(pvApiCtx, 0, 1);\n");
     Printf(getFunctionWrapper->def, "SWIG_Scilab_SetApiContext(pvApiCtx);\n");
 
-    constantTypemap = Swig_typemap_lookup("constcode", node, nodeName, 0);
-    if (constantTypemap != NULL) {
+    constantTypemap = Swig_typemap_lookup("constcode", node, nodeName, nullptr);
+    if (constantTypemap != nullptr) {
       Printf(getFunctionWrapper->code, "SWIG_Scilab_SetOutputPosition(%d);\n", 1);
       Replaceall(constantTypemap, "$value", constantValue);
       Replaceall(constantTypemap, "$result", "1");
@@ -1063,7 +1063,7 @@ public:
    * ----------------------------------------------------------------------- */
 
   void addFunctionInGatewayHeader(const_String_or_char_ptr scilabFunctionName, const_String_or_char_ptr scilabSmallFunctionName, const_String_or_char_ptr wrapperFunctionName) {
-    if (gatewayHeaderV5 == NULL) {
+    if (gatewayHeaderV5 == nullptr) {
       gatewayHeaderV5 = NewString("");
       Printf(gatewayHeaderV5, "static GenericTable Tab[] = {\n");
     } else

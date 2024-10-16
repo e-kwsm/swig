@@ -74,7 +74,7 @@ int is_non_virtual_protected_access(Node *n) {
 
 void clean_overloaded(Node *n) {
   Node *nn = Getattr(n, "sym:overloaded");
-  Node *first = 0;
+  Node *first = nullptr;
   while (nn) {
     String *ntype = nodeType(nn);
     if ((GetFlag(nn, "feature:ignore")) ||

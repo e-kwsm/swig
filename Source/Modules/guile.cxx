@@ -46,16 +46,16 @@ Guile Options (available with -guile)\n\
      -useclassprefix         - Prepend the class name to all goops identifiers\n\
 \n";
 
-static File *f_begin = 0;
-static File *f_runtime = 0;
-static File *f_header = 0;
-static File *f_wrappers = 0;
-static File *f_init = 0;
+static File *f_begin = nullptr;
+static File *f_runtime = nullptr;
+static File *f_header = nullptr;
+static File *f_wrappers = nullptr;
+static File *f_init = nullptr;
 
 
 static String *prefix = NewString("gswig_");
-static char *module = 0;
-static String *package = 0;
+static char *module = nullptr;
+static String *package = nullptr;
 static enum {
   GUILE_LSTYLE_SIMPLE,		// call `SWIG_init()'
   GUILE_LSTYLE_PASSIVE,		// passive linking (no module code)
@@ -63,7 +63,7 @@ static enum {
   GUILE_LSTYLE_HOBBIT		// use (hobbit4d link)
 } linkage = GUILE_LSTYLE_SIMPLE;
 
-static File *procdoc = 0;
+static File *procdoc = nullptr;
 static bool scmstub = false;
 static String *scmtext;
 static bool goops = false;
@@ -82,32 +82,32 @@ static int only_setters = 0;
 static int emit_slot_accessors = 0;
 static int struct_member = 0;
 
-static String *beforereturn = 0;
-static String *return_nothing_doc = 0;
-static String *return_one_doc = 0;
-static String *return_multi_doc = 0;
+static String *beforereturn = nullptr;
+static String *return_nothing_doc = nullptr;
+static String *return_one_doc = nullptr;
+static String *return_multi_doc = nullptr;
 
-static String *exported_symbols = 0;
+static String *exported_symbols = nullptr;
 
 static int exporting_destructor = 0;
-static String *swigtype_ptr = 0;
+static String *swigtype_ptr = nullptr;
 
 /* GOOPS stuff */
-static String *primsuffix = 0;
-static String *class_name = 0;
-static String *short_class_name = 0;
+static String *primsuffix = nullptr;
+static String *class_name = nullptr;
+static String *short_class_name = nullptr;
 static String *goops_class_methods;
 static int in_class = 0;
 static int have_constructor = 0;
 static int useclassprefix = 0;	// -useclassprefix argument
-static String *goopsprefix = 0;	// -goopsprefix argument
+static String *goopsprefix = nullptr;	// -goopsprefix argument
 static int primRenamer = 0;	// if (use-modules ((...) :renamer ...) is exported to GOOPS file
 static int exportprimitive = 0;	// -exportprimitive argument
-static String *memberfunction_name = 0;
+static String *memberfunction_name = nullptr;
 
 extern "C" {
   static Node *has_classname(Node *class_node) {
-    return Getattr(class_node, "guile:goopsclassname") ? class_node : 0;
+    return Getattr(class_node, "guile:goopsclassname") ? class_node : nullptr;
   }
 }
 
@@ -365,7 +365,7 @@ public:
 
     if (procdoc) {
       Delete(procdoc);
-      procdoc = NULL;
+      procdoc = nullptr;
     }
     Delete(goopscode);
     Delete(goopsexport);
@@ -539,12 +539,12 @@ public:
   /* Report an error handling the given type. */
 
   void throw_unhandled_guile_type_error(SwigType *d) {
-    Swig_warning(WARN_TYPEMAP_UNDEF, input_file, line_number, "Unable to handle type %s.\n", SwigType_str(d, 0));
+    Swig_warning(WARN_TYPEMAP_UNDEF, input_file, line_number, "Unable to handle type %s.\n", SwigType_str(d, nullptr));
   }
 
   /* Write out procedure documentation */
 
-  void write_doc(const String *proc_name, const String *signature, const String *doc, const String *signature2 = NULL) {
+  void write_doc(const String *proc_name, const String *signature, const String *doc, const String *signature2 = nullptr) {
     switch (docformat) {
     case GUILE_1_4:
       Printv(procdoc, "\f\n", NIL);
@@ -573,7 +573,7 @@ public:
 
   /* returns false if the typemap is an empty string */
   bool handle_documentation_typemap(String *output,
-				    const String *maybe_delimiter, Parm *p, const String *typemap, const String *default_doc, const String *name = NULL) {
+				    const String *maybe_delimiter, Parm *p, const String *typemap, const String *default_doc, const String *name = nullptr) {
     String *tmp = NewString("");
     String *tm;
     if (!(tm = Getattr(p, typemap))) {
@@ -587,7 +587,7 @@ public:
     const String *pn = !name ? (const String *) Getattr(p, "name") : name;
     String *pt = Getattr(p, "type");
     Replaceall(tm, "$name", pn);	// legacy for $parmname
-    Replaceall(tm, "$type", SwigType_str(pt, 0));
+    Replaceall(tm, "$type", SwigType_str(pt, nullptr));
     /* $NAME is like $name, but marked-up as a variable. */
     String *ARGNAME = NewString("");
     if (docformat == TEXINFO)
@@ -611,7 +611,7 @@ public:
     SwigType *returntype = Getattr(n, "type");
     ParmList *l = Getattr(n, "parms");
     Parm *p;
-    String *proc_name = 0;
+    String *proc_name = nullptr;
     char source[256];
     Wrapper *f = NewWrapper();
     String *cleanup = NewString("");
@@ -628,7 +628,7 @@ public:
     int i;
     int numargs = 0;
     int numreq = 0;
-    String *overname = 0;
+    String *overname = nullptr;
     int args_passed_as_array = 0;
     int scheme_argnum = 0;
     bool any_specialized_arg = false;
@@ -733,7 +733,7 @@ public:
 	  if (i < numreq) {
 	    if (strcmp("void", Char(pt)) != 0) {
 	      Node *class_node = Swig_symbol_clookup_check(pb, Getattr(n, "sym:symtab"), has_classname);
-	      String *goopsclassname = !class_node ? NULL : Getattr(class_node, "guile:goopsclassname");
+	      String *goopsclassname = !class_node ? nullptr : Getattr(class_node, "guile:goopsclassname");
 	      /* do input conversion */
 	      if (goopsclassname) {
 		Printv(method_signature, " (", argname, " ", goopsclassname, ")", NIL);
@@ -843,7 +843,7 @@ public:
       else
 	num_results = 0;
     } else {
-      String *s = SwigType_str(returntype, 0);
+      String *s = SwigType_str(returntype, nullptr);
       Chop(s);
       Printf(returns, "<%s>", s);
       Delete(s);
@@ -861,12 +861,12 @@ public:
     // Look for any remaining cleanup
 
     if (GetFlag(n, "feature:new")) {
-      if ((tm = Swig_typemap_lookup("newfree", n, Swig_cresult_name(), 0))) {
+      if ((tm = Swig_typemap_lookup("newfree", n, Swig_cresult_name(), nullptr))) {
 	Printv(f->code, tm, "\n", NIL);
       }
     }
     // Free any memory allocated by the function being wrapped..
-    if ((tm = Swig_typemap_lookup("ret", n, Swig_cresult_name(), 0))) {
+    if ((tm = Swig_typemap_lookup("ret", n, Swig_cresult_name(), nullptr))) {
       Printv(f->code, tm, "\n", NIL);
     }
     // Wrap things up (in a manner of speaking)
@@ -1107,7 +1107,7 @@ public:
       if (assignable) {
 	/* Check for a setting of the variable value */
 	Printf(f->code, "if (s_0 != SCM_UNDEFINED) {\n");
-	if ((tm = Swig_typemap_lookup("varin", n, name, 0))) {
+	if ((tm = Swig_typemap_lookup("varin", n, name, nullptr))) {
 	  Replaceall(tm, "$input", "s_0");
 	  /* Printv(f->code,tm,"\n",NIL); */
 	  emit_action_code(n, f->code, tm);
@@ -1121,7 +1121,7 @@ public:
       // Now return the value of the variable (regardless
       // of evaluating or setting)
 
-      if ((tm = Swig_typemap_lookup("varout", n, name, 0))) {
+      if ((tm = Swig_typemap_lookup("varout", n, name, nullptr))) {
 	Replaceall(tm, "$result", "gswig_result");
 	/* Printv(f->code,tm,"\n",NIL); */
 	emit_action_code(n, f->code, tm);
@@ -1195,7 +1195,7 @@ public:
       if (procdoc) {
 	/* Compute documentation */
 	String *signature = NewString("");
-	String *signature2 = NULL;
+	String *signature2 = nullptr;
 	String *doc = NewString("");
 
 	if (!assignable) {
@@ -1208,7 +1208,7 @@ public:
 	  if ((tm = Getattr(n, "tmap:varout:doc"))) {
 	    Printv(doc, tm, NIL);
 	  } else {
-	    String *s = SwigType_str(t, 0);
+	    String *s = SwigType_str(t, nullptr);
 	    Chop(s);
 	    Printf(doc, "<%s>", s);
 	    Delete(s);
@@ -1227,7 +1227,7 @@ public:
 	  if ((tm = Getattr(n, "tmap:varin:doc"))) {
 	    Printv(signature, tm, NIL);
 	  } else {
-	    String *s = SwigType_str(t, 0);
+	    String *s = SwigType_str(t, nullptr);
 	    Chop(s);
 	    Printf(signature, "new-value <%s>", s);
 	    Delete(s);
@@ -1238,7 +1238,7 @@ public:
 	  if ((tm = Getattr(n, "tmap:varout:doc"))) {
 	    Printv(doc, tm, NIL);
 	  } else {
-	    String *s = SwigType_str(t, 0);
+	    String *s = SwigType_str(t, nullptr);
 	    Chop(s);
 	    Printf(doc, "<%s>", s);
 	    Delete(s);
@@ -1294,12 +1294,12 @@ public:
 
     // See if there's a typemap
 
-    if ((tm = Swig_typemap_lookup("constant", n, name, 0))) {
+    if ((tm = Swig_typemap_lookup("constant", n, name, nullptr))) {
       Replaceall(tm, "$value", value);
       Printv(f_header, tm, "\n", NIL);
     } else {
       // Create variable and assign it a value
-      Printf(f_header, "static %s = (%s)(%s);\n", SwigType_str(type, var_name), SwigType_str(type, 0), value);
+      Printf(f_header, "static %s = (%s)(%s);\n", SwigType_str(type, var_name), SwigType_str(type, nullptr), value);
     }
     int result = SWIG_OK;
     if (Len(nctype) > 0) {
@@ -1407,7 +1407,7 @@ public:
 
     Printf(goopscode, ")\n%s\n", goops_class_methods);
     Delete(goops_class_methods);
-    goops_class_methods = 0;
+    goops_class_methods = nullptr;
 
 
     /* export class initialization function */
@@ -1437,12 +1437,12 @@ public:
     Delete(mangled_classname);
 
     Delete(swigtype_ptr);
-    swigtype_ptr = 0;
+    swigtype_ptr = nullptr;
 
     Delete(class_name);
     Delete(short_class_name);
-    class_name = 0;
-    short_class_name = 0;
+    class_name = nullptr;
+    short_class_name = nullptr;
 
     return SWIG_OK;
   }
@@ -1458,7 +1458,7 @@ public:
     memberfunction_name = goopsNameMapping(proc, short_class_name);
     Language::memberfunctionHandler(n);
     Delete(memberfunction_name);
-    memberfunction_name = NULL;
+    memberfunction_name = nullptr;
     Delete(proc);
     return SWIG_OK;
   }

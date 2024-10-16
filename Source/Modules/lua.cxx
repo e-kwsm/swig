@@ -59,7 +59,7 @@
 //#define REPORT(T,D)   {Printf(stdout,T"\n");if(D)Swig_print_node(D);}      // the works
 
 void display_mapping(DOH *d) {
-  if (d == 0 || !DohIsMapping(d))
+  if (d == nullptr || !DohIsMapping(d))
     return;
   for (Iterator it = First(d); it.item; it = Next(it)) {
     if (DohIsString(it.item))
@@ -185,21 +185,21 @@ public:
    * --------------------------------------------------------------------- */
 
    LUA():
-      f_begin(0),
-      f_runtime(0),
-      f_header(0),
-      f_wrappers(0),
-      f_init(0),
-      f_initbeforefunc(0),
-      s_luacode(0),
-      module(0),
+      f_begin(nullptr),
+      f_runtime(nullptr),
+      f_header(nullptr),
+      f_wrappers(nullptr),
+      f_init(nullptr),
+      f_initbeforefunc(nullptr),
+      s_luacode(nullptr),
+      module(nullptr),
       have_constructor(0),
       have_destructor(0),
-      destructor_action(0),
-      proxy_class_name(0),
-      full_proxy_class_name(0),
-      class_static_nspace(0),
-      constructor_name(0) {
+      destructor_action(nullptr),
+      proxy_class_name(nullptr),
+      full_proxy_class_name(nullptr),
+      class_static_nspace(nullptr),
+      constructor_name(nullptr) {
     for (int i = 0; i < STATES_COUNT; i++)
       current[i] = false;
   }
@@ -451,7 +451,7 @@ public:
    * Overloaded variant adds method to the "methods" array of specified lua scope/class
    * ---------------------------------------------------------------------- */
 
-  void registerMethod(Node *n, bool overwrite = false, String *overwriteLuaScope = 0) {
+  void registerMethod(Node *n, bool overwrite = false, String *overwriteLuaScope = nullptr) {
     String *symname = Getattr(n, "sym:name");
     assert(symname);
 
@@ -463,7 +463,7 @@ public:
     if (overwrite)
       luaScope = overwriteLuaScope;
 
-    String *wrapname = 0;
+    String *wrapname = nullptr;
     String *mrename;
     if (current[NO_CPP] || !getCurrentClass()) {
       mrename = symname;
@@ -520,7 +520,7 @@ public:
     int i;
     //Printf(stdout,"functionWrapper %s %s %d\n",name,iname,current);
 
-    String *overname = 0;
+    String *overname = nullptr;
     if (Getattr(n, "sym:overloaded")) {
       overname = Getattr(n, "sym:overname");
     } else {
@@ -542,7 +542,7 @@ public:
       Append(wname, overname);
     }
     if (current[CONSTRUCTOR]) {
-      if (constructor_name != 0)
+      if (constructor_name != nullptr)
 	Delete(constructor_name);
       constructor_name = Copy(wname);
     }
@@ -605,7 +605,7 @@ public:
        NEW LANGUAGE NOTE:END *********************************************** */
     String *argument_check = NewString("");
     String *argument_parse = NewString("");
-    String *checkfn = NULL;
+    String *checkfn = nullptr;
     char source[64];
     Printf(argument_check, "SWIG_check_num_args(\"%s\",%d,%d)\n", Swig_name_str(n), num_required + args_to_ignore, num_arguments + args_to_ignore);
 
@@ -639,7 +639,7 @@ public:
 	  } else {
 	    Printf(argument_check, "if(lua_gettop(L)>=%s && !%s(L,%s))", source, checkfn, source);
 	  }
-	  Printf(argument_check, " SWIG_fail_arg(\"%s\",%s,\"%s\");\n", Swig_name_str(n), source, SwigType_str(pt, 0));
+	  Printf(argument_check, " SWIG_fail_arg(\"%s\",%s,\"%s\");\n", Swig_name_str(n), source, SwigType_str(pt, nullptr));
 	}
 	/* NEW LANGUAGE NOTE:***********************************************
 	   lua states the number of arguments passed to a function using the fn
@@ -658,7 +658,7 @@ public:
 	   // why is this code not called when I don't have a typemap?
 	   // instead of giving a warning, no code is generated
 	   NEW LANGUAGE NOTE:END *********************************************** */
-	Swig_warning(WARN_TYPEMAP_IN_UNDEF, input_file, line_number, "Unable to use type %s as a function argument.\n", SwigType_str(pt, 0));
+	Swig_warning(WARN_TYPEMAP_IN_UNDEF, input_file, line_number, "Unable to use type %s as a function argument.\n", SwigType_str(pt, nullptr));
 	break;
       }
     }
@@ -743,7 +743,7 @@ public:
       Printf(f->code, "%s\n", tm);
       //      returnval++;
     } else {
-      Swig_warning(WARN_TYPEMAP_OUT_UNDEF, input_file, line_number, "Unable to use return type %s in function %s.\n", SwigType_str(returntype, 0), name);
+      Swig_warning(WARN_TYPEMAP_OUT_UNDEF, input_file, line_number, "Unable to use return type %s in function %s.\n", SwigType_str(returntype, nullptr), name);
     }
     emit_return_variable(n, returntype, f);
 
@@ -755,13 +755,13 @@ public:
 
     /* Look to see if there is any newfree cleanup code */
     if (GetFlag(n, "feature:new")) {
-      if ((tm = Swig_typemap_lookup("newfree", n, Swig_cresult_name(), 0))) {
+      if ((tm = Swig_typemap_lookup("newfree", n, Swig_cresult_name(), nullptr))) {
 	Printf(f->code, "%s\n", tm);
       }
     }
 
     /* See if there is any return cleanup code */
-    if ((tm = Swig_typemap_lookup("ret", n, Swig_cresult_name(), 0))) {
+    if ((tm = Swig_typemap_lookup("ret", n, Swig_cresult_name(), nullptr))) {
       Printf(f->code, "%s\n", tm);
     }
 
@@ -896,7 +896,7 @@ public:
     Setattr(n, "wrap:name", wname);
 
     if (current[CONSTRUCTOR]) {
-      if (constructor_name != 0)
+      if (constructor_name != nullptr)
 	Delete(constructor_name);
       constructor_name = Copy(wname);
     }
@@ -916,7 +916,7 @@ public:
    * Lua scope could be overwritten. (Used only for backward compatibility)
    * ------------------------------------------------------------ */
 
-  void registerVariable(Node *n, bool overwrite = false, String *overwriteLuaScope = 0) {
+  void registerVariable(Node *n, bool overwrite = false, String *overwriteLuaScope = nullptr) {
     int assignable = !is_immutable(n);
     String *symname = Getattr(n, "sym:name");
     assert(symname);
@@ -927,9 +927,9 @@ public:
       luaScope = overwriteLuaScope;
 
     // Getter and setter
-    String *getName = 0;
-    String *setName = 0;
-    String *mrename = 0;
+    String *getName = nullptr;
+    String *setName = nullptr;
+    String *mrename = nullptr;
     if (current[NO_CPP] || !getCurrentClass()) {
       // Global variable
       getName = Swig_name_get(getNSpace(), symname);
@@ -939,11 +939,11 @@ public:
         assert(!current[NO_CPP]);
         if (current[STATIC_VAR] ) {
           mrename = Swig_name_member(getNSpace(), getClassPrefix(), symname);
-          getName = Swig_name_get(0, mrename);
+          getName = Swig_name_get(nullptr, mrename);
           if (assignable)
-            setName = Swig_name_set(0, mrename);
+            setName = Swig_name_set(nullptr, mrename);
         } else if (current[MEMBER_VAR]) {
-          mrename = Swig_name_member(0, getClassPrefix(), symname);
+          mrename = Swig_name_member(nullptr, getClassPrefix(), symname);
           getName = Swig_name_get(getNSpace(), mrename);
           if (assignable)
             setName = Swig_name_set(getNSpace(), mrename);
@@ -967,7 +967,7 @@ public:
 
   void registerVariable(String *lua_nspace_or_class_name, Node *n, String *getName, String *setName) {
     String *unassignable = NewString("SWIG_Lua_set_immutable");
-    if (setName == 0 || GetFlag(n, "feature:immutable")) {
+    if (setName == nullptr || GetFlag(n, "feature:immutable")) {
       setName = unassignable;
     }
     Hash *nspaceHash = getCArraysHash(lua_nspace_or_class_name);
@@ -1022,7 +1022,7 @@ public:
 
   void registerConstant(String *nspace, String *constantRecord) {
     Hash *nspaceHash = getCArraysHash(nspace);
-    String *s_const_tab = 0;
+    String *s_const_tab = nullptr;
     if (eluac_ltr || elua_ltr)
       // In elua everything goes to "methods" tab
       s_const_tab = Getattr(nspaceHash, "methods");
@@ -1049,16 +1049,16 @@ public:
     String *name = Getattr(n, "name");
     String *iname = Getattr(n, "sym:name");
     String *lua_name = Getattr(n, "lua:name");
-    if (lua_name == 0)
+    if (lua_name == nullptr)
       lua_name = iname;
     String *nsname = Copy(iname);
     SwigType *type = Getattr(n, "type");
     String *value = Getattr(n, "value");
     String *tm;
-    String *lua_name_v2 = 0;
-    String *tm_v2 = 0;
-    String *iname_v2 = 0;
-    Node *n_v2 = 0;
+    String *lua_name_v2 = nullptr;
+    String *tm_v2 = nullptr;
+    String *iname_v2 = nullptr;
+    Node *n_v2 = nullptr;
 
     if (!luaAddSymbol(lua_name, n))
       return SWIG_ERROR;
@@ -1072,17 +1072,17 @@ public:
       value = Char(wname);
     }
 
-    if ((tm = Swig_typemap_lookup("consttab", n, name, 0))) {
+    if ((tm = Swig_typemap_lookup("consttab", n, name, nullptr))) {
       Replaceall(tm, "$value", value);
       Replaceall(tm, "$nsname", nsname);
       registerConstant(luaCurrentSymbolNSpace(), tm);
-    } else if ((tm = Swig_typemap_lookup("constcode", n, name, 0))) {
+    } else if ((tm = Swig_typemap_lookup("constcode", n, name, nullptr))) {
       Replaceall(tm, "$value", value);
       Replaceall(tm, "$nsname", nsname);
       Printf(f_init, "%s\n", tm);
     } else {
       Delete(nsname);
-      nsname = 0;
+      nsname = nullptr;
       Swig_warning(WARN_TYPEMAP_CONST_UNDEF, input_file, line_number, "Unsupported constant value.\n");
       Swig_restore(n);
       return SWIG_NOWRAP;
@@ -1094,8 +1094,8 @@ public:
       // Don't do anything for enums in C mode - they are already
       // wrapped correctly
       if (CPlusPlus || !current[ENUM_CONST]) {
-	lua_name_v2 = Swig_name_member(0, proxy_class_name, lua_name);
-	iname_v2 = Swig_name_member(0, proxy_class_name, iname);
+	lua_name_v2 = Swig_name_member(nullptr, proxy_class_name, lua_name);
+	iname_v2 = Swig_name_member(nullptr, proxy_class_name, iname);
         n_v2 = Copy(n);
         if (!luaAddSymbol(iname_v2, n, getNSpace())) {
           Swig_restore(n);
@@ -1103,13 +1103,13 @@ public:
         }
 
         Setattr(n_v2, "sym:name", lua_name_v2);
-        tm_v2 = Swig_typemap_lookup("consttab", n_v2, name, 0);
+        tm_v2 = Swig_typemap_lookup("consttab", n_v2, name, nullptr);
         if (tm_v2) {
           Replaceall(tm_v2, "$value", value);
           Replaceall(tm_v2, "$nsname", nsname);
           registerConstant(getNSpace(), tm_v2);
         } else {
-          tm_v2 = Swig_typemap_lookup("constcode", n_v2, name, 0);
+          tm_v2 = Swig_typemap_lookup("constcode", n_v2, name, nullptr);
           if (!tm_v2) {
             // This can't be.
             assert(false);
@@ -1163,7 +1163,7 @@ public:
     // The idea is the same as in classHandler - to drop old names generation if
     // enum is in class in namespace.
     const int old_compatible_names_saved = old_compatible_names;
-    if (getNSpace() || ( Getattr(n, "sym:nspace") != 0 && Len(Getattr(n, "sym:nspace")) > 0 ) ) {
+    if (getNSpace() || ( Getattr(n, "sym:nspace") != nullptr && Len(Getattr(n, "sym:nspace")) > 0 ) ) {
       old_compatible_names = 0;
     }
     int result = Language::enumDeclaration(n);
@@ -1197,7 +1197,7 @@ public:
     Setattr(n, "name", tmpValue);	/* for wrapping of enums in a namespace when emit_action is used */
 
     if (GetFlag(parent, "scopedenum")) {
-      symname = Swig_name_member(0, Getattr(parent, "sym:name"), symname);
+      symname = Swig_name_member(nullptr, Getattr(parent, "sym:name"), symname);
       Setattr(n, "sym:name", symname);
       Delete(symname);
     }
@@ -1244,17 +1244,17 @@ public:
   virtual int classHandler(Node *n) {
     //REPORT("classHandler", n);
 
-    String *mangled_full_proxy_class_name = 0;
-    String *destructor_name = 0;
+    String *mangled_full_proxy_class_name = nullptr;
+    String *destructor_name = nullptr;
     String *nspace = getNSpace();
 
-    constructor_name = 0;
+    constructor_name = nullptr;
     have_constructor = 0;
     have_destructor = 0;
-    destructor_action = 0;
-    assert(class_static_nspace == 0);
-    assert(full_proxy_class_name == 0);
-    assert(proxy_class_name == 0);
+    destructor_action = nullptr;
+    assert(class_static_nspace == nullptr);
+    assert(full_proxy_class_name == nullptr);
+    assert(proxy_class_name == nullptr);
 
     current[NO_CPP] = false;
 
@@ -1265,7 +1265,7 @@ public:
     if (!luaAddSymbol(proxy_class_name, n, nspace))
       return SWIG_ERROR;
 
-    if (nspace == 0)
+    if (nspace == nullptr)
       full_proxy_class_name = NewStringf("%s", proxy_class_name);
     else
       full_proxy_class_name = NewStringf("%s.%s", nspace, proxy_class_name);
@@ -1275,11 +1275,11 @@ public:
 
     SwigType *t = Copy(Getattr(n, "name"));
     SwigType *fr_t = SwigType_typedef_resolve_all(t);	/* Create fully resolved type */
-    SwigType *t_tmp = 0;
+    SwigType *t_tmp = nullptr;
     t_tmp = SwigType_typedef_qualified(fr_t);	// Temporary variable
     Delete(fr_t);
     fr_t = SwigType_strip_qualifiers(t_tmp);
-    String *mangled_fr_t = 0;
+    String *mangled_fr_t = nullptr;
     mangled_fr_t = SwigType_manglestr(fr_t);
     // not sure exactly how this works,
     // but tcl has a static hashtable of all classes emitted and then only emits code for them once.
@@ -1290,8 +1290,8 @@ public:
 
     static Hash *emitted = NewHash();
     if (GetFlag(emitted, mangled_fr_t)) {
-      full_proxy_class_name = 0;
-      proxy_class_name = 0;
+      full_proxy_class_name = nullptr;
+      proxy_class_name = nullptr;
       return SWIG_NOWRAP;
     }
     SetFlag(emitted, mangled_fr_t);
@@ -1363,11 +1363,11 @@ public:
       destructor_name = NewStringf("swig_delete_%s", mangled_full_proxy_class_name);
       Printv(f_wrappers, "static void ", destructor_name, "(void *obj) {\n", NIL);
       if (destructor_action) {
-	Printv(f_wrappers, SwigType_str(rt, "arg1"), " = (", SwigType_str(rt, 0), ") obj;\n", NIL);
+	Printv(f_wrappers, SwigType_str(rt, "arg1"), " = (", SwigType_str(rt, nullptr), ") obj;\n", NIL);
 	Printv(f_wrappers, destructor_action, "\n", NIL);
       } else {
 	if (CPlusPlus) {
-	  Printv(f_wrappers, "    delete (", SwigType_str(rt, 0), ") obj;\n", NIL);
+	  Printv(f_wrappers, "    delete (", SwigType_str(rt, nullptr), ") obj;\n", NIL);
 	} else {
 	  Printv(f_wrappers, "    free((char *) obj);\n", NIL);
 	}
@@ -1463,7 +1463,7 @@ public:
     if (have_constructor) {
       Printv(f_wrappers, constructor_name, NIL);
       Delete(constructor_name);
-      constructor_name = 0;
+      constructor_name = nullptr;
     } else {
       Printf(f_wrappers, "0");
     }
@@ -1485,14 +1485,14 @@ public:
 
     current[NO_CPP] = true;
     Delete(class_static_nspace);
-    class_static_nspace = 0;
+    class_static_nspace = nullptr;
     Delete(mangled_full_proxy_class_name);
-    mangled_full_proxy_class_name = 0;
+    mangled_full_proxy_class_name = nullptr;
     Delete(destructor_name);
-    destructor_name = 0;
+    destructor_name = nullptr;
     Delete(full_proxy_class_name);
-    full_proxy_class_name = 0;
-    proxy_class_name = 0;
+    full_proxy_class_name = nullptr;
+    proxy_class_name = nullptr;
     return SWIG_OK;
   }
 
@@ -1624,7 +1624,7 @@ public:
       // Although this function uses Swig_name_member, it actually generates the Lua name,
       // not the C++ name. This is because an earlier version used such a scheme for static function
       // name generation and we have to maintain backward compatibility.
-      String *compat_name = Swig_name_member(0, proxy_class_name, lua_name);
+      String *compat_name = Swig_name_member(nullptr, proxy_class_name, lua_name);
       Setattr(n, "lua:name", compat_name);
       registerMethod(n, true, getNSpace());
       Delete(compat_name);
@@ -1700,12 +1700,12 @@ public:
    */
   String *runtimeCode() {
     String *s = NewString("");
-    const char *filenames[] = { "luarun.swg", 0 };	// must be 0 terminated
+    const char *filenames[] = { "luarun.swg", nullptr };	// must be 0 terminated
 
     emitLuaFlavor(s);
 
-    String *sfile = 0;
-    for (int i = 0; filenames[i] != 0; i++) {
+    String *sfile = nullptr;
+    for (int i = 0; filenames[i] != nullptr; i++) {
       sfile = Swig_include_sys(filenames[i]);
       if (!sfile) {
 	Printf(stderr, "*** Unable to open '%s'\n", filenames[i]);
@@ -1766,7 +1766,7 @@ public:
   Hash *rawGetCArraysHash(const_String_or_char_ptr name) {
     Hash *scope = symbolScopeLookup( name ? name : "" );
     if(!scope)
-      return 0;
+      return nullptr;
 
     Hash *carrays_hash = Getattr(scope, "lua:cdata");
     return carrays_hash;
@@ -1798,11 +1798,11 @@ public:
       assert(scope);
     }
     Hash *carrays_hash = Getattr(scope, "lua:cdata");
-    if (carrays_hash != 0)
+    if (carrays_hash != nullptr)
       return carrays_hash;
     carrays_hash = NewHash();
-    String *mangled_name = 0;
-    if (nspace == 0 || Len(nspace) == 0)
+    String *mangled_name = nullptr;
+    if (nspace == nullptr || Len(nspace) == 0)
       mangled_name = NewString("SwigModule");
     else
       mangled_name = Swig_name_mangle_string(nspace);
@@ -1912,7 +1912,7 @@ public:
     Setattr(scope, "lua:cdata", carrays_hash);
     assert(rawGetCArraysHash(nspace));
 
-    if (reg && nspace != 0 && Len(nspace) != 0 && GetFlag(carrays_hash, "lua:no_reg") == 0) {
+    if (reg && nspace != nullptr && Len(nspace) != 0 && GetFlag(carrays_hash, "lua:no_reg") == 0) {
       // Split names into components
       List *components = Split(nspace, '.', -1);
       String *parent_path = NewString("");
@@ -1939,7 +1939,7 @@ public:
       SetFlag(carrays_hash, "lua:no_reg");
 
     Delete(mangled_name);
-    mangled_name = 0;
+    mangled_name = nullptr;
     return carrays_hash;
   }
 
@@ -2095,10 +2095,10 @@ public:
 
   void closeNamespaces(File *dataOutput) {
     // Special handling for empty module.
-    if (symbolScopeLookup("") == 0 || rawGetCArraysHash("") == 0) {
+    if (symbolScopeLookup("") == nullptr || rawGetCArraysHash("") == nullptr) {
       // Module is empty. Create hash for global scope in order to have swig_SwigModule
       // variable in resulting file
-      getCArraysHash(0);
+      getCArraysHash(nullptr);
     }
     // Because we can't directly access 'symtabs', instead we access
     // top-level scope and look on all scope pseudo-symbols in it.
@@ -2123,7 +2123,7 @@ public:
       String *key = Getitem(to_close, i);
       closeCArraysHash(key, dataOutput);
       Hash *carrays_hash = rawGetCArraysHash(key);
-      String *name = 0;		// name - name of the namespace as it should be visible in Lua
+      String *name = nullptr;		// name - name of the namespace as it should be visible in Lua
       if (Len(key) == 0)	// This is global module
 	name = module;
       else
@@ -2182,7 +2182,7 @@ public:
    * ----------------------------------------------------------------------------- */
 
   String *luaCurrentSymbolNSpace() {
-    String *scope = 0;
+    String *scope = nullptr;
     // If outside class, than NSpace is used.
     // If inside class, but current[NO_CPP], then this is friend function. It belongs to NSpace
     if (!getCurrentClass() || current[NO_CPP]) {

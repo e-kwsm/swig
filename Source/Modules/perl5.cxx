@@ -35,7 +35,7 @@ static int export_all = 0;
  * pmfile
  *   set by the -pm flag, overrides the name of the .pm file
  */
-static String *pmfile = 0;
+static String *pmfile = nullptr;
 
 /*
  * module
@@ -43,7 +43,7 @@ static String *pmfile = 0;
  *   the name of the .pm file, and the dynamic library, and the name
  *   used by any module wanting to %import the module.
  */
-static String *module = 0;
+static String *module = nullptr;
 
 /*
  * namespace_module
@@ -53,35 +53,35 @@ static String *module = 0;
  *   the same as module, above, unless the %module directive is given
  *   the 'package' option, e.g. %module(package="Foo::Bar") "baz"
  */
-static String       *namespace_module = 0;
+static String       *namespace_module = nullptr;
 
 /*
  * cmodule
  *   the namespace of the internal glue code, set to the value of
  *   module with a 'c' appended
  */
-static String *cmodule = 0;
+static String *cmodule = nullptr;
 
 /*
  * dest_package
  *   an optional namespace to put all classes into. Specified by using
  *   the %module(package="Foo::Bar") "baz" syntax
  */
-static String       *dest_package = 0;
+static String       *dest_package = nullptr;
 
-static String *command_tab = 0;
-static String *constant_tab = 0;
-static String *variable_tab = 0;
+static String *command_tab = nullptr;
+static String *constant_tab = nullptr;
+static String *variable_tab = nullptr;
 
-static File *f_begin = 0;
-static File *f_runtime = 0;
-static File *f_runtime_h = 0;
-static File *f_header = 0;
-static File *f_wrappers = 0;
-static File *f_directors = 0;
-static File *f_directors_h = 0;
-static File *f_init = 0;
-static File *f_pm = 0;
+static File *f_begin = nullptr;
+static File *f_runtime = nullptr;
+static File *f_runtime_h = nullptr;
+static File *f_header = nullptr;
+static File *f_wrappers = nullptr;
+static File *f_directors = nullptr;
+static File *f_directors_h = nullptr;
+static File *f_init = nullptr;
+static File *f_pm = nullptr;
 static String *pm;		/* Package initialization code */
 static String *magic;		/* Magic variable wrappers     */
 
@@ -94,25 +94,25 @@ static int          verbose = 0;
 
 static int blessed = 1;		/* Enable object oriented features */
 static int do_constants = 0;	/* Constant wrapping */
-static List *classlist = 0;	/* List of classes */
+static List *classlist = nullptr;	/* List of classes */
 static int have_constructor = 0;
 static int have_destructor = 0;
 static int have_data_members = 0;
-static String *class_name = 0;	/* Name of the class (what Perl thinks it is) */
-static String *real_classname = 0;	/* Real name of C/C++ class */
-static String *fullclassname = 0;
+static String *class_name = nullptr;	/* Name of the class (what Perl thinks it is) */
+static String *real_classname = nullptr;	/* Real name of C/C++ class */
+static String *fullclassname = nullptr;
 
-static String *pcode = 0;	/* Perl code associated with each class */
+static String *pcode = nullptr;	/* Perl code associated with each class */
 						  /* static  String   *blessedmembers = 0;     *//* Member data associated with each class */
 static int member_func = 0;	/* Set to 1 when wrapping a member function */
-static String *func_stubs = 0;	/* Function stubs */
-static String *const_stubs = 0;	/* Constant stubs */
-static Node *const_stubs_enum_class = 0; /* Node for enum class if we're currently generating one */
-static String *var_stubs = 0;	/* Variable stubs */
-static String *exported = 0;	/* Exported symbols */
-static String *pragma_include = 0;
-static String *additional_perl_code = 0;	/* Additional Perl code from %perlcode %{ ... %} */
-static Hash *operators = 0;
+static String *func_stubs = nullptr;	/* Function stubs */
+static String *const_stubs = nullptr;	/* Constant stubs */
+static Node *const_stubs_enum_class = nullptr; /* Node for enum class if we're currently generating one */
+static String *var_stubs = nullptr;	/* Variable stubs */
+static String *exported = nullptr;	/* Exported symbols */
+static String *pragma_include = nullptr;
+static String *additional_perl_code = nullptr;	/* Additional Perl code from %perlcode %{ ... %} */
+static Hash *operators = nullptr;
 static int have_operators = 0;
 
 class PERL5:public Language {
@@ -137,7 +137,7 @@ public:
       }
       return Getattr(n, "perl5:proxy");
     }
-    return 0;
+    return nullptr;
   }
 
   /* ------------------------------------------------------------
@@ -365,7 +365,7 @@ public:
       fprintf(stdout, "top: using module: %s\n", Char(module));
     }
 
-    dest_package = options ? Getattr(options, "package") : 0;
+    dest_package = options ? Getattr(options, "package") : nullptr;
     if (dest_package) {
       namespace_module = Copy(dest_package);
       if (verbose > 0) {
@@ -390,7 +390,7 @@ public:
      * the module name */
 
     if (no_pmfile) {
-      f_pm = NewString(0);
+      f_pm = NewString(nullptr);
     } else {
       if (!pmfile) {
 	char *m = Char(module) + Len(module);
@@ -404,12 +404,12 @@ public:
 	pmfile = NewStringf("%s.pm", m);
       }
       String *filen = NewStringf("%s%s", SWIG_output_directory(), pmfile);
-      if ((f_pm = NewFile(filen, "w", SWIG_output_files())) == 0) {
+      if ((f_pm = NewFile(filen, "w", SWIG_output_files())) == nullptr) {
 	FileErrorDisplay(filen);
 	Exit(EXIT_FAILURE);
       }
       Delete(filen);
-      filen = NULL;
+      filen = nullptr;
       Swig_register_filebyname("pm", f_pm);
       Swig_register_filebyname("perl", f_pm);
     }
@@ -652,7 +652,7 @@ public:
     String *iname = Getattr(n, "sym:name");
     SwigType *returntype = Getattr(n, "type");
     ParmList *l = Getattr(n, "parms");
-    String *overname = 0;
+    String *overname = nullptr;
     int director_method = 0;
 
     Parm *p;
@@ -733,7 +733,7 @@ public:
 	Printf(f->code, "%s\n", tm);
 	p = Getattr(p, "tmap:in:next");
       } else {
-	Swig_warning(WARN_TYPEMAP_IN_UNDEF, input_file, line_number, "Unable to use type %s as a function argument.\n", SwigType_str(pt, 0));
+	Swig_warning(WARN_TYPEMAP_IN_UNDEF, input_file, line_number, "Unable to use type %s as a function argument.\n", SwigType_str(pt, nullptr));
 	p = nextSibling(p);
       }
       if (i >= num_required) {
@@ -852,7 +852,7 @@ public:
       }
       Printf(f->code, "%s\n", tm);
     } else {
-      Swig_warning(WARN_TYPEMAP_OUT_UNDEF, input_file, line_number, "Unable to use return type %s in function %s.\n", SwigType_str(returntype, 0), name);
+      Swig_warning(WARN_TYPEMAP_OUT_UNDEF, input_file, line_number, "Unable to use return type %s in function %s.\n", SwigType_str(returntype, nullptr), name);
     }
     emit_return_variable(n, returntype, f);
 
@@ -865,17 +865,17 @@ public:
     Printv(f->code, cleanup, NIL);
 
     if (GetFlag(n, "feature:new")) {
-      if ((tm = Swig_typemap_lookup("newfree", n, Swig_cresult_name(), 0))) {
+      if ((tm = Swig_typemap_lookup("newfree", n, Swig_cresult_name(), nullptr))) {
 	Printf(f->code, "%s\n", tm);
       }
     }
 
-    if ((tm = Swig_typemap_lookup("ret", n, Swig_cresult_name(), 0))) {
+    if ((tm = Swig_typemap_lookup("ret", n, Swig_cresult_name(), nullptr))) {
       Printf(f->code, "%s\n", tm);
     }
 
     if (director_method) {
-      if ((tm = Swig_typemap_lookup("directorfree", n, Swig_cresult_name(), 0))) {
+      if ((tm = Swig_typemap_lookup("directorfree", n, Swig_cresult_name(), nullptr))) {
 	Replaceall(tm, "$input", Swig_cresult_name());
 	Replaceall(tm, "$result", "ST(argvi)");
 	Printf(f->code, "%s\n", tm);
@@ -979,13 +979,13 @@ public:
       Printv(setf->code, tab4, "MAGIC_PPERL\n", NIL);
 
       /* Check for a few typemaps */
-      tm = Swig_typemap_lookup("varin", n, name, 0);
+      tm = Swig_typemap_lookup("varin", n, name, nullptr);
       if (tm) {
 	Replaceall(tm, "$input", "sv");
 	/* Printf(setf->code,"%s\n", tm); */
 	emit_action_code(n, setf->code, tm);
       } else {
-	Swig_warning(WARN_TYPEMAP_VARIN_UNDEF, input_file, line_number, "Unable to set variable of type %s.\n", SwigType_str(t, 0));
+	Swig_warning(WARN_TYPEMAP_VARIN_UNDEF, input_file, line_number, "Unable to set variable of type %s.\n", SwigType_str(t, nullptr));
 	DelWrapper(setf);
 	DelWrapper(getf);
 	return SWIG_NOWRAP;
@@ -1002,7 +1002,7 @@ public:
     Printf(getf->def, "SWIGCLASS_STATIC int %s(pTHX_ SV *sv, MAGIC *SWIGUNUSEDPARM(mg)) {\n", get_name);
     Printv(getf->code, tab4, "MAGIC_PPERL\n", NIL);
 
-    if ((tm = Swig_typemap_lookup("varout", n, name, 0))) {
+    if ((tm = Swig_typemap_lookup("varout", n, name, nullptr))) {
       Replaceall(tm, "$result", "sv");
       if (is_shadow(t)) {
 	Replaceall(tm, "$shadow", "SWIG_SHADOW");
@@ -1012,7 +1012,7 @@ public:
       /* Printf(getf->code,"%s\n", tm); */
       addfail = emit_action_code(n, getf->code, tm);
     } else {
-      Swig_warning(WARN_TYPEMAP_VAROUT_UNDEF, input_file, line_number, "Unable to read variable of type %s\n", SwigType_str(t, 0));
+      Swig_warning(WARN_TYPEMAP_VAROUT_UNDEF, input_file, line_number, "Unable to read variable of type %s\n", SwigType_str(t, nullptr));
       DelWrapper(setf);
       DelWrapper(getf);
       return SWIG_NOWRAP;
@@ -1091,7 +1091,7 @@ public:
       value = Char(wname);
     }
 
-    if ((tm = Swig_typemap_lookup("consttab", n, name, 0))) {
+    if ((tm = Swig_typemap_lookup("consttab", n, name, nullptr))) {
       Replaceall(tm, "$value", value);
       if (is_shadow(type)) {
 	Replaceall(tm, "$shadow", "SWIG_SHADOW");
@@ -1099,7 +1099,7 @@ public:
 	Replaceall(tm, "$shadow", "0");
       }
       Printf(constant_tab, "%s,\n", tm);
-    } else if ((tm = Swig_typemap_lookup("constcode", n, name, 0))) {
+    } else if ((tm = Swig_typemap_lookup("constcode", n, name, nullptr))) {
       Replaceall(tm, "$value", value);
       if (is_shadow(type)) {
 	Replaceall(tm, "$shadow", "SWIG_SHADOW");
@@ -1121,9 +1121,9 @@ public:
       } else if (do_constants) {
 	char *dcolon = Strstr(name, "::");
 	if (!dcolon) {
-	  if (Len(const_stubs) == 0 || const_stubs_enum_class != NULL) {
+	  if (Len(const_stubs) == 0 || const_stubs_enum_class != nullptr) {
 	    Printf(const_stubs, "package %s;\n", namespace_module);
-	    const_stubs_enum_class = NULL;
+	    const_stubs_enum_class = nullptr;
 	  }
 	  Printv(const_stubs, "sub ", iname, " () { $", cmodule, "::", iname, " }\n", NIL);
 	} else {
@@ -1153,7 +1153,7 @@ public:
    * usage_func()
    * ------------------------------------------------------------ */
   char *usage_func(char *iname, SwigType *, ParmList *l) {
-    static String *temp = 0;
+    static String *temp = nullptr;
     Parm *p;
     int i;
 
@@ -1165,7 +1165,7 @@ public:
     /* Now go through and print parameters */
     p = l;
     i = 0;
-    while (p != 0) {
+    while (p != nullptr) {
       SwigType *pt = Getattr(p, "type");
       String *pn = Getattr(p, "name");
       if (!checkAttribute(p,"tmap:in:numinputs","0")) {
@@ -1174,7 +1174,7 @@ public:
 	  if (Len(pn) > 0) {
 	    Printf(temp, "%s", pn);
 	  } else {
-	    Printf(temp, "%s", SwigType_str(pt, 0));
+	    Printf(temp, "%s", SwigType_str(pt, nullptr));
 	  }
 	}
 	i++;
@@ -1470,7 +1470,7 @@ public:
       /* Only output the following methods if a class has member data */
 
       Delete(operators);
-      operators = 0;
+      operators = nullptr;
       if (Swig_directorclass(n)) {
 	/* director classes need a way to recover subclass instance attributes */
 	Node *get_attr = NewHash();
@@ -1596,7 +1596,7 @@ public:
       }
 
       if (Getattr(n, "feature:shadow")) {
-	String *plcode = perlcode(Getattr(n, "feature:shadow"), 0);
+	String *plcode = perlcode(Getattr(n, "feature:shadow"), nullptr);
 	String *plaction = NewStringf("%s::%s", cmodule, Swig_name_member(NSPACE_TODO, class_name, symname));
 	Replaceall(plcode, "$action", plaction);
 	Delete(plaction);
@@ -1695,7 +1695,7 @@ public:
 
     if ((blessed) && (!Getattr(n, "sym:nextSibling"))) {
       if (Getattr(n, "feature:shadow")) {
-	String *plcode = perlcode(Getattr(n, "feature:shadow"), 0);
+	String *plcode = perlcode(Getattr(n, "feature:shadow"), nullptr);
 	String *plaction = NewStringf("%s::%s", module, Swig_name_member(NSPACE_TODO, class_name, symname));
 	Replaceall(plcode, "$action", plaction);
 	Delete(plaction);
@@ -1731,7 +1731,7 @@ public:
     Language::destructorHandler(n);
     if (blessed) {
       if (Getattr(n, "feature:shadow")) {
-	String *plcode = perlcode(Getattr(n, "feature:shadow"), 0);
+	String *plcode = perlcode(Getattr(n, "feature:shadow"), nullptr);
 	String *plaction = NewStringf("%s::%s", module, Swig_name_member(NSPACE_TODO, class_name, symname));
 	Replaceall(plcode, "$action", plaction);
 	Delete(plaction);
@@ -1867,7 +1867,7 @@ public:
     List *clist = SplitLines(temp);
     Delete(temp);
     int initial = 0;
-    String *s = 0;
+    String *s = nullptr;
     Iterator si;
     /* Get the initial indentation */
 
@@ -2012,8 +2012,8 @@ public:
 	Wrapper *w = NewWrapper();
 	String *call;
 	String *basetype = Getattr(parent, "classtype");
-	String *target = Swig_method_decl(0, decl, classname, parms, 0);
-	call = Swig_csuperclass_call(0, basetype, superparms);
+	String *target = Swig_method_decl(nullptr, decl, classname, parms, 0);
+	call = Swig_csuperclass_call(nullptr, basetype, superparms);
 	Printf(w->def, "%s::%s: %s, Swig::Director(self) { \n", classname, target, call);
 	Printf(w->def, "   SWIG_DIRECTOR_RGTR((%s *)this, this); \n", basetype);
 	Append(w->def, "}\n");
@@ -2025,7 +2025,7 @@ public:
 
       /* constructor header */
       {
-	String *target = Swig_method_decl(0, decl, classname, parms, 1);
+	String *target = Swig_method_decl(nullptr, decl, classname, parms, 1);
 	Printf(f_directors_h, "    %s;\n", target);
 	Delete(target);
       }
@@ -2073,7 +2073,7 @@ public:
     String *target;
     String *pclassname = NewStringf("SwigDirector_%s", classname);
     String *qualified_name = NewStringf("%s::%s", pclassname, name);
-    SwigType *rtype = Getattr(n, "conversion_operator") ? 0 : Getattr(n, "classDirectorMethods:type");
+    SwigType *rtype = Getattr(n, "conversion_operator") ? nullptr : Getattr(n, "classDirectorMethods:type");
     target = Swig_method_decl(rtype, decl, qualified_name, l, 0);
     Printf(w->def, "%s", target);
     Delete(qualified_name);
@@ -2088,7 +2088,7 @@ public:
       Append(w->def, " noexcept");
       Append(declaration, " noexcept");
     }
-    ParmList *throw_parm_list = 0;
+    ParmList *throw_parm_list = nullptr;
 
     if ((throw_parm_list = Getattr(n, "throws")) || Getattr(n, "throw")) {
       Parm *p;
@@ -2098,14 +2098,14 @@ public:
       Append(declaration, " throw(");
 
       if (throw_parm_list)
-	Swig_typemap_attach_parms("throws", throw_parm_list, 0);
+	Swig_typemap_attach_parms("throws", throw_parm_list, nullptr);
       for (p = throw_parm_list; p; p = nextSibling(p)) {
 	if (Getattr(p, "tmap:throws")) {
 	  if (gencomma++) {
 	    Append(w->def, ", ");
 	    Append(declaration, ", ");
 	  }
-	  String *str = SwigType_str(Getattr(p, "type"), 0);
+	  String *str = SwigType_str(Getattr(p, "type"), nullptr);
 	  Append(w->def, str);
 	  Append(declaration, str);
 	  Delete(str);
@@ -2126,7 +2126,7 @@ public:
     if (!is_void && (!ignored_method || pure_virtual)) {
       if (!SwigType_isclass(returntype)) {
 	if (!(SwigType_ispointer(returntype) || SwigType_isreference(returntype))) {
-	  String *construct_result = NewStringf("= SwigValueInit< %s >()", SwigType_lstr(returntype, 0));
+	  String *construct_result = NewStringf("= SwigValueInit< %s >()", SwigType_lstr(returntype, nullptr));
 	  Wrapper_add_localv(w, "c_result", SwigType_lstr(returntype, "c_result"), construct_result, NIL);
 	  Delete(construct_result);
 	} else {
@@ -2164,7 +2164,7 @@ public:
       Swig_director_parms_fixup(l);
 
       /* remove the wrapper 'w' since it was producing spurious temps */
-      Swig_typemap_attach_parms("in", l, 0);
+      Swig_typemap_attach_parms("in", l, nullptr);
       Swig_typemap_attach_parms("directorin", l, w);
       Swig_typemap_attach_parms("directorargout", l, w);
 
@@ -2199,13 +2199,13 @@ public:
 	  continue;
 	}
 
-	if (Getattr(p, "tmap:directorargout") != 0)
+	if (Getattr(p, "tmap:directorargout") != nullptr)
 	  outputs++;
 
 	String *pname = Getattr(p, "name");
 	String *ptype = Getattr(p, "type");
 
-	if ((tm = Getattr(p, "tmap:directorin")) != 0) {
+	if ((tm = Getattr(p, "tmap:directorin")) != nullptr) {
 	  sprintf(source, "obj%d", idx++);
 	  String *input = NewString(source);
 	  Setattr(p, "emit:directorinput", input);
@@ -2235,7 +2235,7 @@ public:
 	    Node *module = Getattr(parent, "module");
 	    Node *target = Swig_directormap(module, ptype);
 	    sprintf(source, "obj%d", idx++);
-	    String *nonconst = 0;
+	    String *nonconst = nullptr;
 	    /* strip pointer/reference --- should move to Swig/stype.c */
 	    String *nptype = NewString(Char(ptype) + 2);
 	    /* name as pointer */
@@ -2246,8 +2246,8 @@ public:
 	    /* if necessary, cast away const since Perl doesn't support it! */
 	    if (SwigType_isconst(nptype)) {
 	      nonconst = NewStringf("nc_tmp_%s", pname);
-	      String *nonconst_i = NewStringf("= const_cast< %s >(%s)", SwigType_lstr(ptype, 0), ppname);
-	      Wrapper_add_localv(w, nonconst, SwigType_lstr(ptype, 0), nonconst, nonconst_i, NIL);
+	      String *nonconst_i = NewStringf("= const_cast< %s >(%s)", SwigType_lstr(ptype, nullptr), ppname);
+	      Wrapper_add_localv(w, nonconst, SwigType_lstr(ptype, nullptr), nonconst, nonconst_i, NIL);
 	      Delete(nonconst_i);
 	      Swig_warning(WARN_LANG_DISCARD_CONST, input_file, line_number,
 			   "Target language argument '%s' discards const in director method %s::%s.\n",
@@ -2280,7 +2280,7 @@ public:
 	    Delete(nonconst);
 	  } else {
 	    Swig_warning(WARN_TYPEMAP_DIRECTORIN_UNDEF, input_file, line_number,
-			 "Unable to use type %s as a function argument in director method %s::%s (skipping method).\n", SwigType_str(ptype, 0),
+			 "Unable to use type %s as a function argument in director method %s::%s (skipping method).\n", SwigType_str(ptype, nullptr),
 			 SwigType_namestr(c_classname), SwigType_namestr(name));
 	    status = SWIG_NOWRAP;
 	    break;
@@ -2312,7 +2312,7 @@ public:
 	Printf(w->code, "swig_set_inner(\"%s\", false);\n", name);
 
       /* exception handling */
-      tm = Swig_typemap_lookup("director:except", n, Swig_cresult_name(), 0);
+      tm = Swig_typemap_lookup("director:except", n, Swig_cresult_name(), nullptr);
       if (!tm) {
 	tm = Getattr(n, "feature:director:except");
 	if (tm)
@@ -2355,7 +2355,7 @@ public:
 	Append(w->code, "SPAGAIN;\n");
 	Printf(w->code, "%s = POPs;\n", Swig_cresult_name());
 	tm = Swig_typemap_lookup("directorout", n, Swig_cresult_name(), w);
-	if (tm != 0) {
+	if (tm != nullptr) {
 	  if (outputs > 1) {
 	    Printf(w->code, "output = POPs;\n");
 	    Replaceall(tm, "$input", "output");
@@ -2377,7 +2377,7 @@ public:
 	  Delete(tm);
 	} else {
 	  Swig_warning(WARN_TYPEMAP_DIRECTOROUT_UNDEF, input_file, line_number,
-		       "Unable to use return type %s in director method %s::%s (skipping method).\n", SwigType_str(returntype, 0),
+		       "Unable to use return type %s in director method %s::%s (skipping method).\n", SwigType_str(returntype, nullptr),
 		       SwigType_namestr(c_classname), SwigType_namestr(name));
 	  status = SWIG_ERROR;
 	}
@@ -2385,7 +2385,7 @@ public:
 
       /* marshal outputs */
       for (p = l; p;) {
-	if ((tm = Getattr(p, "tmap:directorargout")) != 0) {
+	if ((tm = Getattr(p, "tmap:directorargout")) != nullptr) {
 	  if (outputs > 1) {
 	    Printf(w->code, "output = POPs;\n");
 	    Replaceall(tm, "$result", "output");
@@ -2413,7 +2413,7 @@ public:
 
     if (!is_void) {
       if (!(ignored_method && !pure_virtual)) {
-	String *rettype = SwigType_str(returntype, 0);
+	String *rettype = SwigType_str(returntype, nullptr);
 	if (!SwigType_isreference(returntype)) {
 	  Printf(w->code, "return (%s) c_result;\n", rettype);
 	} else {

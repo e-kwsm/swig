@@ -17,7 +17,7 @@ static const char *usage = "\
 XML Options (available with -xml)\n\
      -xmllite        - More lightweight version of XML\n";
 
-static File *out = 0;
+static File *out = nullptr;
 static int xmllite = 0;
 
 
@@ -51,7 +51,7 @@ public:
   /* Top of the parse tree */
 
   virtual int top(Node *n) {
-    if (out == 0) {
+    if (out == nullptr) {
       String *outfile = Getattr(n, "outfile");
       String *ext = Swig_file_extension(outfile);
       // If there's an extension, ext will include the ".".
@@ -208,7 +208,7 @@ public:
   }
 
   String *Xml_escape_string(String *str) {
-    String *escaped_str = 0;
+    String *escaped_str = nullptr;
     if (str) {
       escaped_str = NewString(str);
       Replaceall(escaped_str, "&", "&amp;");

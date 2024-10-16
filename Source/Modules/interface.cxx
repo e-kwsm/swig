@@ -187,7 +187,7 @@ void Swig_interface_propagate_methods(Node *n) {
 	  assert(on == cn);
 
 	  // Features from the copied base class method are already present, now add in features specific to the added method in the derived class
-	  Swig_features_get(Swig_cparse_features(), Swig_symbol_qualifiedscopename(0), name, decl, cn);
+	  Swig_features_get(Swig_cparse_features(), Swig_symbol_qualifiedscopename(nullptr), name, decl, cn);
 	  Swig_symbol_setscope(oldscope);
 	  appendChild(n, cn);
 	}

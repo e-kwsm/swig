@@ -370,7 +370,7 @@ DoxygenTranslator(flags), m_tableLineLen(0), m_prevRowIsTH(false) {
 static std::string getCSharpDocType(Node *n, const_String_or_char_ptr lname = "") {
   std::string type;
 
-  String *s = Swig_typemap_lookup("doctype", n, lname, 0);
+  String *s = Swig_typemap_lookup("doctype", n, lname, nullptr);
   if (!s) {
     if (String *t = Getattr(n, "type"))
       s = SwigType_str(t, "");
@@ -955,7 +955,7 @@ String *CSharpDocConverter::makeDocumentation(Node *n) {
   currentNode = n;
 
   documentation = getDoxygenComment(n);
-  if (documentation != NULL) {
+  if (documentation != nullptr) {
     if (GetFlag(n, "feature:doxygen:notranslate")) {
       String *comment = NewString("");
       Append(comment, documentation);
