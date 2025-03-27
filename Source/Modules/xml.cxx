@@ -30,7 +30,7 @@ public:
   XML() :indent_level(0) , id(0) {
   }
   
-  ~XML() {
+  ~XML() override {
   }
 
   void main(int argc, char *argv[]) override {
@@ -261,7 +261,7 @@ public:
     Printf(out, "</%s>\n", markup);
   }
 
-  NestedClassSupport nestedClassesSupport() const {
+  NestedClassSupport nestedClassesSupport() const override {
     return NCS_Full;
   }
 };
