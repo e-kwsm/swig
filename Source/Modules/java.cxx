@@ -2726,7 +2726,7 @@ public:
       // TODO: add full support for Java annotations - implementation should be same as C# attributes
       const String *annotations = Getattr(n, "feature:java:annotations");
 #else
-      const String *annotations = NULL;
+      const String *annotations = nullptr;
 #endif
       // Default annotation for director constructors is a warning suppression
       static const String *suppress_warning_this_escape = NewString("@SuppressWarnings(\"this-escape\")");
