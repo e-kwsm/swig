@@ -143,13 +143,13 @@ static String *getSlot(Node *n = nullptr, const char *key = nullptr, String *def
   return val ? val : default_slot ? default_slot : zero;
 }
 
-static String *getHeapTypesSlot(Node *n = NULL, const char *key = NULL, String *default_slot = NULL) {
-  String *val = n && key && *key ? Getattr(n, key) : NULL;
+static String *getHeapTypesSlot(Node *n = nullptr, const char *key = nullptr, String *default_slot = nullptr) {
+  String *val = n && key && *key ? Getattr(n, key) : nullptr;
   return val ? val : default_slot;
 }
 
-static void printSlot(File *f, String *slotval, const char *slotname, const char *functype = NULL) {
-  String *slotval_override = 0;
+static void printSlot(File *f, String *slotval, const char *slotname, const char *functype = nullptr) {
+  String *slotval_override = nullptr;
   if (functype && Strcmp(slotval, "0") == 0)
     slotval = slotval_override = NewStringf("(%s) %s", functype, slotval);
   int len = Len(slotval);
@@ -158,9 +158,9 @@ static void printSlot(File *f, String *slotval, const char *slotname, const char
   Delete(slotval_override);
 }
 
-static void printHeapTypesSlot(File *f, String *slotval, const char *slotname, const char *functype = NULL) {
+static void printHeapTypesSlot(File *f, String *slotval, const char *slotname, const char *functype = nullptr) {
   if (slotval) {
-    String *slotval_override = 0;
+    String *slotval_override = nullptr;
     if (functype)
       slotval = slotval_override = NewStringf("(%s) %s", functype, slotval);
     int len = Len(slotname);
