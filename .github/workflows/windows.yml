@@ -236,7 +236,7 @@ jobs:
             esac
             # The matched MSYS2 active environment path prefix
             if [[ -z "$mingw_dir" ]]; then
-              mingw_dir="/${MSYSTEM,,}" # Change to lowecase
+              mingw_dir="/${MSYSTEM,,}" # Change to lowercase
             fi
             # Note regarding 'mingw_dir':
             #  The MSYSTEM=MSYS, which supports 'Cygwin', uses the '/usr' path prefix.

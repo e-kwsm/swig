@@ -207,7 +207,7 @@ jobs:
             # GCC front-end is available with versioned only!
             CC="gcc-$GCC"
             CXX="g++-$GCC"
-          else # The defualt on MacOS is Clang
+          else # The default on MacOS is Clang
             CFLAGS+=" -Wno-deprecated-declarations"
             CXXFLAGS+=" -Wno-deprecated-declarations"
             CC='clang'
