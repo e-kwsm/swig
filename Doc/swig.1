@@ -1,0 +1,674 @@
+.TH "SWIG" "1" "May 2026" "swig" "User Commands"
+.SH "NAME"
+swig \[em] Simplified Wrapper and Interface Generator
+.SH "SYNOPSIS"
+\fBswig\fP [\fIOPTIONS\fP] \fIfile\fP
+.SH "DESCTIPTION"
+SWIG is a software development tool that connects programs written in C and C++
+with a variety of high\-level programming languages.
+.SH "OPTIONS"
+.SS "Supported Target Language Options"
+.TP
+\fB\-csharp\fP
+Generate C# wrappers
+.TP
+\fB\-d\fP
+Generate D wrappers
+.TP
+\fB\-go\fP
+Generate Go wrappers
+.TP
+\fB\-guile\fP
+Generate Guile wrappers
+.TP
+\fB\-java\fP
+Generate Java wrappers
+.TP
+\fB\-javascript\fP
+Generate Javascript wrappers
+.TP
+\fB\-lua\fP
+Generate Lua wrappers
+.TP
+\fB\-octave\fP
+Generate Octave wrappers
+.TP
+\fB\-perl5\fP
+Generate Perl 5 wrappers
+.TP
+\fB\-php7\fP
+Generate PHP 8 or later wrappers
+.TP
+\fB\-python\fP
+Generate Python wrappers
+.TP
+\fB\-r\fP
+Generate R (aka GNU S) wrappers
+.TP
+\fB\-ruby\fP
+Generate Ruby wrappers
+.TP
+\fB\-scilab\fP
+Generate Scilab wrappers
+.TP
+\fB\-tcl8\fP
+Generate Tcl 8 wrappers
+.TP
+\fB\-xml\fP
+Generate XML wrappers
+.SS "General Options"
+.TP
+\fB\-addextern\fP
+Add extra extern declarations
+.TP
+\fB\-c++\fP
+Enable C++ processing
+.TP
+\fB\-co\fP \fIfile\fP
+Check \fIfile\fP out of the SWIG library
+.TP
+\fB\-copyctor\fP
+Automatically generate copy constructors wherever possible
+.TP
+\fB\-cpperraswarn\fP
+Treat the preprocessor #error statement as #warning (default)
+.TP
+\fB\-cppext\fP \fIext\fP
+Change file extension of generated C++ files to \fIext\fP (default is cxx)
+.TP
+\fB\-copyright\fP
+Display copyright notices
+.TP
+\fB\-debug\-classes\fP
+Display information about the classes found in the interface
+.TP
+\fB\-debug\-module\fP \fIn\fP
+Display module parse tree at stages 1\[en]4, \fIn\fP is a csv list of stages
+.TP
+\fB\-debug\-symtabs\fP
+Display symbol tables information
+.TP
+\fB\-debug\-symbols\fP
+Display target language symbols in the symbol tables
+.TP
+\fB\-debug\-csymbols\fP
+Display C symbols in the symbol tables
+.TP
+\fB\-debug\-lsymbols\fP
+Display target language layer symbols
+.TP
+\fB\-debug\-quiet\fP
+Display less parse tree node debug info when using other \fB\-debug\fP options
+.TP
+\fB\-debug\-tags\fP
+Display information about the tags found in the interface
+.TP
+\fB\-debug\-template\fP
+Display information for debugging templates
+.TP
+\fB\-debug\-top\fP \fIn\fP
+Display entire parse tree at stages 1\[en]4, \fIn\fP is a csv list of stages
+.TP
+\fB\-debug\-typedef\fP
+Display information about the types and typedefs in the interface
+.TP
+\fB\-debug\-typemap\fP
+Display typemap debugging information
+.TP
+\fB\-debug\-tmsearch\fP
+Display typemap search debugging information
+.TP
+\fB\-debug\-tmused\fP
+Display typemaps used debugging information
+.TP
+\fB\-directors\fP
+Turn on director mode for all the classes, mainly for testing
+.TP
+\fB\-dirprot\fP
+Turn on wrapping of protected members for director classes (default)
+.TP
+\fB\-D\fP\fIsymbol\fP[\fB=\fP\fIvalue\fP]
+Define symbol \fIsymbol\fP (for conditional compilation)
+.TP
+\fB\-E\fP
+Preprocess only, does not generate wrapper code
+.TP
+\fB\-external\-runtime\fP \fIfile\fP
+Export the SWIG runtime stack
+.TP
+\fB\-fakeversion\fP \fIv\fP
+Make SWIG fake the program version number to \fIv\fP
+.TP
+\fB\-fcompact\fP
+Compile in compact mode
+.TP
+\fB\-features\fP \fIlist\fP
+Set global features, where \fIlist\fP is a comma separated list of
+features, eg \fB\-features\fP directors,autodoc=1
+.br
+If no explicit value is given to the feature, a default of 1 is used
+.TP
+\fB\-fastdispatch\fP
+Enable fast dispatch mode to produce faster overload dispatcher code
+.TP
+\fB\-Fmicrosoft\fP
+Display error/warning messages in Microsoft format
+.TP
+\fB\-Fstandard\fP
+Display error/warning messages in commonly used format
+.TP
+\fB\-fvirtual\fP
+Compile in virtual elimination mode
+.TP
+\fB\-help\fP
+Display help
+.TP
+\fB\-I\-\fP
+Don\[cq]t search the current directory
+.TP
+\fB\-I\fP\fIdir\fP
+Look for SWIG files in directory \fIdir\fP
+.TP
+\fB\-ignoremissing\fP
+Ignore missing include files
+.TP
+\fB\-importall\fP
+Follow all #include statements as imports
+.TP
+\fB\-includeall\fP
+Follow all #include statements
+.TP
+\fB\-l\fP\fIifile\fP
+Include SWIG library file \fIifile\fP
+.TP
+\fB\-macroerrors\fP
+Report errors inside macros
+.TP
+\fB\-M\fP
+List all dependencies
+.TP
+\fB\-MD\fP
+Is equivalent to \fB\-M \-MF\fP \fIfile\fP, except \fB\-E\fP is not implied
+.TP
+\fB\-MF\fP \fIfile\fP
+Generate dependencies into \fIfile\fP and continue generating wrappers
+.TP
+\fB\-MM\fP
+List dependencies, but omit files in SWIG library
+.TP
+\fB\-MMD\fP
+Like \fB\-MD\fP, but omit files in SWIG library
+.TP
+\fB\-module\fP \fIname\fP
+Set module name to \fIname\fP
+.TP
+\fB\-MP\fP
+Generate phony targets for all dependencies
+.TP
+\fB\-MT\fP \fItarget\fP
+Set the target of the rule emitted by dependency generation
+.TP
+\fB\-nocontract\fP
+Turn off contract checking
+.TP
+\fB\-nocpperraswarn\fP
+Do not treat the preprocessor #error statement as #warning
+.TP
+\fB\-nodefaultctor\fP
+Do not generate implicit default constructors
+.TP
+\fB\-nodefaultdtor\fP
+Do not generate implicit default destructors
+.TP
+\fB\-nodirprot\fP
+Do not wrap director protected members
+.TP
+\fB\-noexcept\fP
+Do not wrap exception specifiers
+.TP
+\fB\-nofastdispatch\fP
+Disable fast dispatch mode (default)
+.TP
+\fB\-nopreprocess\fP
+Skip the preprocessor step
+.TP
+\fB\-notemplatereduce\fP
+Disable reduction of the typedefs in templates
+.TP
+\fB\-O\fP
+Enable the optimization options:
+\fB\-fastdispatch \-fvirtual\fP
+.TP
+\fB\-o\fP \fIoutfile\fP
+Set name of C/C++ output file to \fIoutfile\fP
+.TP
+\fB\-oh\fP \fIheadfile\fP
+Set name of C++ output header file for directors to \fIheadfile\fP
+.TP
+\fB\-outcurrentdir\fP
+Set default output dir to current dir instead of input file\[cq]s path
+.TP
+\fB\-outdir\fP \fIdir\fP
+Set language specific files output directory to \fIdir\fP
+.TP
+\fB\-pcreversion\fP
+Display PCRE2 version information
+.TP
+\fB\-small\fP
+Compile in virtual elimination and compact mode
+.TP
+\fB\-std=\fP\fIstandard\fP
+Set the C or C++ language \fIstandard\fP for inputs
+.TP
+\fB\-swiglib\fP
+Report location of SWIG library and exit
+.TP
+\fB\-templatereduce\fP
+Reduce all the typedefs in templates
+.TP
+\fB\-U\fP\fIsymbol\fP
+Undefine symbol \fIsymbol\fP
+.TP
+\fB\-v\fP
+Run in verbose mode
+.TP
+\fB\-version\fP
+Display SWIG version number
+.TP
+\fB\-Wall\fP
+Remove all warning suppression, also implies \fB\-Wextra\fP
+.TP
+\fB\-Wallkw\fP
+Enable keyword warnings for all the supported languages
+.TP
+\fB\-Werror\fP
+Treat warnings as errors
+.TP
+\fB\-Wextra\fP
+Adds the following additional warnings: 309,403,405,512,321,322
+.TP
+\fB\-w\fP\fIlist\fP
+Suppress/add warning messages, eg \fB\-w401,+321\fP \- see Warnings.html
+.TP
+\fB\-xmlout\fP \fIfile\fP
+Write XML version of the parse tree to \fIfile\fP after normal processing
+.SS "C# Options (available with \fB\-csharp\fP)"
+.TP
+\fB\-dllimport\fP \fIdl\fP
+Override DllImport attribute name to \fIdl\fP
+.TP
+\fB\-namespace\fP \fInm\fP
+Generate wrappers into C# namespace \fInm\fP
+.TP
+\fB\-noproxy\fP
+Generate the low\-level functional interface instead of proxy classes
+.TP
+\fB\-oldvarnames\fP
+Old intermediary method names for variable wrappers
+.TP
+\fB\-outfile\fP \fIfile\fP
+Write all C# into a single \fIfile\fP located in the output directory
+.SS "D Options (available with \fB\-d\fP)"
+.TP
+\fB\-d2\fP
+Generate code for D2/Phobos (The default, left for backward compatibility)
+.TP
+\fB\-package\fP \fIpkg\fP
+Write generated D modules into package \fIpkg\fP
+.TP
+\fB\-splitproxy\fP
+Write each D type to a dedicated file instead of generating a single proxy D
+module.
+.TP
+\fB\-wrapperlibrary\fP \fIwl\fP
+Set the name of the wrapper library to \fIwl\fP
+.SS "Go Options (available with \fB\-go\fP)"
+.TP
+\fB\-gccgo\fP
+Generate code for gccgo rather than gc
+.TP
+\fB\-go\-pkgpath\fP \fIp\fP
+Like gccgo \fB\-fgo\-pkgpath\fP option
+.TP
+\fB\-go\-prefix\fP \fIp\fP
+Like gccgo \fB\-fgo\-prefix\fP option
+.TP
+\fB\-import\-prefix\fP \fIp\fP
+Prefix to add to %import directives
+.TP
+\fB\-intgosize\fP \fIs\fP
+Set size of Go int type\[em]32 or 64 bits
+.TP
+\fB\-no\-unique\-id\fP
+Do not add unique IDs to generated names
+.TP
+\fB\-package\fP \fIname\fP
+Set name of the Go package to \fIname\fP
+.TP
+\fB\-unique\-id\fP
+Add unique IDs to generated names (default)
+.TP
+\fB\-use\-shlib\fP
+Force use of a shared library
+.TP
+\fB\-soname\fP \fIname\fP
+Set shared library holding C/C++ code to \fIname\fP
+.SS "Guile Options (available with \fB\-guile\fP)"
+.TP
+\fB\-emitsetters\fP
+Emit procedures\-with\-setters for variables and structure slots.
+.TP
+\fB\-emitslotaccessors\fP
+Emit accessor methods for all GOOPS slots
+.TP
+\fB\-exportprimitive\fP
+Add the (export .\|.\|.) code from scmstub into the GOOPS file.
+.TP
+\fB\-goopsprefix\fP \fIprefix\fP
+Prepend \fIprefix\fP to all goops identifiers
+.TP
+\fB\-Linkage\fP \fIlstyle\fP
+Use linkage protocol \fIlstyle\fP (default \fBsimple\fP).
+Use \fBmodule\fP for native Guile module linking (requires Guile \[>=] 1.5.0).
+Use \fBpassive\fP for passive linking (no C\-level module\-handling code), or
+\fBhobbit\fP for hobbit modules.
+.TP
+\fB\-onlysetters\fP
+Don\[cq]t emit traditional getter and setter procedures for structure slots,
+only emit procedures\-with\-setters.
+.TP
+\fB\-package\fP \fIname\fP
+Set the path of the module to \fIname\fP (default NULL)
+.TP
+\fB\-prefix\fP \fIname\fP
+Use \fIname\fP as prefix [default "gswig_"]
+.TP
+\fB\-procdoc\fP \fIfile\fP
+Output procedure documentation to \fIfile\fP
+.TP
+\fB\-procdocformat\fP \fIformat\fP
+Output procedure documentation in \fIformat\fP; one of \fBguile\-1.4\fP,
+\fBplain\fP, \fBtexinfo\fP
+.TP
+\fB\-proxy\fP
+Export GOOPS class definitions
+.TP
+\fB\-primsuffix\fP \fIsuffix\fP
+Name appended to primitive module when exporting GOOPS classes.
+(default = "primitive")
+.TP
+\fB\-scmstub\fP
+Output Scheme file with module declaration and exports; only with \fBpassive\fP
+and \fBsimple\fP linkage
+.TP
+\fB\-useclassprefix\fP
+Prepend the class name to all goops identifiers
+.SS "Java Options (available with \fB\-java\fP)"
+.TP
+\fB\-doxygen\fP
+Convert C++ doxygen comments to JavaDoc comments in proxy classes
+.TP
+\fB\-debug\-doxygen\-parser\fP
+Display doxygen parser module debugging information
+.TP
+\fB\-debug\-doxygen\-translator\fP
+Display doxygen translator module debugging information
+.TP
+\fB\-nopgcpp\fP
+Suppress premature garbage collection prevention parameter
+.TP
+\fB\-noproxy\fP
+Generate the low\-level functional interface instead
+of proxy classes
+.TP
+\fB\-oldvarnames\fP
+Old intermediary method names for variable wrappers
+.TP
+\fB\-package\fP \fIname\fP
+Set name of the Java package to \fIname\fP
+.SS "Javascript Options (available with \fB\-javascript\fP)"
+.TP
+\fB\-jsc\fP
+creates a JavascriptCore extension
+.TP
+\fB\-v8\fP
+creates a v8 extension
+.TP
+\fB\-node\fP
+creates a node.js extension
+.TP
+\fB\-napi\fP
+creates a NAPI extension
+.TP
+\fB\-debug\-codetemplates\fP
+generates information about the origin of code templates
+.SS "Lua Options (available with \fB\-lua\fP)"
+.TP
+\fB\-elua\fP
+Generates LTR compatible wrappers for smaller devices running elua
+.TP
+\fB\-eluac\fP
+LTR compatible wrappers in "crass compress" mode for elua
+.TP
+\fB\-elua\-emulate\fP
+Emulates behaviour of eLua.
+Useful only for testing.
+Incompatible with \fB\-elua\fP/\fB\-eluac\fP options.
+.TP
+\fB\-nomoduleglobal\fP
+Do not register the module name as a global variable but return the module table
+from calls to require.
+.SS "Octave Options (available with \fB\-octave\fP)"
+.TP
+\fB\-globals\fP \fIname\fP
+Set \fIname\fP used to access C global variables [default: \fBcvar\fP].
+Use \[oq].\[cq] to load C global variables into module namespace
+.TP
+\fB\-opprefix\fP \fIstr\fP
+Prefix \fIstr\fP for global operator functions [default: \fBop_\fP]
+.SS "Perl 5 Options (available with \fB\-perl5\fP)"
+.TP
+\fB\-compat\fP
+Compatibility mode
+.TP
+\fB\-const\fP
+Wrap constants as constants and not variables (implies \fB\-proxy\fP)
+.TP
+\fB\-nopm\fP
+Do not generate the .pm file
+.TP
+\fB\-noproxy\fP
+Don\[cq]t create proxy classes
+.TP
+\fB\-proxy\fP
+Create proxy classes (enabled by default)
+.TP
+\fB\-static\fP
+Omit code related to dynamic loading
+.SS "PHP Options (available with \fB\-php7\fP)"
+.TP
+\fB\-prefix\fP \fIprefix\fP
+Prepend \fIprefix\fP to all class names in PHP wrappers
+.SS "Python Options (available with \fB\-python\fP)"
+.TP
+\fB\-builtin\fP
+Create Python built\-in types rather than proxy classes, for better performance
+.TP
+\fB\-castmode\fP
+Enable the casting mode, which allows implicit cast between types in Python
+.TP
+\fB\-debug\-doxygen\-parser\fP
+Display doxygen parser module debugging information
+.TP
+\fB\-debug\-doxygen\-translator\fP
+Display doxygen translator module debugging information
+.TP
+\fB\-dirvtable\fP
+Generate a pseudo virtual table for directors for faster dispatch
+.TP
+\fB\-doxygen\fP
+Convert C++ doxygen comments to pydoc comments in proxy classes
+.TP
+\fB\-extranative\fP
+Return extra native wrappers for C++ std containers wherever possible
+.TP
+\fB\-fastproxy\fP
+Use fast proxy mechanism for member methods
+.TP
+\fB\-flatstaticmethod\fP
+Generate additional flattened Python methods for C++ static methods
+.TP
+\fB\-globals\fP \fIname\fP
+Set \fIname\fP used to access C global variable (default: \fBcvar\fP)
+.TP
+\fB\-interface\fP \fImod\fP
+level C/C++ module name to \fImod\fP (default: module name prefixed by \fB_\fP)
+.TP
+\fB\-keyword\fP
+Use keyword arguments
+.TP
+\fB\-nofastunpack\fP
+Use traditional UnpackTuple method to parse the argument functions
+.TP
+\fB\-nogil\fP
+Enable free\-threading if supported by the Python interpreter
+.TP
+\fB\-noh\fP
+Don\[cq]t generate the output header file
+.TP
+\fB\-noproxy\fP
+Don\[cq]t generate proxy classes
+.TP
+\fB\-nortti\fP
+Disable the use of the native C++ RTTI with directors
+.TP
+\fB\-nothreads\fP
+Disable thread support for the entire interface
+.TP
+\fB\-olddefs\fP
+Keep the old method definitions when using \fB\-fastproxy\fP
+.TP
+\fB\-relativeimport\fP
+Use relative Python imports
+.TP
+\fB\-threads\fP
+Add thread support for all the interface
+.TP
+\fB\-O\fP
+Enable the following optimization options:
+\fB\-fastdispatch\fP \fB\-fastproxy\fP \fB\-fvirtual\fP
+.SS "R Options (available with \fB\-r\fP)"
+.TP
+\fB\-copystruct\fP
+Emit R code to copy C structs (on by default)
+.TP
+\fB\-debug\fP
+Output debug
+.TP
+\fB\-dll\fP \fIname\fP
+Name of the DLL (without the .dll or .so suffix).
+Default is the module name.
+.TP
+\fB\-gc\fP
+Aggressive garbage collection
+.TP
+\fB\-memoryprof\fP
+Add memory profile
+.TP
+\fB\-namespace\fP
+Output NAMESPACE file
+.TP
+\fB\-no\-init\-code\fP
+Turn off the generation of the R_init_\fIpkgname\fP code (registration
+information still generated)
+.TP
+\fB\-package\fP \fIname\fP
+Package name for the PACKAGE argument of the R .Call()
+invocations.
+Default is the module name.
+.SS "Ruby Options (available with \fB\-ruby\fP)"
+.TP
+\fB\-autorename\fP
+Enable renaming of classes and methods to follow Ruby coding standards
+.TP
+\fB\-globalmodule\fP
+Wrap everything into the global module
+.TP
+\fB\-initname\fP \fIname\fP
+Set entry function to Init_\fIname\fP (used by \[oq]require\[cq])
+.TP
+\fB\-minherit\fP
+Attempt to support multiple inheritance
+.TP
+\fB\-noautorename\fP
+Disable renaming of classes and methods (default)
+.TP
+\fB\-prefix\fP \fIname\fP
+Set a prefix \fIname\fP to be prepended to all names
+.SS "Scilab Options (available with \fB\-scilab\fP)"
+.TP
+\fB\-builder\fP
+Generate a Scilab builder script
+.TP
+\fB\-buildercflags\fP \fIcflags\fP
+Add \fIcflags\fP to the builder compiler flags
+.TP
+\fB\-builderflagscript\fP \fIfile\fP
+Set the Scilab script \fIfile\fP to use by builder to configure build flags
+.TP
+\fB\-builderldflags\fP \fIldflags\fP
+Add \fIldflags\fP to the builder linker flags
+.TP
+\fB\-buildersources\fP \fIfiles\fP
+Add the (comma separated) files \fIfiles\fP to the builder sources
+.TP
+\fB\-builderverbositylevel\fP \fIlevel\fP
+Set the builder verbosity level to \fIlevel\fP (default 0: off, 2: high)
+.TP
+\fB\-gatewayxml\fP \fIgateway_id\fP
+Generate gateway xml with the given \fIgateway_id\fP
+.TP
+\fB\-gatewayxml6\fP
+Generate gateway xml for Scilab 6
+.SS "Tcl 8 Options (available with \fB\-tcl8\fP)"
+.TP
+\fB\-itcl\fP
+Enable ITcl support
+.TP
+\fB\-nosafe\fP
+Leave out SafeInit module function.
+.TP
+\fB\-prefix\fP \fIname\fP
+Set a prefix \fIname\fP to be prepended to all names
+.TP
+\fB\-namespace\fP
+Build module into a Tcl 8 namespace
+.TP
+\fB\-pkgversion\fP
+Set package version
+.SS "XML Options (available with \fB\-xml\fP)"
+.TP
+\fB\-xmllite\fP
+More lightweight version of XML
+\"
+.SH "ENVIRONMENT"
+.TP
+\fBSWIG_FEATURES\fP
+Options can also be defined using the SWIG_FEATURES environment variable, for
+example:
+.EX
+$ SWIG_FEATURES=\[dq]-Wall\[dq]
+.br
+$ export SWIG_FEATURES
+.br
+$ swig -python interface.i
+.EE
+is equivalent to:
+.EX
+$ swig -Wall -python interface.i
+.EE
+.SH "SEE ALSO"
+Please see
+.UR https://www.swig.org
+.UE
+for reporting bugs and further information
