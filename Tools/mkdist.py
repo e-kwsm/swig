@@ -32,10 +32,6 @@ current_dir = os.getcwd()
 # version directory path $ENV/swig/<x.x.x>
 dirpath = os.path.join(current_dir, dirname)
 
-if sys.version_info[0:2] < (2, 7):
-     print("Error: Python 2.7 or higher is required")
-     sys.exit(3)
-
 # Check name matches normal unix conventions
 if dirname.lower() != dirname:
     print("directory name (" + dirname + ") should be in lowercase")
