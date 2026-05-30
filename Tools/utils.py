@@ -1,4 +1,5 @@
-import os, subprocess
+import os
+import subprocess
 
 
 def check_file_exists(path):
