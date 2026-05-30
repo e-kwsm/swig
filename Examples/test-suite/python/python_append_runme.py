@@ -16,7 +16,7 @@ if grabstaticpath() != os.path.basename(mypath):
     raise RuntimeError("grabstaticpath failed")
 
 clearstaticpath()
-if grabstaticpath() != None:
+if grabstaticpath() is not None:
     raise RuntimeError("Resetting staticfuncpath failed")
 Test.static_func()
 if grabstaticpath() != os.path.basename(mypath):

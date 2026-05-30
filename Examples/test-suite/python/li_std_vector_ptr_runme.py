@@ -51,7 +51,7 @@ bNones = BPtrVector([None, b111, None])
 bCount = 0
 noneCount = 0
 for b in bNones:
-  if b == None:
+  if b is None:
     noneCount = noneCount + 1
   else:
     if b.val != 111:
