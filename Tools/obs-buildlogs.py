@@ -20,7 +20,7 @@ def download():
 
     print("Writing log to {}".format(filename))
     file = open(filename, "w")
-    if buildlog.stderr != None:
+    if buildlog.stderr is None:
       print("Errors: {}".format(buildlog.stderr))
     for log_line in buildlog.stdout:
       file.write(log_line)

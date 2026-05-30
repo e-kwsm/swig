@@ -297,19 +297,19 @@ if k2.getLabel() != "second":
 del k2
 checkCount(0)
 
-if (makeNullUniquePtr() != None):
+if (makeNullUniquePtr() is not None):
   raise RuntimeError("null failure")
 
 # unique_ptr as output (rvalue ref)
 k1 = makeRVRKlassUniquePtr("first")
 if k1.getLabel() != "first":
     raise "wrong object label"
-if (makeRVRKlassUniquePtr(None) != None):
+if (makeRVRKlassUniquePtr(None) is not None):
   raise RuntimeError("null failure")
 
 # unique_ptr as output (lvalue ref)
 k1 = makeRefKlassUniquePtr("lvalueref")
 if k1.getLabel() != "lvalueref":
     raise "wrong object label"
-if (makeRVRKlassUniquePtr(None) != None):
+if (makeRVRKlassUniquePtr(None) is not None):
   raise RuntimeError("null failure")
