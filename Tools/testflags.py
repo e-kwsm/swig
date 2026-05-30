@@ -2,7 +2,7 @@
 import platform
 
 def get_cflags(language, std, compiler):
-    if std == None or len(std) == 0:
+    if std is None or len(std) == 0:
         std = "gnu89"
     c_common = "-fdiagnostics-show-option -std=" + std + " -Wno-long-long -Wreturn-type -Wmissing-field-initializers"
     if platform.system() != 'Darwin':
@@ -45,7 +45,7 @@ def get_cflags(language, std, compiler):
     return cflags[language]
 
 def get_cxxflags(language, std, compiler):
-    if std == None or len(std) == 0:
+    if std is None or len(std) == 0:
         std = "c++98"
     cxx_common = "-fdiagnostics-show-option -std=" + std + " -Wno-long-long -Wreturn-type -Wmissing-field-initializers"
     if platform.system() != 'Darwin':
