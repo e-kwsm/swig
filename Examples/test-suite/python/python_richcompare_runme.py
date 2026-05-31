@@ -141,24 +141,24 @@ else:
 
 x = sorted([a2, a3, a1])
 
-if not (x[0] is a1):
+if (x[0] is not a1):
     raise RuntimeError("Ordering failed")
 
-if not (x[1] is a2):
+if (x[1] is not a2):
     raise RuntimeError("Ordering failed")
 
-if not (x[2] is a3):
+if (x[2] is not a3):
     raise RuntimeError("Ordering failed")
 
 x = sorted([base2, a3, b1])
 
-if not (x[0] is b1):
+if (x[0] is not b1):
     raise RuntimeError("Ordering failed")
 
-if not (x[1] is base2):
+if (x[1] is not base2):
     raise RuntimeError("Ordering failed")
 
-if not (x[2] is a3):
+if (x[2] is not a3):
     raise RuntimeError("Ordering failed")
 
 
