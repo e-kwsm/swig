@@ -34,12 +34,8 @@ add = Ad(5.5)
 
 try:
     fint(add)
-    good = 0
 except TypeError:
-    good = 1
-
-if not good:
-    raise RuntimeError("fint(int)")
+    raise RuntimeError("fint(int)") from None
 
 
 if fint(ad) != "fint:int":
