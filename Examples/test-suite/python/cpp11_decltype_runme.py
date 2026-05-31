@@ -19,14 +19,14 @@ if n != 0:
 
 b = cpp11_decltype.B()
 
-if b.a != False:
+if b.a is not False:
     raise RuntimeError("b.a should be False")
 
-if b.b != True:
+if b.b is not True:
     raise RuntimeError("b.b should be True")
 
-if b.negate(True) != False:
+if b.negate(True) is not False:
     raise RuntimeError("b.negate(True) should return False")
 
-if b.negate(False) != True:
+if b.negate(False) is not True:
     raise RuntimeError("b.negate(False) should return True")
