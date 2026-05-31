@@ -9,9 +9,9 @@ def failed(a, b, msg):
 def compare_sequences(a, b):
     if len(a) != len(b):
         failed(a, b, "different sizes")
-    for i in range(len(a)):
-        if a[i] != b[i]:
-            failed(a, b, "elements are different")
+    for i, j in zip(a, b):
+        if i != j:
+            failed(i, j, "elements are different")
 
 def compare_containers(pythonlist, swigarray):
     compare_sequences(pythonlist, swigarray)
