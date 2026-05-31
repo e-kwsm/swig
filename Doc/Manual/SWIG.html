@@ -386,7 +386,7 @@ This dependency information can be used by build systems to optimally determine
 when SWIG needs to be re-run on the <tt>.i</tt> file instead of blindly running
 SWIG every time as part of the build, which can be slow if there are multiple
 <tt>.i</tt> files to process or generated sources to compile/link. The provided
-dependency informaton also helps build systems avoid the opposite scenario of
+dependency information also helps build systems avoid the opposite scenario of
 not running SWIG on the <tt>.i</tt> files enough, which typically happens when
 a file processed by <tt>%include</tt> has changed but the <tt>.i</tt> file
 itself has not changed.
