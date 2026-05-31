@@ -105,5 +105,5 @@ if k2.getLabel() != "second":
 del k2
 checkCount(0)
 
-if (makeNullAutoPtr() != None):
+if (makeNullAutoPtr() is not None):
   raise RuntimeError("null failure")

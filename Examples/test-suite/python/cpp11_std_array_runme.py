@@ -18,11 +18,11 @@ def compare_containers(pythonlist, swigarray):
 
 def steps_exception(swigarray, i, j, step):
     try:
-        if i == None and j == None:
+        if i is None and j is None:
             a = swigarray[::step]
-        elif i == None:
+        elif i is None:
             a = swigarray[:j:step]
-        elif j == None:
+        elif j is None:
             a = swigarray[i::step]
         else:
             a = swigarray[i:j:step]
@@ -33,13 +33,13 @@ def steps_exception(swigarray, i, j, step):
 
 def del_exception(swigarray, i, j, step):
     try:
-        if i == None and j == None:
+        if i is None and j is None:
             del swigarray[::step]
-        elif j == None and step == None:
+        elif j is None and step is None:
             del swigarray[i]
-        elif i == None:
+        elif i is None:
             del swigarray[:j:step]
-        elif j == None:
+        elif j is None:
             del swigarray[i::step]
         else:
             del swigarray[i:j:step]

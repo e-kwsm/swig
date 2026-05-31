@@ -122,11 +122,11 @@ if c_empty() != "":
     raise RuntimeError
 
 
-if c_null() != None:
+if c_null() is not None:
     raise RuntimeError
 
 
-if get_null(c_null()) != None:
+if get_null(c_null()) is not None:
     raise RuntimeError
 
 

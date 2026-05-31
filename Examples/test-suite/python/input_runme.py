@@ -4,17 +4,17 @@ f = Foo()
 if f.foo(2) != 4:
     raise RuntimeError
 
-if f.foo(None) != None:
+if f.foo(None) is not None:
     raise RuntimeError
 
-if f.foo() != None:
+if f.foo() is not None:
     raise RuntimeError
 
 if sfoo("Hello") != "Hello world":
     raise RuntimeError
 
-if sfoo(None) != None:
+if sfoo(None) is not None:
     raise RuntimeError
 
-if sfoo() != None:
+if sfoo() is not None:
     raise RuntimeError

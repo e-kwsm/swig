@@ -154,5 +154,5 @@ if li_std_string_extra.stdstring_empty() != "":
 if li_std_string_extra.c_empty() != "":
     raise RuntimeError
 
-if li_std_string_extra.c_null() != None:
+if li_std_string_extra.c_null() is not None:
     raise RuntimeError

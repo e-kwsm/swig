@@ -32,13 +32,13 @@ def container_insert_step(i, j, step, newval):
 
     # Python slice
     try:
-        if step == None:
-            if j == None:
+        if step is None:
+            if j is None:
                 ps[i] = newval
             else:
                 ps[i:j] = newval
         else:
-            if j == None:
+            if j is None:
                 ps[i::step] = newval
             else:
                 ps[i:j:step] = newval
@@ -50,13 +50,13 @@ def container_insert_step(i, j, step, newval):
 
     # std::vector<int>
     try:
-        if step == None:
-            if j == None:
+        if step is None:
+            if j is None:
                 iv[i] = newval
             else:
                 iv[i:j] = newval
         else:
-            if j == None:
+            if j is None:
                 iv[i::step] = newval
             else:
                 iv[i:j:step] = newval
@@ -68,13 +68,13 @@ def container_insert_step(i, j, step, newval):
 
     # std::list<int>
     try:
-        if step == None:
-            if j == None:
+        if step is None:
+            if j is None:
                 il[i] = newval
             else:
                 il[i:j] = newval
         else:
-            if j == None:
+            if j is None:
                 il[i::step] = newval
             else:
                 il[i:j:step] = newval
@@ -100,13 +100,13 @@ def container_delete_step(i, j, step):
 
     # Python slice
     try:
-        if step == None:
-            if j == None:
+        if step is None:
+            if j is None:
                 del ps[i]
             else:
                 del ps[i:j]
         else:
-            if j == None:
+            if j is None:
                 del ps[i::step]
             else:
                 del ps[i:j:step]
@@ -118,13 +118,13 @@ def container_delete_step(i, j, step):
 
     # std::vector<int>
     try:
-        if step == None:
-            if j == None:
+        if step is None:
+            if j is None:
                 del iv[i]
             else:
                 del iv[i:j]
         else:
-            if j == None:
+            if j is None:
                 del iv[i::step]
             else:
                 del iv[i:j:step]
@@ -136,13 +136,13 @@ def container_delete_step(i, j, step):
 
     # std::list<int>
     try:
-        if step == None:
-            if j == None:
+        if step is None:
+            if j is None:
                 del il[i]
             else:
                 del il[i:j]
         else:
-            if j == None:
+            if j is None:
                 del il[i::step]
             else:
                 del il[i:j:step]
