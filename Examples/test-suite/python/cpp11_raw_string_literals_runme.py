@@ -36,10 +36,10 @@ if cvar.aa != "Wide string":
 if cvar.bb != "UTF-8 string":
     raise RuntimeError(cvar.wide)
 
-if cvar.xx != ")I'm an \"ascii\" \\ string.":
+if cvar.xx != r""")I'm an "ascii" \ string.""":
     raise RuntimeError(cvar.xx)
 
-if cvar.ee != ")I'm an \"ascii\" \\ string.":
+if cvar.ee != r""")I'm an "ascii" \ string.""":
     raise RuntimeError(cvar.ee)
 
 if cvar.ff != "I'm a \"raw wide\" \\ string.":
