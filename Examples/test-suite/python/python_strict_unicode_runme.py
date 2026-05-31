@@ -50,7 +50,7 @@ uovr = python_strict_unicode.overload(test_unicode)
 if uovr != UNICODE:
     raise RuntimeError("Failed to return unicode from overload")
 if type(uovr) is not type_unicode_string:
-    raise RuntimeERror("Wrong type output from overload")
+    raise RuntimeError("Wrong type output from overload")
 
 # Test that bytes aren't accepted as wide strings and unicode isn't accepted as narrow strings
 try:
