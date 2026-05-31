@@ -41,9 +41,10 @@ check(getVectorValueC(vC, 0), 3333)
 vAB = [makeA(999), makeB(999)]
 try:
   check(getVectorValueA(vAB, 0), 999)
-  raise RuntimeError("missed exception")
 except TypeError:
   pass
+else:
+  raise RuntimeError("missed exception")
 
 b111 = makeB(111)
 bNones = BPtrVector([None, b111, None])
