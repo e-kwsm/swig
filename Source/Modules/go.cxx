@@ -4047,7 +4047,7 @@ private:
 
       Printv(w->code, "}", NULL);
 
-      emit_isvoid_special_variables(0, w->code, is_void);
+      emit_isvoid_special_variables(nullptr, w->code, is_void);
       Replaceall(w->code, "$symname", symname);
       Wrapper_print(w, f_c_directors);
     }

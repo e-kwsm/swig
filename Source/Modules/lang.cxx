@@ -3842,7 +3842,7 @@ void Language::replaceSpecialVariables(String *method, String *tm, Parm *parm) {
 
 String *Language::composeOutputType(Node *n, List *types) {
   (void)n;
-  return Len(types) == 1 ? Copy(Getitem(types, 0)) : 0;
+  return Len(types) == 1 ? Copy(Getitem(types, 0)) : nullptr;
 }
 
 Language *Language::instance() {

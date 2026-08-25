@@ -4730,7 +4730,7 @@ public:
       } else {
         Replaceall(w->code, "$null", "");
       }
-      emit_isvoid_special_variables(0, w->code, is_void);
+      emit_isvoid_special_variables(nullptr, w->code, is_void);
       if (!GetFlag(n, "feature:ignore"))
         Printv(imclass_directors, callback_def, callback_code, NIL);
       if (!Getattr(n, "defaultargs")) {

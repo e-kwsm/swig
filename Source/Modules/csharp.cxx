@@ -4582,7 +4582,7 @@ public:
       } else {
         Replaceall(w->code, "$null", "");
       }
-      emit_isvoid_special_variables(0, w->code, is_void);
+      emit_isvoid_special_variables(nullptr, w->code, is_void);
       if (!ignored_method)
         Printv(director_delegate_callback, "\n", callback_def, callback_code, NIL);
       if (!Getattr(n, "defaultargs")) {

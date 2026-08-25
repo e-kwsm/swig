@@ -1747,7 +1747,7 @@ public:
 
     /* emit the director method */
     if (status == SWIG_OK) {
-      emit_isvoid_special_variables(0, w->code, is_void);
+      emit_isvoid_special_variables(nullptr, w->code, is_void);
       if (!Getattr(n, "defaultargs")) {
         Replaceall(w->code, "$symname", symname);
         Wrapper_print(w, f_directors);

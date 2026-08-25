@@ -22,7 +22,7 @@
  * ----------------------------------------------------------------------------- */
 
 bool is_non_negative_integer(String *value) {
-  const char *c = value ? Char(value) : 0;
+  const char *c = value ? Char(value) : nullptr;
   if (!c || !*c)
     return false;
   for (; *c; c++) {

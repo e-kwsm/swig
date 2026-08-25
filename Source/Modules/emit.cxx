@@ -295,8 +295,8 @@ int emit_num_arguments(ParmList *parms) {
 void emit_output_summary(Node *n, ParmList *parms, bool warn_container_mismatch) {
   Parm *p;
   List *outputs = NewList();
-  String *container = 0;
-  String *clashing_container = 0;
+  String *container = nullptr;
+  String *clashing_container = nullptr;
   int container_built = 0;
   int returnsurvives;
 
@@ -320,10 +320,10 @@ void emit_output_summary(Node *n, ParmList *parms, bool warn_container_mismatch)
       Clear(outputs);
       returnsurvives = 0;
       Delete(container);
-      container = numoutputs > 0 ? Copy(tm_container) : 0;
+      container = numoutputs > 0 ? Copy(tm_container) : nullptr;
       container_built = container ? 1 : 0;
       Delete(clashing_container);
-      clashing_container = 0;
+      clashing_container = nullptr;
     } else if (numoutputs > 0) {
       const char *want = tm_container ? Char(tm_container) : "list";
       if (!container) {
